@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * A class for storing all the information associated with a Paper.
  * For instantiation use to .createPaper() method.(see factory pattern)
- * @author Dimitar Kumanov test
+ * @author Dimitar Kumanov
  * @version 04/24/2017
  */
 public class Paper {
