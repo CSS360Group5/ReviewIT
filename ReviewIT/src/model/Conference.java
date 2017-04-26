@@ -73,21 +73,30 @@ public class Conference {
     }
 
 
-
-    public boolean addPaper(final String theUserID,
-                              final Paper thePaper) {
-        ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
-        //TODO: Convert to ErrorCode comparison
-        if (createErrorCode(SUBMIT_ACTION,
-                theUserID,
-                paperList.size(),
-                thePaper)) {
-            paperList.add(thePaper);
-            return true;
-        }
-
-        return false;
+    public void addPaper(final String theUserID, final Paper thePaper) throws ErrorException {
+    	ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
+    	if(myPaperSubmissionLimit > paperList.size()) {
+    		throw new ErrorException("Sorry, you have already submitted the maximum number of papers!");
+    	}else if(myPaperSubmissionDeadline.before(new Date())) {
+    		throw new ErrorException("Sorry, the deadline for submitting papers has passed!");
+    	}
+    	
     }
+
+//    public boolean addPaper(final String theUserID,
+//                              final Paper thePaper) {
+//        ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
+//        //TODO: Convert to ErrorCode comparison
+//        if (createErrorCode(SUBMIT_ACTION,
+//                theUserID,
+//                paperList.size(),
+//                thePaper)) {
+//            paperList.add(thePaper);
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     /*
     Lots of ways to divide the ErrorCode generation.
