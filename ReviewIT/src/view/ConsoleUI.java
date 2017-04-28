@@ -138,7 +138,6 @@ public class ConsoleUI {
 		List<Conference> conferenceList = RSystem.getInstance().getConferences();
 		
 		for(int i = 0; i < conferenceList.size(); ++i){
-//		for(final Conference currentConference: conferenceList){
 			final Conference currentConference = conferenceList.get(i);
 			ps.println(i + ") "+ currentConference.getName());
 		}
