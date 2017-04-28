@@ -79,6 +79,8 @@ public class Conference {
     		throw new ErrorException("Sorry, you have already submitted the maximum number of papers!");
     	}else if(myPaperSubmissionDeadline.before(new Date())) {
     		throw new ErrorException("Sorry, the deadline for submitting papers has passed!");
+    	} else {
+    		paperList.add(thePaper);
     	}
     	
     }
