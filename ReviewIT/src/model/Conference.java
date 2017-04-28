@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,12 +11,20 @@ import java.util.HashMap;
  * @author Kevin Ravana
  * @version 04/25/2017
  */
-public class Conference {
-    private static final String SUBMIT_ACTION = "Submit Paper";
+public class Conference implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -836524014001898470L;
+	
+	private static final String SUBMIT_ACTION = "Submit Paper";
     private static final String ASSIGN_ACTION = "Assign Paper";
 
     private final String myConferenceName;
     private final HashMap<String, ArrayList<Paper>> myAuthorSubmissionMap;
+    /**
+     * Maps a UserID to a Role. 
+     */
     private final HashMap<String, ArrayList<String>> myUserRoleMap;
     private final Date myPaperSubmissionDeadline;
     private final int myPaperSubmissionLimit;
@@ -40,7 +49,7 @@ public class Conference {
      * @param thePaperAssignmentLimit The total amount of papers that a Reviewer can be assigned.
      * @return a Conference Object
      */
-    public Conference createConference(final String theConferenceName,
+    public static Conference createConference(final String theConferenceName,
                                        final Date thePaperDeadline,
                                        final int thePaperSubmissionLimit,
                                        final int thePaperAssignmentLimit) {
@@ -98,6 +107,15 @@ public class Conference {
 //        return false;
 //    }
 
+    /**
+     * A getter for the Conference name
+     * @return the conference name
+     * @author Dimitar Kumanov
+     */
+    public String getName(){
+    	return myConferenceName;
+    }
+    
     /*
     Lots of ways to divide the ErrorCode generation.
      */
