@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import javafx.print.Paper;
+
 /**
  * A class for storing all information associated with
  * a particular conference.
@@ -22,6 +24,8 @@ public class Conference implements Serializable{
 
     private final String myConferenceName;
     private final HashMap<String, ArrayList<Paper>> myAuthorSubmissionMap;
+    private final HashMap<String, ArrayList<Paper>> myReviewerAssignmentMap;
+    private final HashMap<String, ArrayList<Paper>> mySubprogramAssignmentMap;
     /**
      * Maps a UserID to a Role. 
      */
@@ -35,6 +39,8 @@ public class Conference implements Serializable{
                        final int thePaperSubmissionLimit,
                        final int thePaperAssignmentLimit) {
         myAuthorSubmissionMap = new HashMap<>();
+        myReviewerAssignmentMap = new HashMap<>();
+        mySubprogramAssignmentMap = new HashMap<>();
         myUserRoleMap = new HashMap<>();
         myConferenceName = theConferenceName;
         myPaperSubmissionDeadline = thePaperDeadline;
@@ -148,5 +154,51 @@ public class Conference implements Serializable{
         }
 
         return dateCheck && limitCheck && !authorCheck;
+    }
+    
+    /**
+     * Acquires all the papers assigned to a reviewer
+     * for a specific conference.
+     * 
+     * @param theReviewerID  The Reviewer's user ID.
+     * @return an ArrayList of papers assigned to this reviewer.
+     * 
+     * @author Danielle Lambion
+     */
+    public ArrayList<Paper> getPapersAssignedForReviewer(final String theReviewerID) {
+        return myReviewerAssignmentMap.get(theUserID);
+    }
+    
+    /**
+     * Acquires all the papers assigned to a subprogram chair
+     * for a specific conference.
+     * 
+     * @param theUserID  The user ID of the subprogram chair user.
+     * @return an ArrayList of papers assigned to this subprogram chair.
+     * 
+     * @author Danielle Lambion
+     */
+    public ArrayList<Paper> getPapersAssignedForSubprogram(final String theUserID) {
+        return mySubprogramAssignmentMap.get(theUserID);
+    }
+    
+    /**
+     * Assigns papers to a selected reviewer
+     * 
+     * @param theReviewerID the ID 
+     * @param thePaper the paper object to be assigned to a reviewer.
+     * 
+     * @author Danielle Lambion
+     */
+    public void assignReviewer(final String theReviewerID, Paper thePaper)throws ErrorException {
+    	ArrayList<Paper> paperList = myReviewerAssignmentMap.get(theReviewerID);
+    	
+    	if(myPaperAssignmentLimit > paperList.size()) {
+    		throw new ErrorException("Sorry, you have already assigned the maximum number of papers!");
+    	}
+    	else {
+    		paperList.add(thePaper);
+    		myReviewerAssignment.put(theReviewerID, paperList);
+    	}
     }
 }
