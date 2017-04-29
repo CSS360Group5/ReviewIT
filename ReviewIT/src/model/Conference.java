@@ -194,11 +194,11 @@ public class Conference implements Serializable{
     	ArrayList<Paper> paperList = myReviewerAssignmentMap.get(theReviewerID);
     	
     	if(myPaperAssignmentLimit > paperList.size()) {
-    		throw new ErrorException("Sorry, you have already assigned the maximum number of papers!");
+    		throw new ErrorException("Sorry, you have already assigned the maximum number of papers for this reviewer!");
     	}
     	else {
     		paperList.add(thePaper);
-    		myReviewerAssignment.put(theReviewerID, paperList);
+    		myReviewerAssignmentMap.put(theReviewerID, paperList);
     	}
     }
 }
