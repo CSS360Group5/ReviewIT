@@ -270,12 +270,13 @@ public class Conference implements Serializable{
      * 
      * @param thePaper
      * @param theReviewerUserID
-     * @return true iff all the Paper assigned
+     * @return true iff all the number of Papers assigned
+     * for review are strictly less than the reviewer assignment limit.
      * @author Dimitar Kumanov
      */
     public boolean isPaperInReviewerAssignmentLimit(final String theReviewerUserID,
     												final Paper thePaper){
-    	return getPapersAssignedToReviewer(theReviewerUserID).size() >= myReviewerAssignmentLimit;
+    	return getPapersAssignedToReviewer(theReviewerUserID).size() < myReviewerAssignmentLimit;
     }
 
     
