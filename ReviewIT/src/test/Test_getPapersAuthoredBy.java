@@ -66,8 +66,14 @@ public class Test_getPapersAuthoredBy {
 			e.printStackTrace();
 		}
 	    
+<<<<<<< HEAD
 		//Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
 		List<Paper> papers = new_conference.getPapersAuthoredBy(the_Submitter_UID);
+=======
+		//Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
+		List<Paper> papers = new_conference.getPapersAuthoredBy(the_Submitter_UID);
+
+>>>>>>> branch 'DongshengTestingBranch' of https://github.com/DimitarKum/ReviewIT.git
 		assertNotNull(papers);
 	}
 
