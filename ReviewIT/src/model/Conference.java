@@ -141,8 +141,9 @@ public class Conference implements Serializable{
     public void addPaper(final String theUserID,
     						final Paper thePaper) throws ErrorException {
     	if(!isPaperInAuthorSubmissionLimit(thePaper) ||
-    		!isPaperInSubmissionDeadline(thePaper))
-    			throw new ErrorException("Paper not submittable.");
+    		!isPaperInSubmissionDeadline(thePaper)) {
+            throw new ErrorException("Paper not submittable.");
+        }
     	//(OPTIONAL) Check if paper is already submitted:
 //    	else if(myPaperSubmissionMap.containsValue(thePaper) ||
 //    			myPaperAuthorshipMap.containsValue(thePaper))
@@ -150,21 +151,40 @@ public class Conference implements Serializable{
 //    	myPaperSubmissionMap.put(key, value);
     	
     	//Add paper to submission map:
-    	if(!myPaperSubmissionMap.containsKey(theUserID)){
-    		myPaperSubmissionMap.put(theUserID, new ArrayList<>());
-    	}
-    	myPaperSubmissionMap.get(theUserID).add(thePaper);
-    	
-    	
+        addPaperToSubmissionMap(theUserID, thePaper);
+
     	//Add paper to author map:
-    	for(final String currentAuthor: thePaper.getAuthors()){
-    		if(!myPaperAuthorshipMap.containsKey(currentAuthor)){
-        		myPaperAuthorshipMap.put(currentAuthor, new ArrayList<>());
-        	}
-        	myPaperAuthorshipMap.get(currentAuthor).add(thePaper);
-    	}
+    	addPaperToAuthorshipMap(thePaper);
     }
 
+    /**
+     * Adds paper to myPaperSubmissionMap. If the Author has not yet submitted a paper
+     * to this Conference, the Author's userID will be put into the map along with a
+     * list for storing their papers.
+     * @param theUserID
+     * @param thePaper
+     */
+    private void addPaperToSubmissionMap(final String theUserID, final Paper thePaper) {
+        if(!myPaperSubmissionMap.containsKey(theUserID)){
+            myPaperSubmissionMap.put(theUserID, new ArrayList<>());
+            myPaperSubmissionMap.get(theUserID).add(thePaper);
+        }
+        myPaperSubmissionMap.get(theUserID).add(thePaper);
+    }
+
+    /**
+     * Adds the paper to myPaperAuthorshipMap. This is a map that records all coauthors of
+     * a particular paper.
+     * @param thePaper
+     */
+    private void addPaperToAuthorshipMap(final Paper thePaper) {
+        for(final String currentAuthor: thePaper.getAuthors()){
+            if(!myPaperAuthorshipMap.containsKey(currentAuthor)){
+                myPaperAuthorshipMap.put(currentAuthor, new ArrayList<>());
+            }
+            myPaperAuthorshipMap.get(currentAuthor).add(thePaper);
+        }
+    }
     
     /**
      * @param thePaper The paper to check for.
@@ -209,7 +229,7 @@ public class Conference implements Serializable{
      * Acquires all the papers assigned to a reviewer
      * for a specific conference.
      * 
-     * @param theReviewerID  The Reviewer's user ID.
+     * @param theReviewerUserID  The Reviewer's user ID.
      * @return an ArrayList of papers assigned to this reviewer.
      * 
      * @author Danielle Lambion
