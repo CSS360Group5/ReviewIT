@@ -204,7 +204,7 @@ public class Conference implements Serializable{
      * @author Dimitar Kumanov
      */
     public boolean isPaperInSubmissionDeadline(final Paper thePaper){
-    	return myPaperSubmissionDeadline.after(thePaper.getSubmitDate());
+    	return thePaper.getSubmitDate().before(myPaperSubmissionDeadline);
     }
     
     /**
