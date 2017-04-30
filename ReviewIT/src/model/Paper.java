@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class Paper {
 	private final File myPaperFile;
-	private final Date mySubmissionDate;
+	private Date mySubmissionDate;
 	private final List<String> myAuthors;
 	private final String myTitle;
 	private final String mySubmitter;
@@ -67,6 +67,10 @@ public class Paper {
 	
 	public List<String> getAuthors(){
 		return myAuthors;
+	}
+
+	public void setSubmissionDate(final Date newSubDate) {
+		mySubmissionDate = newSubDate;
 	}
 }
 

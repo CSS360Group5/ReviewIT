@@ -126,7 +126,8 @@ public class Conference implements Serializable{
     }
 
 	/**
-	 * 
+	 * Adds a Paper Object to myAuthorSubmissionMap and
+     * to myPaperAuthorshipMap.
 	 * PRECONDITION: thePaper is isPaperInAuthorSubmissionLimit()
 	 * AND isPaperInSubmissionDeadline()
 	 * @param theUserID
@@ -161,14 +162,14 @@ public class Conference implements Serializable{
         if(!myPaperSubmissionMap.containsKey(theUserID)){
             myPaperSubmissionMap.put(theUserID, new ArrayList<>());
             myPaperSubmissionMap.get(theUserID).add(thePaper);
-        }
-        List<Paper> paperList = myPaperSubmissionMap.get(theUserID);
-        for (Paper p : paperList) {
-            if (theUserID.equals(p.getSubmitterUID())) {
-                paperList.remove(p);
+        } else {
+            List<Paper> paperList = myPaperSubmissionMap.get(theUserID);
+            for (Paper p : paperList) {
+                if (theUserID.equals(p.getSubmitterUID())) {
+                    p = thePaper;
+                }
             }
         }
-        paperList.add(thePaper);
     }
 
     /**
@@ -211,7 +212,7 @@ public class Conference implements Serializable{
      * @author Dimitar Kumanov
      */
     public boolean isPaperInSubmissionDeadline(final Paper thePaper){
-    	return myPaperSubmissionDeadline.before(thePaper.getSubmitDate());
+    	return myPaperSubmissionDeadline.after(thePaper.getSubmitDate());
     }
     
     /**
