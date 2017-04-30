@@ -138,8 +138,9 @@ public class Conference implements Serializable{
 	 */
     public void addPaper(final String theUserID,
     						final Paper thePaper) throws ErrorException {
-    	if(!isPaperInAuthorSubmissionLimit(thePaper) || isPaperInSubmissionDeadline(thePaper)) {
-            throw new ErrorException("Paper not submittable");
+    	if(!isPaperInAuthorSubmissionLimit(thePaper) ||
+    		!isPaperInSubmissionDeadline(thePaper)) {
+            throw new ErrorException("Paper not submittable.");
         }
 
     	//Add paper to submission map:
