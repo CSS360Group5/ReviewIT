@@ -1,4 +1,4 @@
-package tests;
+package tests.business_rules;
 
 import static org.junit.Assert.assertEquals;
 

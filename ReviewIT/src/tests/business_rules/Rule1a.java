@@ -1,4 +1,4 @@
-package tests;
+package tests.business_rules;
 
 import model.Conference;
 import model.ErrorException;
