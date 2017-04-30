@@ -100,14 +100,13 @@ public class Rule1aJUnit4 {
         assertTrue(testCon.getPapersSubmittedBy(userID).size() == 1);
     }
 
-//    @Test
-//    void testHourLateSubmission() throws ErrorException {
-//        assertThrows(ErrorException.class, () -> {testCon.addPaper(userID, hourLatePaper);});
-//    }
-//
-//    @Test
-//    void testSecondLateSubmission() throws ErrorException {
-//        assertThrows(ErrorException.class, () -> {testCon.addPaper(userID, secondLatePaper);});
-//    }
+    @Test (expected = ErrorException.class)
+    public void testHourLateSubmission() throws ErrorException {
+        testCon.addPaper(userID, hourLatePaper);
+    }
 
+    @Test (expected = ErrorException.class)
+    public void testSecondLateSubmission() throws ErrorException {
+        testCon.addPaper(userID, secondLatePaper);
+    }
 }
