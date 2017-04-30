@@ -58,11 +58,16 @@ public class Rule2a {
 
 	@Test(expected = ErrorException.class)
 	public void assignAuthoredPaperForReview() throws ErrorException{
-//		assertNotNull(aConference);
-		aConference.assignReviewer(aUserProfile.getUID(), anAuthoredPaper);
-		
-//		fail("Unimplemented");
+		aConference.assignReviewer(aUserProfile.getUID(),
+				aUserProfile.getName(),
+				anAuthoredPaper);
 	}
 	
+	@Test(expected = ErrorException.class)
+	public void assignCoauthoredPaperForReview() throws ErrorException{
+		aConference.assignReviewer(aUserProfile.getUID(),
+				aUserProfile.getName(),
+				aCoauthoredPaper);
+	}
 
 }
