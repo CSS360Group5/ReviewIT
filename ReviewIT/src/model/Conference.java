@@ -19,9 +19,6 @@ public class Conference implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -836524014001898470L;
-	
-	private static final String SUBMIT_ACTION = "Submit Paper";
-    private static final String ASSIGN_ACTION = "Assign Paper";
 
     private final String myConferenceName;
     /**
@@ -101,7 +98,7 @@ public class Conference implements Serializable{
 
     /**
      * A method to acquire all papers submitted by the User with theUserID
-     * @param theAuthorName The name of the Author to match with.
+     * @param theUserID The name of the Author to match with.
      * @return A list of all papers in this conference submitted by the User.
      * Returns an empty list if no papers found.
      * @author Kevin Ravana
@@ -144,12 +141,7 @@ public class Conference implements Serializable{
     		!isPaperInSubmissionDeadline(thePaper)) {
             throw new ErrorException("Paper not submittable.");
         }
-    	//(OPTIONAL) Check if paper is already submitted:
-//    	else if(myPaperSubmissionMap.containsValue(thePaper) ||
-//    			myPaperAuthorshipMap.containsValue(thePaper))
-//    			throw new ErrorException("Paper already submitted.");
-//    	myPaperSubmissionMap.put(key, value);
-    	
+
     	//Add paper to submission map:
         addPaperToSubmissionMap(theUserID, thePaper);
 
@@ -160,7 +152,8 @@ public class Conference implements Serializable{
     /**
      * Adds paper to myPaperSubmissionMap. If the Author has not yet submitted a paper
      * to this Conference, the Author's userID will be put into the map along with a
-     * list for storing their papers.
+     * list for storing their papers. If a paper with the same name has already been
+     * submitted, it will be replaced. (Add prompt to ask user if this should occur).
      * @param theUserID
      * @param thePaper
      */
@@ -169,7 +162,13 @@ public class Conference implements Serializable{
             myPaperSubmissionMap.put(theUserID, new ArrayList<>());
             myPaperSubmissionMap.get(theUserID).add(thePaper);
         }
-        myPaperSubmissionMap.get(theUserID).add(thePaper);
+        List<Paper> paperList = myPaperSubmissionMap.get(theUserID);
+        for (Paper p : paperList) {
+            if (theUserID.equals(p.getSubmitterUID())) {
+                paperList.remove(p);
+            }
+        }
+        paperList.add(thePaper);
     }
 
     /**
@@ -273,17 +272,17 @@ public class Conference implements Serializable{
      * @author Danielle Lambion
      * @author Dimitar Kumanov
      */
-    public void assignReviewer(final String theReviewerUserID,
+    public void assignReviewer(final String theReviewerID,
     							Paper thePaper) throws ErrorException {
-    	if(!isPaperInReviewerAssignmentLimit(theReviewerUserID, thePaper) ||
-    		isPaperAuthoredByReviewer(theReviewerUserID, thePaper)) {
+    	if(!isPaperInReviewerAssignmentLimit(theReviewerID, thePaper) ||
+    		isPaperAuthoredByReviewer(theReviewerID, thePaper)) {
     		throw new ErrorException("Cannot assign reviewer to paper");
     	}
     	
-    	if(!myReviewerAssignmentMap.containsKey(theReviewerUserID)){
-    		myReviewerAssignmentMap.put(theReviewerUserID, new ArrayList<>());
+    	if(!myReviewerAssignmentMap.containsKey(theReviewerID)){
+    		myReviewerAssignmentMap.put(theReviewerID, new ArrayList<>());
     	}
-    	myReviewerAssignmentMap.get(theReviewerUserID).add(thePaper);
+    	myReviewerAssignmentMap.get(theReviewerID).add(thePaper);
     }
     
     /**
