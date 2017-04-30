@@ -68,6 +68,7 @@ public class Test_getPapersAuthoredBy {
 	    
 		//Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
 		List<Paper> papers = new_conference.getPapersAuthoredBy(the_Submitter_UID);
+
 		assertNotNull(papers);
 	}
 
