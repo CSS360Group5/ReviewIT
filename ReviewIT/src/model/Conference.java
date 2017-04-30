@@ -152,17 +152,16 @@ public class Conference implements Serializable{
     	//Add paper to submission map:
     	if(!myPaperSubmissionMap.containsKey(theUserID)){
     		myPaperSubmissionMap.put(theUserID, new ArrayList<>());
-    	}else{
-    		myPaperSubmissionMap.get(theUserID).add(thePaper);
     	}
+    	myPaperSubmissionMap.get(theUserID).add(thePaper);
+    	
     	
     	//Add paper to author map:
     	for(final String currentAuthor: thePaper.getAuthors()){
     		if(!myPaperAuthorshipMap.containsKey(currentAuthor)){
         		myPaperAuthorshipMap.put(currentAuthor, new ArrayList<>());
-        	}else{
-        		myPaperAuthorshipMap.get(currentAuthor).add(thePaper);
         	}
+        	myPaperAuthorshipMap.get(currentAuthor).add(thePaper);
     	}
     }
 
@@ -261,8 +260,9 @@ public class Conference implements Serializable{
     		throw new ErrorException("Cannot assign reviewer to paper");
     	}
     	
-
-    	List<Paper> paperList = myReviewerAssignmentMap.get(theReviewerUserID);
+    	if(!myReviewerAssignmentMap.containsKey(theReviewerUserID)){
+    		myReviewerAssignmentMap.put(theReviewerUserID, new ArrayList<>());
+    	}
     	myReviewerAssignmentMap.get(theReviewerUserID).add(thePaper);
     }
     
@@ -295,8 +295,8 @@ public class Conference implements Serializable{
     			result = true;
     			break;
     		}
-    	
+    	}
     	return result;
-    }
+ 
     }
 }
