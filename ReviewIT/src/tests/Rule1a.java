@@ -20,11 +20,22 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class Rule1a {
 
+    /**
+     * Conference Object containing method to be tested.
+     */
     private Conference testCon;
+
+    /*
+     Paper Objects with varying submission dates to be tested.
+     */
     private Paper hourEarlyPaper;
     private Paper secondEarlyPaper;
     private Paper hourLatePaper;
     private Paper secondLatePaper;
+
+    /**
+     * ID of the user submitting a paper.
+     */
     private final String userID = "someid";
 
     @BeforeEach
