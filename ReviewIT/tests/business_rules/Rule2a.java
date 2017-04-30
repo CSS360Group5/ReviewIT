@@ -1,4 +1,4 @@
-package tests.business_rules;
+package business_rules;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,7 +27,7 @@ public class Rule2a {
 	private UserProfile aUserProfile;
 	private Paper anAuthoredPaper;
 	private Paper aCoauthoredPaper;
-	private Paper aNonAuthoredPaper;
+	private Paper aNotAuthoredPaper;
 	
 	
 	@Before
@@ -47,7 +47,7 @@ public class Rule2a {
 																							"John Reviewer Doe"})),
 												"Sample Paper Title",
 												"someid@uw.edu");
-		aNonAuthoredPaper = Paper.createPaper(new File(""),
+		aNotAuthoredPaper = Paper.createPaper(new File(""),
 												new ArrayList<>(Arrays.asList(new String[]{"Some Author",
 																							"Some Coauthor"})),
 												"Sample Paper Title",
@@ -70,12 +70,12 @@ public class Rule2a {
 	}
 	
 	@Test
-	public void assignUnauthoredPaperForReview() throws ErrorException{
+	public void assignNotAuthoredPaperForReview() throws ErrorException{
 		aConference.assignReviewer(aUserProfile.getUID(),
 				aUserProfile.getName(),
-				aNonAuthoredPaper);
+				aNotAuthoredPaper);
 		assertEquals(aConference.getPapersAssignedToReviewer(aUserProfile.getUID()).get(0),
-					aNonAuthoredPaper);
+					aNotAuthoredPaper);
 		
 	}
 }
