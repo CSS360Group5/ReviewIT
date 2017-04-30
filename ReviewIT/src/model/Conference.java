@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+
 /**
  * A class for storing all information associated with
  * a particular conference.
@@ -83,14 +84,38 @@ public class Conference implements Serializable{
 
 
     public void addPaper(final String theUserID, final Paper thePaper) throws ErrorException {
-    	ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
-    	if(myPaperSubmissionLimit > paperList.size()) {
-    		throw new ErrorException("Sorry, you have already submitted the maximum number of papers!");
-    	}else if(myPaperSubmissionDeadline.before(new Date())) {
-    		throw new ErrorException("Sorry, the deadline for submitting papers has passed!");
-    	}
-    	
+        if (myAuthorSubmissionMap.containsKey(theUserID)) {
+
+            ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
+
+            if (isSubmissionUnderLimit(paperList.size())) {
+                throw new ErrorException("Sorry, you have already submitted the maximum number of papers!");
+            } else if (isSubmissionBeforeDeadline()) {
+                throw new ErrorException("Sorry, the deadline for submitting papers has passed!");
+            }
+
+            for (Paper p : paperList) {
+                if (p.getTitle().equals(thePaper.getTitle())) {
+                    paperList.remove(p);
+                }
+            }
+            paperList.add(thePaper);
+        } else {
+            myAuthorSubmissionMap.put(theUserID, new ArrayList<>());
+            ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
+            paperList.add(thePaper);
+        }
     }
+    
+
+    private boolean isSubmissionUnderLimit(final int theLimit) {
+        return theLimit < myPaperSubmissionLimit;
+    }
+
+    private boolean isSubmissionBeforeDeadline() {
+        return myPaperSubmissionDeadline.before(new Date());
+    }
+
 
 //    public boolean addPaper(final String theUserID,
 //                              final Paper thePaper) {

@@ -1,12 +1,14 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * This is a custom Error class that can be used to throw exceptions with custom error messages.
  * [LAST EDIT: 4-25-17}
  * @author Harlan Stewart
  * @version 1.0
  */
-public class ErrorException extends Exception {
+public class ErrorException extends Exception implements Serializable{
 
 	/**
 	 * Auto generated UID
