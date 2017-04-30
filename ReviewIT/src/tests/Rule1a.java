@@ -18,9 +18,12 @@ import static org.junit.Assert.assertTrue;
 
 
 /**
- * Created by Kevin on 4/30/2017.
+ * A Test unit for business Rule 1A:
+ * An author cannot submit a paper after the submission deadline has passed.
+ * @author Kevin Ravana
+ * @version 04/30/2017
  */
-public class Rule1aJUnit4 {
+public class Rule1a {
 
     /**
      * Conference Object containing method to be tested.
