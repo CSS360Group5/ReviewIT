@@ -1,5 +1,6 @@
 package tests;
 
+import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
+import model.ErrorException;
 import model.Paper;
 import model.UserProfile;
 
@@ -19,7 +21,6 @@ import model.UserProfile;
  * A reviewer can't be assigned to review a paper he/she has authored or coauthored.
  * @author Dimitar Kumanov
  * @version 4/29/2017
- *
  */
 public class Rule2a {
 
@@ -48,17 +49,25 @@ public class Rule2a {
 												"Sample Paper Title",
 												"someid@uw.edu");
 		aCoauthoredPaper = Paper.createPaper(new File(""),
-				new ArrayList<>(Arrays.asList(new String[]{"Some Author",
-															"Some Coauthor"})),
-				"Sample Paper Title",
-				"someid@uw.edu");
+												new ArrayList<>(Arrays.asList(new String[]{"Some Author",
+																							"Some Coauthor"})),
+												"Sample Paper Title",
+												"someid@uw.edu");
 	}
 	
 
-	@Test
-	public void assignAuthoredPaperForReview(){
-		fail("Unimplemented");
+	@Test(expected = ErrorException.class)
+	public void assignAuthoredPaperForReview() throws ErrorException{
+		aConference.assignReviewer(aUserProfile.getUID(),
+				aUserProfile.getName(),
+				anAuthoredPaper);
 	}
 	
+	@Test(expected = ErrorException.class)
+	public void assignCoauthoredPaperForReview() throws ErrorException{
+		aConference.assignReviewer(aUserProfile.getUID(),
+				aUserProfile.getName(),
+				aCoauthoredPaper);
+	}
 
 }

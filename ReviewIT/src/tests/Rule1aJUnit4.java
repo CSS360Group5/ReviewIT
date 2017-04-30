@@ -3,8 +3,9 @@ package tests;
 import model.Conference;
 import model.ErrorException;
 import model.Paper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.text.ParseException;
@@ -13,22 +14,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * Created by Kevin on 4/30/2017.
  */
-class Rule1a {
+public class Rule1aJUnit4 {
 
+    /**
+     * Conference Object containing method to be tested.
+     */
     private Conference testCon;
+
+    /*
+     Paper Objects with varying submission dates to be tested.
+     */
     private Paper hourEarlyPaper;
     private Paper secondEarlyPaper;
     private Paper hourLatePaper;
     private Paper secondLatePaper;
+
+    /**
+     * ID of the user submitting a paper.
+     */
     private final String userID = "someid";
 
-    @BeforeEach
-    void setUp() throws ParseException {
+    @Before
+    public void setUp() throws ParseException {
 
         /*
         Create date format and host of dates to be tested.
@@ -76,25 +89,24 @@ class Rule1a {
     }
 
     @Test
-    void testHourEarlySubmission() throws ErrorException {
+    public void testHourEarlySubmission() throws ErrorException {
         testCon.addPaper(userID, hourEarlyPaper);
         assertTrue(testCon.getPapersSubmittedBy(userID).size() == 1);
     }
 
     @Test
-    void testSecondEarlySubmission() throws ErrorException {
+    public void testSecondEarlySubmission() throws ErrorException {
         testCon.addPaper(userID, secondEarlyPaper);
         assertTrue(testCon.getPapersSubmittedBy(userID).size() == 1);
     }
 
-    @Test
-    void testHourLateSubmission() throws ErrorException {
-        assertThrows(ErrorException.class, () -> {testCon.addPaper(userID, hourLatePaper);});
+    @Test (expected = ErrorException.class)
+    public void testHourLateSubmission() throws ErrorException {
+        testCon.addPaper(userID, hourLatePaper);
     }
 
-    @Test
-    void testSecondLateSubmission() throws ErrorException {
-        assertThrows(ErrorException.class, () -> {testCon.addPaper(userID, secondLatePaper);});
+    @Test (expected = ErrorException.class)
+    public void testSecondLateSubmission() throws ErrorException {
+        testCon.addPaper(userID, secondLatePaper);
     }
-
 }
