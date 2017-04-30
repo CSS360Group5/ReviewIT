@@ -122,7 +122,7 @@ public class Rule2b {
     @Test
     public void test3PapersAssigned() throws ErrorException {
     	for(int i = 0; i < 3; i++) {
-    		testCon.assignReviewer(reviewerID, papers.get(i));
+    		testCon.assignReviewer(reviewerID, "Reviewer Guy", papers.get(i));
     	}
         assertTrue(testCon.getPapersAssignedToReviewer(reviewerID).size() == 3);
     }
@@ -130,7 +130,7 @@ public class Rule2b {
     @Test
     public void testExactLimit() throws ErrorException {
     	for(int i = 0; i < 8; i++) {
-    		testCon.assignReviewer(reviewerID, papers.get(i));
+    		testCon.assignReviewer(reviewerID, "Reviewer Jane",  papers.get(i));
     	}
         assertTrue(testCon.getPapersAssignedToReviewer(reviewerID).size() == 8);
     }
@@ -138,7 +138,7 @@ public class Rule2b {
     @Test(expected = ErrorException.class)
     public void testOverLimit() throws ErrorException {
     	for(int i = 0; i < 9; i++) {
-    		testCon.assignReviewer(reviewerID, papers.get(i));
+    		testCon.assignReviewer(reviewerID, "Reviewer Dylan", papers.get(i));
     	}
     }
 }
