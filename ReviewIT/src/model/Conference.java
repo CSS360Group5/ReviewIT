@@ -261,6 +261,7 @@ public class Conference implements Serializable{
     		throw new ErrorException("Cannot assign reviewer to paper");
     	}
     	
+
     	List<Paper> paperList = myReviewerAssignmentMap.get(theReviewerUserID);
     	myReviewerAssignmentMap.get(theReviewerUserID).add(thePaper);
     }
@@ -294,8 +295,8 @@ public class Conference implements Serializable{
     			result = true;
     			break;
     		}
-    	}
     	
     	return result;
+    }
     }
 }
