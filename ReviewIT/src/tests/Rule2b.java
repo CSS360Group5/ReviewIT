@@ -135,12 +135,10 @@ public class Rule2b {
         assertTrue(testCon.getPapersAssignedToReviewer(reviewerID).size() == 8);
     }
 
-    //@Test FIX
-    /**void testOverLimit() throws ErrorException {
-    	assertThrows(ErrorException.class, () -> {
-    		for(int i = 0; i < 9; i++) {
-        		testCon.assignReviewer(reviewerID, papers.get(i));
-        	};
-    	});
-    }**/
+    @Test(expected = ErrorException.class)
+    public void testOverLimit() throws ErrorException {
+    	for(int i = 0; i < 9; i++) {
+    		testCon.assignReviewer(reviewerID, papers.get(i));
+    	}
+    }
 }
