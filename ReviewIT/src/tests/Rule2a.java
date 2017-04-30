@@ -1,7 +1,6 @@
 package tests;
 
-import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class Rule2a {
 																							"John Reviewer Doe"})),
 												"Sample Paper Title",
 												"someid@uw.edu");
-		aCoauthoredPaper = Paper.createPaper(new File(""),
+		aNonAuthoredPaper = Paper.createPaper(new File(""),
 												new ArrayList<>(Arrays.asList(new String[]{"Some Author",
 																							"Some Coauthor"})),
 												"Sample Paper Title",
@@ -69,5 +68,14 @@ public class Rule2a {
 				aUserProfile.getName(),
 				aCoauthoredPaper);
 	}
-
+	
+	@Test
+	public void assignUnauthoredPaperForReview() throws ErrorException{
+		aConference.assignReviewer(aUserProfile.getUID(),
+				aUserProfile.getName(),
+				aNonAuthoredPaper);
+		assertEquals(aConference.getPapersAssignedToReviewer(aUserProfile.getUID()).get(0),
+					aNonAuthoredPaper);
+		
+	}
 }
