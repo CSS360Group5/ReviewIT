@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javafx.print.Paper;
 
 /**
  * A class for storing all information associated with
@@ -23,29 +24,43 @@ public class Conference implements Serializable{
     private static final String ASSIGN_ACTION = "Assign Paper";
 
     private final String myConferenceName;
-    private final HashMap<String, ArrayList<Paper>> myAuthorSubmissionMap;
-    private final HashMap<String, ArrayList<Paper>> myReviewerAssignmentMap;
-    private final HashMap<String, ArrayList<Paper>> mySubprogramAssignmentMap;
     /**
-     * Maps a UserID to a Role. 
+     * Maps a Submitter's UserID to a Paper.
+     */
+    private final Map<String, List<Paper>> myPaperSubmissionMap;
+    /**
+     * Maps an Author/Coauthor's name to a Paper.
+     */
+    private final Map<String, List<Paper>> myPaperAuthorshipMap;
+    /**
+     * Maps a Reviewer's UserID to a Paper.
+     */
+    private final Map<String, List<Paper>> myReviewerAssignmentMap;
+    /**
+     * Maps a Subprogram Chair's UserID to a Paper.
+     */
+    private final Map<String, List<Paper>> mySubprogramAssignmentMap;
+    /**
+     * Maps a User's UserID to a Role. 
      */
     private final HashMap<String, ArrayList<String>> myUserRoleMap;
     private final Date myPaperSubmissionDeadline;
     private final int myPaperSubmissionLimit;
-    private final int myPaperAssignmentLimit;
+    private final int myReviewerAssignmentLimit;
 
     private Conference(final String theConferenceName,
                        final Date thePaperDeadline,
                        final int thePaperSubmissionLimit,
                        final int thePaperAssignmentLimit) {
-        myAuthorSubmissionMap = new HashMap<>();
+    	myPaperSubmissionMap = new HashMap<>();
+    	myPaperAuthorshipMap = new HashMap<>();
         myReviewerAssignmentMap = new HashMap<>();
         mySubprogramAssignmentMap = new HashMap<>();
         myUserRoleMap = new HashMap<>();
         myConferenceName = theConferenceName;
         myPaperSubmissionDeadline = thePaperDeadline;
         myPaperSubmissionLimit = thePaperSubmissionLimit;
-        myPaperAssignmentLimit = thePaperAssignmentLimit;
+        myReviewerAssignmentLimit = thePaperAssignmentLimit;
     }
 
     /**
@@ -66,15 +81,41 @@ public class Conference implements Serializable{
     }
 
     /**
-     * A method to acquire all papers submitted by a specified
-     * Author to this particular Conference.
-     * @param theUserID The Author of the requested papers.
-     * @return an ArrayList of Paper Objects.
+     * A method to acquire all papers authored or
+     * coauthored by the author with theAuthorName
+     * @param theAuthorName The name of the Author to match with.
+     * @return A list of all papers in this conference authored by the author.
+     * Returns an empty list if no papers found.
+     * @author Kevin Ravana
+     * @author Dimitar Kumanov 
      */
-    public ArrayList<Paper> getPapersAuthoredBy(final String theUserID) {
-        return myAuthorSubmissionMap.get(theUserID);
+    public List<Paper> getPapersAuthoredBy(final String theAuthorName) {
+    	final List<Paper> authoredPapers;
+    	if(myPaperAuthorshipMap.containsKey(theAuthorName))
+    		authoredPapers = myPaperAuthorshipMap.get(theAuthorName);
+    	else{
+    		authoredPapers = new ArrayList<>();
+    	}
+        return authoredPapers;
     }
 
+    /**
+     * A method to acquire all papers submitted by the User with theUserID
+     * @param theAuthorName The name of the Author to match with.
+     * @return A list of all papers in this conference submitted by the User.
+     * Returns an empty list if no papers found.
+     * @author Kevin Ravana
+     * @author Dimitar Kumanov 
+     */
+    public List<Paper> getPapersSubmittedBy(final String theUserID) {
+    	final List<Paper> submittedPapers;
+    	if(myPaperSubmissionMap.containsKey(theUserID))
+    		submittedPapers = myPaperSubmissionMap.get(theUserID);
+    	else{
+    		submittedPapers = new ArrayList<>();
+    	}
+        return submittedPapers;
+    }
     /**
      * A method to change the roles associated with a
      * particular user.
@@ -87,32 +128,74 @@ public class Conference implements Serializable{
         myUserRoleMap.put(theUserID, theRoles);
     }
 
-
-    public void addPaper(final String theUserID, final Paper thePaper) throws ErrorException {
-    	ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
-    	if(myPaperSubmissionLimit > paperList.size()) {
-    		throw new ErrorException("Sorry, you have already submitted the maximum number of papers!");
-    	}else if(myPaperSubmissionDeadline.before(new Date())) {
-    		throw new ErrorException("Sorry, the deadline for submitting papers has passed!");
+	/**
+	 * 
+	 * PRECONDITION: thePaper is isPaperInAuthorSubmissionLimit()
+	 * AND isPaperInSubmissionDeadline()
+	 * @param theUserID
+	 * @param thePaper
+	 * @throws ErrorException If the precondition is violated.
+	 * @author Kevin Ravana
+	 * @author Dimitar Kumanov
+	 */
+    public void addPaper(final String theUserID,
+    						final Paper thePaper) throws ErrorException {
+    	if(!isPaperInAuthorSubmissionLimit(thePaper) ||
+    		!isPaperInSubmissionDeadline(thePaper))
+    			throw new ErrorException("Paper not submittable.");
+    	//(OPTIONAL) Check if paper is already submitted:
+//    	else if(myPaperSubmissionMap.containsValue(thePaper) ||
+//    			myPaperAuthorshipMap.containsValue(thePaper))
+//    			throw new ErrorException("Paper already submitted.");
+//    	myPaperSubmissionMap.put(key, value);
+    	
+    	//Add paper to submission map:
+    	if(!myPaperSubmissionMap.containsKey(theUserID)){
+    		myPaperSubmissionMap.put(theUserID, new ArrayList<>());
+    	}else{
+    		myPaperSubmissionMap.get(theUserID).add(thePaper);
     	}
     	
+    	//Add paper to author map:
+    	for(final String currentAuthor: thePaper.getAuthors()){
+    		if(!myPaperAuthorshipMap.containsKey(currentAuthor)){
+        		myPaperAuthorshipMap.put(currentAuthor, new ArrayList<>());
+        	}else{
+        		myPaperAuthorshipMap.get(currentAuthor).add(thePaper);
+        	}
+    	}
     }
 
-//    public boolean addPaper(final String theUserID,
-//                              final Paper thePaper) {
-//        ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
-//        //TODO: Convert to ErrorCode comparison
-//        if (createErrorCode(SUBMIT_ACTION,
-//                theUserID,
-//                paperList.size(),
-//                thePaper)) {
-//            paperList.add(thePaper);
-//            return true;
-//        }
-//
-//        return false;
-//    }
-
+    
+    /**
+     * @param thePaper The paper to check for.
+     * @return true iff all the Paper submitted to this Conference by all
+     * authors of thePaper is strictly less than
+     * paper submission limit for the conference.
+     * @author Dimitar Kumanov
+     */
+    public boolean isPaperInAuthorSubmissionLimit(final Paper thePaper){
+    	boolean result = true;
+    	
+    	for(final String currentAuthor: thePaper.getAuthors()){
+    		if(getPapersAuthoredBy(currentAuthor).size() >= myPaperSubmissionLimit){
+    			result = false;
+    			break;
+    		}
+    	}
+    	return result;
+    }
+    
+    /**
+     * @param thePaper The paper to check for.
+     * @return true iff thePaper's submission date
+     * is strictly before the Conference submission deadline.
+     * @author Dimitar Kumanov
+     */
+    public boolean isPaperInSubmissionDeadline(final Paper thePaper){
+    	return myPaperSubmissionDeadline.before(thePaper.getSubmitDate());
+    }
+    
     /**
      * A getter for the Conference name
      * @return the conference name
@@ -122,39 +205,6 @@ public class Conference implements Serializable{
     	return myConferenceName;
     }
     
-    /*
-    Lots of ways to divide the ErrorCode generation.
-     */
-    /**
-     *
-     * @param theCheckedAction The action being performed.
-     * @param theUserID The user subject of the action.
-     * @param theCount The amount of papers already submitted/assigned.
-     * @param thePaper The Paper Object subject of the action.
-     * @return
-     */
-    private boolean createErrorCode(final String theCheckedAction,
-                                    final String theUserID,
-                                    final int theCount,
-                                    final Paper thePaper) {
-        //TODO: Convert return type to ErrorCode
-
-        boolean dateCheck = false;
-        boolean limitCheck = false;
-        boolean authorCheck = true;
-
-        if (theCheckedAction.equals(SUBMIT_ACTION)) {
-            dateCheck = myPaperSubmissionDeadline.before(new Date());
-            limitCheck = myPaperSubmissionLimit > theCount;
-            authorCheck = false;
-        } else if (theCheckedAction.equals(ASSIGN_ACTION)) {
-            dateCheck = true;
-            limitCheck = myPaperAssignmentLimit > theCount;
-            authorCheck = theUserID.equals(thePaper.getSubmitterUID());
-        }
-
-        return dateCheck && limitCheck && !authorCheck;
-    }
     
     /**
      * Acquires all the papers assigned to a reviewer
@@ -164,10 +214,20 @@ public class Conference implements Serializable{
      * @return an ArrayList of papers assigned to this reviewer.
      * 
      * @author Danielle Lambion
+     * @author Dimitar Kumanov
      */
-    public ArrayList<Paper> getPapersAssignedForReviewer(final String theReviewerID) {
-        return myReviewerAssignmentMap.get(theUserID);
+    public List<Paper> getPapersAssignedToReviewer(final String theReviewerUserID) {
+    	
+    	final List<Paper> papersAssignedForReview;
+    	if(myReviewerAssignmentMap.containsKey(theReviewerUserID))
+    		papersAssignedForReview = myReviewerAssignmentMap.get(theReviewerUserID);
+    	else{
+    		papersAssignedForReview = new ArrayList<>();
+    	}
+        return papersAssignedForReview;
     }
+    
+    
     
     /**
      * Acquires all the papers assigned to a subprogram chair
@@ -178,27 +238,64 @@ public class Conference implements Serializable{
      * 
      * @author Danielle Lambion
      */
-    public ArrayList<Paper> getPapersAssignedForSubprogram(final String theUserID) {
+    public List<Paper> getPapersAssignedForSubprogram(final String theUserID) {
+    	//TO DO: Fix me to work like other methods that get Lists from a Map
         return mySubprogramAssignmentMap.get(theUserID);
     }
     
     /**
-     * Assigns papers to a selected reviewer
+     * Assigns a paper to a reviewer
      * 
+     * PRECONDITION: isPaperInReviewerAssignmentLimit and !isPaperAuthoredByReviewer
      * @param theReviewerID the ID 
      * @param thePaper the paper object to be assigned to a reviewer.
+     * @exception Precondition violated
      * 
      * @author Danielle Lambion
+     * @author Dimitar Kumanov
      */
-    public void assignReviewer(final String theReviewerID, Paper thePaper)throws ErrorException {
-    	ArrayList<Paper> paperList = myReviewerAssignmentMap.get(theReviewerID);
+    public void assignReviewer(final String theReviewerUserID,
+    							Paper thePaper) throws ErrorException {
+    	if(!isPaperInReviewerAssignmentLimit(theReviewerUserID, thePaper) ||
+    		isPaperAuthoredByReviewer(theReviewerUserID, thePaper)) {
+    		throw new ErrorException("Cannot assign reviewer to paper");
+    	}
     	
-    	if(myPaperAssignmentLimit > paperList.size()) {
-    		throw new ErrorException("Sorry, you have already assigned the maximum number of papers!");
+    	List<Paper> paperList = myReviewerAssignmentMap.get(theReviewerUserID);
+    	myReviewerAssignmentMap.get(theReviewerUserID).add(thePaper);
+    }
+    
+    /**
+     * 
+     * @param thePaper
+     * @param theReviewerUserID
+     * @return true iff all the Paper assigned
+     * @author Dimitar Kumanov
+     */
+    public boolean isPaperInReviewerAssignmentLimit(final String theReviewerUserID,
+    												final Paper thePaper){
+    	return getPapersAssignedToReviewer(theReviewerUserID).size() >= myReviewerAssignmentLimit;
+    }
+
+    
+    /**
+     * 
+     * @param theReviewerName
+     * @param thePaper
+     * @return
+     * @author Dimitar Kumanov
+     */
+    public boolean isPaperAuthoredByReviewer(final String theReviewerName,
+    											final Paper thePaper){
+    	boolean result = false;
+    	
+    	for(final String currentAuthor: thePaper.getAuthors()){
+    		if(currentAuthor.equals(theReviewerName)){
+    			result = true;
+    			break;
+    		}
     	}
-    	else {
-    		paperList.add(thePaper);
-    		myReviewerAssignment.put(theReviewerID, paperList);
-    	}
+    	
+    	return result;
     }
 }
