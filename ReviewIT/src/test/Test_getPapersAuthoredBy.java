@@ -40,7 +40,7 @@ public class Test_getPapersAuthoredBy {
 													 deadline, 
 													 Author_Paper_Submission_Limit, 
 													 Reviewer_Paper_Assignment_Limit);
-
+		assertNotNull(new_conference);
 		//Create a new a Paper 
 		List<String> the_Authors = new ArrayList<String>();
 		the_Authors.add("Malik, P");
@@ -57,7 +57,7 @@ public class Test_getPapersAuthoredBy {
 		String the_Paper_Title = "Hungry for life";
 		String the_Submitter_UID = "Malik55813";
 		Paper new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UID);
-		
+		assertNotNull(new_paper);
 		
 		//Add the paper to the Conference
 		try {
