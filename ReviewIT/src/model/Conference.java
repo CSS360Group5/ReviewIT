@@ -26,6 +26,7 @@ public class Conference implements Serializable{
     private final HashMap<String, ArrayList<Paper>> myAuthorSubmissionMap;
     private final HashMap<String, ArrayList<Paper>> myReviewerAssignmentMap;
     private final HashMap<String, ArrayList<Paper>> mySubprogramAssignmentMap;
+
     /**
      * Maps a UserID to a Role. 
      */
@@ -105,6 +106,10 @@ public class Conference implements Serializable{
                 }
             }
             paperList.add(thePaper);
+        } else {
+            myAuthorSubmissionMap.put(theUserID, new ArrayList<>());
+            ArrayList<Paper> paperList = myAuthorSubmissionMap.get(theUserID);
+            paperList.add(thePaper);
         }
     }
 
@@ -140,39 +145,39 @@ public class Conference implements Serializable{
     	return myConferenceName;
     }
     
-    /*
-    Lots of ways to divide the ErrorCode generation.
-     */
-    /**
-     *
-     * @param theCheckedAction The action being performed.
-     * @param theUserID The user subject of the action.
-     * @param theCount The amount of papers already submitted/assigned.
-     * @param thePaper The Paper Object subject of the action.
-     * @return
-     */
-    private boolean createErrorCode(final String theCheckedAction,
-                                    final String theUserID,
-                                    final int theCount,
-                                    final Paper thePaper) {
-        //TODO: Convert return type to ErrorCode
-
-        boolean dateCheck = false;
-        boolean limitCheck = false;
-        boolean authorCheck = true;
-
-        if (theCheckedAction.equals(SUBMIT_ACTION)) {
-            dateCheck = myPaperSubmissionDeadline.before(new Date());
-            limitCheck = myPaperSubmissionLimit > theCount;
-            authorCheck = false;
-        } else if (theCheckedAction.equals(ASSIGN_ACTION)) {
-            dateCheck = true;
-            limitCheck = myPaperAssignmentLimit > theCount;
-            authorCheck = theUserID.equals(thePaper.getSubmitterUID());
-        }
-
-        return dateCheck && limitCheck && !authorCheck;
-    }
+//    /*
+//    Lots of ways to divide the ErrorCode generation.
+//     */
+//    /**
+//     *
+//     * @param theCheckedAction The action being performed.
+//     * @param theUserID The user subject of the action.
+//     * @param theCount The amount of papers already submitted/assigned.
+//     * @param thePaper The Paper Object subject of the action.
+//     * @return
+//     */
+//    private boolean createErrorCode(final String theCheckedAction,
+//                                    final String theUserID,
+//                                    final int theCount,
+//                                    final Paper thePaper) {
+//        //TODO: Convert return type to ErrorCode
+//
+//        boolean dateCheck = false;
+//        boolean limitCheck = false;
+//        boolean authorCheck = true;
+//
+//        if (theCheckedAction.equals(SUBMIT_ACTION)) {
+//            dateCheck = myPaperSubmissionDeadline.before(new Date());
+//            limitCheck = myPaperSubmissionLimit > theCount;
+//            authorCheck = false;
+//        } else if (theCheckedAction.equals(ASSIGN_ACTION)) {
+//            dateCheck = true;
+//            limitCheck = myPaperAssignmentLimit > theCount;
+//            authorCheck = theUserID.equals(thePaper.getSubmitterUID());
+//        }
+//
+//        return dateCheck && limitCheck && !authorCheck;
+//    }
     
     /**
      * Acquires all the papers assigned to a reviewer
