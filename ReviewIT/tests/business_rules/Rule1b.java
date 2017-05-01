@@ -60,7 +60,7 @@ public class Rule1b {
 		int subLimit = 5;
 		int assLimit = 8;		
         format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");        
-        deadline = format.parse("2017/04/30 23:59:59");
+        deadline = format.parse("4017/04/30 23:59:59");
         
 		testCon = Conference.createConference(conName, deadline, subLimit,assLimit);
 		
