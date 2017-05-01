@@ -1,10 +1,8 @@
-package test;
+package methods_classes;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,14 +22,9 @@ public class Test_getPapersAuthoredBy {
 	@Test
 	public void test() {
 		// Convert string to date and set deadline to str_date
-		SimpleDateFormat date_format = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-		Date deadline = new Date();
-		String str_deadline = "01-06-2017 11:59:59";
-		try {
-			deadline = date_format.parse(str_deadline);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		@SuppressWarnings("deprecation")
+		Date deadline = new Date(117, 6, 1, 23, 59, 59);
+		assertTrue(deadline.after(new Date()));
 
 		//Create a new conference
 		int Author_Paper_Submission_Limit = 5;
