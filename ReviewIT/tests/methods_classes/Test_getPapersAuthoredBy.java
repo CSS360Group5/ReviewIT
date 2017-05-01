@@ -29,7 +29,7 @@ public class Test_getPapersAuthoredBy {
 	
 	@Before
 	public void setUp(){
-		/**
+		/*
 		* Create a new conference
 		*/
 		@SuppressWarnings("deprecation")
@@ -40,7 +40,7 @@ public class Test_getPapersAuthoredBy {
 				Author_Paper_Submission_Limit, Reviewer_Paper_Assignment_Limit);
 		assertNotNull(new_conference);
 		
-		/**
+		/*
 		* Create a new a Paper 
 		*/
 		the_Authors = new ArrayList<String>();
@@ -59,7 +59,7 @@ public class Test_getPapersAuthoredBy {
 		new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UID);
 		assertNotNull(new_paper);
 		
-		/**
+		/*
 		* Add the paper to the Conference
 		*/
 		try {
@@ -70,8 +70,8 @@ public class Test_getPapersAuthoredBy {
 	}
 	
 	@Test
-	public void test() {
-		/**
+	public void test_getPapersAuthoredBy() {
+		/*
 		* Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
 		*/
 		for(int i = 0; i < the_Authors.size(); i++){
