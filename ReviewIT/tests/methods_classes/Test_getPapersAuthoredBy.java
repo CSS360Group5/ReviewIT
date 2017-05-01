@@ -25,11 +25,10 @@ public class Test_getPapersAuthoredBy {
 	public void test() {
 		/**
 		* @before
+		* Create a new conference
 		*/
-		// Convert string to date and set deadline to str_date
 		@SuppressWarnings("deprecation")
 		Date deadline = new Date(117, 6, 1, 23, 59, 59);
-		//Create a new conference
 		int Author_Paper_Submission_Limit = 5;
 	    int Reviewer_Paper_Assignment_Limit = 8;
 		Conference new_conference = Conference.createConference("Test Conference", 
@@ -40,10 +39,12 @@ public class Test_getPapersAuthoredBy {
 		
 		/**
 		* @before
+		* Create a new a Paper 
 		*/
-		//Create a new a Paper 
 		List<String> the_Authors = new ArrayList<String>();
 		the_Authors.add("Malik, P");
+		the_Authors.add("Melik, Q");
+		the_Authors.add("Ca S");
 		String file_name = "Hungry for life.txt";
 		File the_Paper_File = null;
 		try {
@@ -53,7 +54,6 @@ public class Test_getPapersAuthoredBy {
 			// if any I/O error occurs
 			e.printStackTrace();
 		}
-		
 		String the_Paper_Title = "Hungry for life";
 		String the_Submitter_UID = "Malik55813";
 		Paper new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UID);
@@ -61,8 +61,8 @@ public class Test_getPapersAuthoredBy {
 		
 		/**
 		* @before
+		* Add the paper to the Conference
 		*/
-		//Add the paper to the Conference
 		try {
 			new_conference.addPaper(the_Submitter_UID, new_paper);
 		} catch (ErrorException e) {
@@ -71,10 +71,13 @@ public class Test_getPapersAuthoredBy {
 	    
 		/**
 		* @test
+		* Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
 		*/
-		//Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
-		List<Paper> papers = new_conference.getPapersAuthoredBy(the_Authors.get(0));
-		assertTrue(papers.contains(new_paper));
+		List<Paper> papers;
+		for(int i = 0; i < the_Authors.size(); i++){
+			papers = new_conference.getPapersAuthoredBy(the_Authors.get(i));
+			assertTrue(papers.contains(new_paper));
+		}
 	}
 
 }
