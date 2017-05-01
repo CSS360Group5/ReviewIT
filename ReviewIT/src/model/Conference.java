@@ -12,6 +12,8 @@ import java.util.Map;
  * A class for storing all information associated with
  * a particular conference.
  * @author Kevin Ravana
+ * @author Dimitar Kumanov
+ * @author Danielle Lambion
  * @version 04/25/2017
  */
 public class Conference implements Serializable{
@@ -118,6 +120,7 @@ public class Conference implements Serializable{
      * particular user.
      * @param theUserID The user whose roles are to be altered.
      * @param theRoles The collection of roles to be assigned.
+     * @author Kevin Ravana
      */
     public void setUserRoles(final String theUserID,
                              final ArrayList<String> theRoles) {
@@ -157,6 +160,8 @@ public class Conference implements Serializable{
      * submitted, it will be replaced. (Add prompt to ask user if this should occur).
      * @param theUserID
      * @param thePaper
+     * @author Kevin Ravana
+     * @author Dimitar Kumanov
      */
     private void addPaperToSubmissionMap(final String theUserID, final Paper thePaper){
     	if(!myPaperSubmissionMap.containsKey(theUserID)){
@@ -169,6 +174,8 @@ public class Conference implements Serializable{
      * Adds the paper to myPaperAuthorshipMap. This is a map that records all coauthors of
      * a particular paper.
      * @param thePaper
+     * @author Kevin Ravana
+     * @author Dimitar Kumanov
      */
     private void addPaperToAuthorshipMap(final Paper thePaper) {
         for(final String currentAuthor: thePaper.getAuthors()){

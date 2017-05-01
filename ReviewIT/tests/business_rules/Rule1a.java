@@ -57,6 +57,7 @@ public class Rule1a {
         Date deadline = format.parse("2017/04/30 23:59:59");
 
         String conName = "On the Testing of Dates and Times";
+        String[] authorArray = {"John Doe", "Some Coauthor"};
         int subLimit = 5;
         int assLimit = 8;
 
@@ -66,19 +67,19 @@ public class Rule1a {
                 assLimit);
 
         hourEarlyPaper = Paper.createPaper(new File(""),
-                new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
+                new ArrayList<>(Arrays.asList(authorArray),
                 "Title",
                 "someid");
         secondEarlyPaper = Paper.createPaper(new File(""),
-                new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
+                new ArrayList<>(Arrays.asList(authorArray),
                 "Title",
                 "someid");
         hourLatePaper = Paper.createPaper(new File(""),
-                new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
+                new ArrayList<>(Arrays.asList(authorArray),
                 "Title",
                 "someid");
         secondLatePaper = Paper.createPaper(new File(""),
-                new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
+                new ArrayList<>(Arrays.asList(authorArray),
                 "Title",
                 "someid");
 
