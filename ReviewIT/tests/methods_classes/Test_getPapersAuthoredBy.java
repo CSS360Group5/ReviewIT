@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
@@ -21,46 +22,46 @@ import model.Paper;
  */
 public class Test_getPapersAuthoredBy {
 
-	@Test
-	public void test() {
+	private Conference new_conference;
+	private Paper new_paper;
+	private List<String> the_Authors;
+	private List<Paper> papers;
+	
+	@Before
+	public void setUp(){
 		/**
-		* @before
 		* Create a new conference
 		*/
 		@SuppressWarnings("deprecation")
 		Date deadline = new Date(117, 6, 1, 23, 59, 59);
 		int Author_Paper_Submission_Limit = 5;
 	    int Reviewer_Paper_Assignment_Limit = 8;
-		Conference new_conference = Conference.createConference("Test Conference", 
+		new_conference = Conference.createConference("Test Conference", 
 													 deadline, 
 													 Author_Paper_Submission_Limit, 
 													 Reviewer_Paper_Assignment_Limit);
 		assertNotNull(new_conference);
 		
 		/**
-		* @before
 		* Create a new a Paper 
 		*/
-		List<String> the_Authors = new ArrayList<String>();
+		the_Authors = new ArrayList<String>();
 		the_Authors.add("Malik, P");
 		the_Authors.add("Melik, Q");
 		the_Authors.add("Ca S");
 		String file_name = "Hungry for life.txt";
-		File the_Paper_File = null;
-		try {
-			// create new file
-			the_Paper_File = new File(file_name);
-		}catch(Exception e) {
-			// if any I/O error occurs
-			e.printStackTrace();
-		}
 		String the_Paper_Title = "Hungry for life";
 		String the_Submitter_UID = "Malik55813";
-		Paper new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UID);
+		File the_Paper_File = null;
+		try {
+			the_Paper_File = new File(file_name);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UID);
 		assertNotNull(new_paper);
 		
 		/**
-		* @before
 		* Add the paper to the Conference
 		*/
 		try {
@@ -68,12 +69,13 @@ public class Test_getPapersAuthoredBy {
 		} catch (ErrorException e) {
 			e.printStackTrace();
 		}
-	    
+	}
+	
+	@Test
+	public void test() {
 		/**
-		* @test
 		* Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
 		*/
-		List<Paper> papers;
 		for(int i = 0; i < the_Authors.size(); i++){
 			papers = new_conference.getPapersAuthoredBy(the_Authors.get(i));
 			assertTrue(papers.contains(new_paper));
