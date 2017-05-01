@@ -126,7 +126,8 @@ public class Conference implements Serializable{
     }
 
 	/**
-	 * 
+	 * Adds a Paper Object to myAuthorSubmissionMap and
+     * to myPaperAuthorshipMap.
 	 * PRECONDITION: thePaper is isPaperInAuthorSubmissionLimit()
 	 * AND isPaperInSubmissionDeadline()
 	 * @param theUserID
@@ -157,18 +158,11 @@ public class Conference implements Serializable{
      * @param theUserID
      * @param thePaper
      */
-    private void addPaperToSubmissionMap(final String theUserID, final Paper thePaper) {
-        if(!myPaperSubmissionMap.containsKey(theUserID)){
-            myPaperSubmissionMap.put(theUserID, new ArrayList<>());
-            myPaperSubmissionMap.get(theUserID).add(thePaper);
-        }
-        List<Paper> paperList = myPaperSubmissionMap.get(theUserID);
-        for (Paper p : paperList) {
-            if (theUserID.equals(p.getSubmitterUID())) {
-                paperList.remove(p);
-            }
-        }
-        paperList.add(thePaper);
+    private void addPaperToSubmissionMap(final String theUserID, final Paper thePaper){
+    	if(!myPaperSubmissionMap.containsKey(theUserID)){
+    		myPaperSubmissionMap.put(theUserID, new ArrayList<>());
+    	}
+    	myPaperSubmissionMap.get(theUserID).add(thePaper);
     }
 
     /**
@@ -211,7 +205,7 @@ public class Conference implements Serializable{
      * @author Dimitar Kumanov
      */
     public boolean isPaperInSubmissionDeadline(final Paper thePaper){
-    	return myPaperSubmissionDeadline.before(thePaper.getSubmitDate());
+    	return thePaper.getSubmitDate().before(myPaperSubmissionDeadline);
     }
     
     /**
@@ -273,9 +267,10 @@ public class Conference implements Serializable{
      * @author Dimitar Kumanov
      */
     public void assignReviewer(final String theReviewerID,
+    							final String theReviewerName,
     							Paper thePaper) throws ErrorException {
     	if(!isPaperInReviewerAssignmentLimit(theReviewerID, thePaper) ||
-    		isPaperAuthoredByReviewer(theReviewerID, thePaper)) {
+    		isPaperAuthoredByReviewer(theReviewerName, thePaper)) {
     		throw new ErrorException("Cannot assign reviewer to paper");
     	}
     	
