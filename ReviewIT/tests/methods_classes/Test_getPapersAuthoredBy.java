@@ -37,7 +37,7 @@ public class Test_getPapersAuthoredBy {
 		int Author_Paper_Submission_Limit = 5;
 		int Reviewer_Paper_Assignment_Limit = 8;
 		new_conference = Conference.createConference("Test Conference", deadline, 
-				Author_Paper_Submission_Limit, Reviewer_Paper_Assignment_Limit);
+				Author_Paper_Submission_Limit, Reviewer_Paper_Assignment_Limit); 
 		
 		/*
 		* Create a new a Paper 
