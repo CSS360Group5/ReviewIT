@@ -67,19 +67,19 @@ public class Rule1a {
                 assLimit);
 
         hourEarlyPaper = Paper.createPaper(new File(""),
-                new ArrayList<>(Arrays.asList(authorArray),
+                new ArrayList<>(Arrays.asList(authorArray)),
                 "Title",
                 "someid");
         secondEarlyPaper = Paper.createPaper(new File(""),
-                new ArrayList<>(Arrays.asList(authorArray),
+                new ArrayList<>(Arrays.asList(authorArray)),
                 "Title",
                 "someid");
         hourLatePaper = Paper.createPaper(new File(""),
-                new ArrayList<>(Arrays.asList(authorArray),
+                new ArrayList<>(Arrays.asList(authorArray)),
                 "Title",
                 "someid");
         secondLatePaper = Paper.createPaper(new File(""),
-                new ArrayList<>(Arrays.asList(authorArray),
+                new ArrayList<>(Arrays.asList(authorArray)),
                 "Title",
                 "someid");
 
