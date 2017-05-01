@@ -35,11 +35,9 @@ public class Test_getPapersAuthoredBy {
 		@SuppressWarnings("deprecation")
 		Date deadline = new Date(117, 6, 1, 23, 59, 59);
 		int Author_Paper_Submission_Limit = 5;
-	    int Reviewer_Paper_Assignment_Limit = 8;
-		new_conference = Conference.createConference("Test Conference", 
-													 deadline, 
-													 Author_Paper_Submission_Limit, 
-													 Reviewer_Paper_Assignment_Limit);
+		int Reviewer_Paper_Assignment_Limit = 8;
+		new_conference = Conference.createConference("Test Conference", deadline, 
+				Author_Paper_Submission_Limit, Reviewer_Paper_Assignment_Limit);
 		assertNotNull(new_conference);
 		
 		/**
