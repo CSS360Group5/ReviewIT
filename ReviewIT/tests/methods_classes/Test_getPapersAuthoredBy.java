@@ -15,25 +15,32 @@ import model.Paper;
 
 
 /**
- * Dongsheng Han
+ * @author Dongsheng Han
+ * @version 4/30/2017
+ * 
  */
 public class Test_getPapersAuthoredBy {
 
 	@Test
 	public void test() {
+		/**
+		* @before
+		*/
 		// Convert string to date and set deadline to str_date
 		@SuppressWarnings("deprecation")
 		Date deadline = new Date(117, 6, 1, 23, 59, 59);
-		assertTrue(deadline.after(new Date()));
-
 		//Create a new conference
 		int Author_Paper_Submission_Limit = 5;
-	    int Reviewer_Paper_Assignment_Limit = 10;
+	    int Reviewer_Paper_Assignment_Limit = 8;
 		Conference new_conference = Conference.createConference("Test Conference", 
 													 deadline, 
 													 Author_Paper_Submission_Limit, 
 													 Reviewer_Paper_Assignment_Limit);
 		assertNotNull(new_conference);
+		
+		/**
+		* @before
+		*/
 		//Create a new a Paper 
 		List<String> the_Authors = new ArrayList<String>();
 		the_Authors.add("Malik, P");
@@ -52,6 +59,9 @@ public class Test_getPapersAuthoredBy {
 		Paper new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UID);
 		assertNotNull(new_paper);
 		
+		/**
+		* @before
+		*/
 		//Add the paper to the Conference
 		try {
 			new_conference.addPaper(the_Submitter_UID, new_paper);
@@ -59,10 +69,12 @@ public class Test_getPapersAuthoredBy {
 			e.printStackTrace();
 		}
 	    
+		/**
+		* @test
+		*/
 		//Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
-		List<Paper> papers = new_conference.getPapersAuthoredBy(the_Submitter_UID);
-
-		assertNotNull(papers);
+		List<Paper> papers = new_conference.getPapersAuthoredBy(the_Authors.get(0));
+		assertTrue(papers.contains(new_paper));
 	}
 
 }
