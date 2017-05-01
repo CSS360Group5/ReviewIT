@@ -1,4 +1,4 @@
-package Tests;
+package business_rules;
 
 import static org.junit.Assert.*;
 
