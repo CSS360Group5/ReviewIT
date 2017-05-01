@@ -38,7 +38,6 @@ public class Test_getPapersAuthoredBy {
 		int Reviewer_Paper_Assignment_Limit = 8;
 		new_conference = Conference.createConference("Test Conference", deadline, 
 				Author_Paper_Submission_Limit, Reviewer_Paper_Assignment_Limit);
-		assertNotNull(new_conference);
 		
 		/*
 		* Create a new a Paper 
@@ -57,7 +56,6 @@ public class Test_getPapersAuthoredBy {
 			e.printStackTrace();
 		}
 		new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UID);
-		assertNotNull(new_paper);
 		
 		/*
 		* Add the paper to the Conference
