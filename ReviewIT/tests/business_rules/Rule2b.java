@@ -7,6 +7,7 @@ package business_rules;
 
 import model.ErrorException;
 import model.Paper;
+import model.UserProfile;
 import model.conference.Conference;
 
 import static org.junit.Assert.*;
@@ -121,24 +122,36 @@ public class Rule2b {
 	}  
     @Test
     public void test3PapersAssigned() throws ErrorException {
+    	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Guy");
     	for(int i = 0; i < 3; i++) {
-    		testCon.assignReviewer(reviewerID, "Reviewer Guy", papers.get(i));
+    		testCon.getReviewRole().assignReviewer(
+    				aReviewerProfile, 
+    				papers.get(i)
+    				);
     	}
-        assertTrue(testCon.getPapersAssignedToReviewer(reviewerID).size() == 3);
+        assertTrue(testCon.getInfo().getPapersAssignedToReviewer(aReviewerProfile).size() == 3);
     }
 
     @Test
     public void testExactLimit() throws ErrorException {
+    	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Jane");
     	for(int i = 0; i < 8; i++) {
-    		testCon.assignReviewer(reviewerID, "Reviewer Jane",  papers.get(i));
+    		testCon.getReviewRole().assignReviewer(
+    				aReviewerProfile,
+    				papers.get(i)
+    				);
     	}
-        assertTrue(testCon.getPapersAssignedToReviewer(reviewerID).size() == 8);
+        assertTrue(testCon.getInfo().getPapersAssignedToReviewer(aReviewerProfile).size() == 8);
     }
 
     @Test(expected = ErrorException.class)
     public void testOverLimit() throws ErrorException {
+    	UserProfile aUserProfile = new UserProfile(reviewerID, "Reviewer Dylan");
     	for(int i = 0; i < 9; i++) {
-    		testCon.assignReviewer(reviewerID, "Reviewer Dylan", papers.get(i));
+    		testCon.getReviewRole().assignReviewer(
+    				aUserProfile,
+    				papers.get(i)
+    				);
     	}
     }
 }

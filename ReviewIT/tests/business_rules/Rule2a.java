@@ -57,25 +57,21 @@ public class Rule2a {
 
 	@Test(expected = ErrorException.class)
 	public void assignAuthoredPaperForReview() throws ErrorException{
-		aConference.assignReviewer(aUserProfile.getUID(),
-				aUserProfile.getName(),
-				anAuthoredPaper);
+		aConference.getReviewRole().assignReviewer(aUserProfile, anAuthoredPaper);
 	}
 	
 	@Test(expected = ErrorException.class)
 	public void assignCoauthoredPaperForReview() throws ErrorException{
-		aConference.assignReviewer(aUserProfile.getUID(),
-				aUserProfile.getName(),
-				aCoauthoredPaper);
+		aConference.getReviewRole().assignReviewer(aUserProfile, aCoauthoredPaper);
 	}
 	
 	@Test
 	public void assignNotAuthoredPaperForReview() throws ErrorException{
-		aConference.assignReviewer(aUserProfile.getUID(),
-				aUserProfile.getName(),
-				aNotAuthoredPaper);
-		assertEquals(aConference.getPapersAssignedToReviewer(aUserProfile.getUID()).get(0),
-					aNotAuthoredPaper);
+		aConference.getReviewRole().assignReviewer(aUserProfile, aNotAuthoredPaper);
+		assertEquals(aConference.getInfo().getPapersAssignedToReviewer(
+				aUserProfile).get(0),
+				aNotAuthoredPaper
+				);
 		
 	}
 }

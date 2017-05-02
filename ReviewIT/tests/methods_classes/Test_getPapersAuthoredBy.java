@@ -61,7 +61,7 @@ public class Test_getPapersAuthoredBy {
 		* Add the paper to the Conference
 		*/
 		try {
-			new_conference.addPaper(the_Submitter_UID, new_paper);
+			new_conference.getUserRole().addPaper(the_Submitter_UID, new_paper);
 		} catch (ErrorException e) {
 			e.printStackTrace();
 		}
@@ -73,7 +73,7 @@ public class Test_getPapersAuthoredBy {
 		* Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
 		*/
 		for(int i = 0; i < the_Authors.size(); i++){
-			papers = new_conference.getPapersAuthoredBy(the_Authors.get(i));
+			papers = new_conference.getInfo().getPapersAuthoredBy(the_Authors.get(i));
 			assertTrue(papers.contains(new_paper));
 		}
 	}

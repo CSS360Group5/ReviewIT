@@ -139,7 +139,7 @@ public class ConsoleUI {
 		
 		for(int i = 0; i < conferenceList.size(); ++i){
 			final Conference currentConference = conferenceList.get(i);
-			ps.println(i + ") "+ currentConference.getName());
+			ps.println(i + ") "+ currentConference.getInfo().getName());
 		}
 		
 		return 0;

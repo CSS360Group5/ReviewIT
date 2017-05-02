@@ -77,7 +77,7 @@ public class RSystem {
 	}
 	
 	public void addConference(final Conference theConference){
-		myConferenceMap.put(theConference.getName(), theConference);
+		myConferenceMap.put(theConference.getInfo().getName(), theConference);
 	}
 	
 	/**

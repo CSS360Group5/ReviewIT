@@ -94,23 +94,23 @@ public class Rule1a {
 
     @Test
     public void testHourEarlySubmission() throws ErrorException {
-        testCon.addPaper(userID, hourEarlyPaper);
-        assertTrue(testCon.getPapersSubmittedBy(userID).size() == 1);
+        testCon.getUserRole().addPaper(userID, hourEarlyPaper);
+        assertTrue(testCon.getInfo().getPapersSubmittedBy(userID).size() == 1);
     }
 
     @Test
     public void testSecondEarlySubmission() throws ErrorException {
-        testCon.addPaper(userID, secondEarlyPaper);
-        assertTrue(testCon.getPapersSubmittedBy(userID).size() == 1);
+        testCon.getUserRole().addPaper(userID, secondEarlyPaper);
+        assertTrue(testCon.getInfo().getPapersSubmittedBy(userID).size() == 1);
     }
 
     @Test (expected = ErrorException.class)
     public void testHourLateSubmission() throws ErrorException {
-        testCon.addPaper(userID, hourLatePaper);
+        testCon.getUserRole().addPaper(userID, hourLatePaper);
     }
 
     @Test (expected = ErrorException.class)
     public void testSecondLateSubmission() throws ErrorException {
-        testCon.addPaper(userID, secondLatePaper);
+        testCon.getUserRole().addPaper(userID, secondLatePaper);
     }
 }

@@ -10,9 +10,9 @@ import model.UserProfile;
 
 public class ReviewRole {
 	
-	private final ConferenceInfo myConferenceInfo;
+	private final ConferenceData myConferenceInfo;
     
-    public ReviewRole(final ConferenceInfo theConferenceInfo){
+    public ReviewRole(final ConferenceData theConferenceInfo){
     	myConferenceInfo = theConferenceInfo;
     }
     
@@ -31,7 +31,7 @@ public class ReviewRole {
 //    		final String theReviewerID,
 //    							final String theReviewerName,
     							Paper thePaper) throws ErrorException {
-    	if(!myConferenceInfo.isPaperInReviewerAssignmentLimit(theReviewerProfile.getUID(), thePaper) ||
+    	if(!myConferenceInfo.isPaperInReviewerAssignmentLimit(theReviewerProfile, thePaper) ||
     			myConferenceInfo.isPaperAuthoredByReviewer(theReviewerProfile.getName(), thePaper)) {
     		throw new ErrorException("Cannot assign reviewer to paper");
     	}

@@ -92,9 +92,9 @@ public class Rule1b {
 	@Test
 	public void paperSubmitUnderLimitCheck()throws ErrorException {
 		for(int i = 0; i < 4; i++) {
-			testCon.addPaper(testUID, testPaperList.get(i));
+			testCon.getUserRole().addPaper(testUID, testPaperList.get(i));
 		}
-		assertTrue(testCon.getPapersSubmittedBy(testUID).size() == 4);		
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUID).size() == 4);		
 	}
 	
 	/**
@@ -106,9 +106,9 @@ public class Rule1b {
 	@Test
 	public void paperSubmitExactLimitCheck()throws ErrorException {
 		for(int i = 0; i < 5; i++) {
-			testCon.addPaper(testUID, testPaperList.get(i));
+			testCon.getUserRole().addPaper(testUID, testPaperList.get(i));
 		}
-		assertTrue(testCon.getPapersSubmittedBy(testUID).size() == 5);
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUID).size() == 5);
 	}
 	
 	/**
@@ -120,9 +120,9 @@ public class Rule1b {
 	@Test (expected = ErrorException.class)
 	public void paperSubmitOverLimitCheck() throws ErrorException {
 		for(int i = 0; i < testPaperList.size(); i++) {
-			testCon.addPaper(testUID, testPaperList.get(i));
+			testCon.getUserRole().addPaper(testUID, testPaperList.get(i));
 		}
-		assertTrue(testCon.getPapersSubmittedBy(testUID).size() == 5);
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUID).size() == 5);
 	}
 
 }
