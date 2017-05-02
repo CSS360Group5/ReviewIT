@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.Scanner;
 
 import controller.RSystem;
-import model.Conference;
 import model.UserProfile;
+import model.conference.Conference;
 
 /**
  * A console based UI running the ReviewIt internal model.

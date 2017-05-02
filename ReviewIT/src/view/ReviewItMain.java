@@ -1,4 +1,7 @@
 package view;
+
+import controller.RSystem;
+
 /**
  * Entry point(main) for our system.
  * @author Dimitar Kumanov

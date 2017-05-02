@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.Conference;
 import model.UserProfile;
+import model.conference.Conference;
 
 /**
  * A singleton system class which is responsible for holding

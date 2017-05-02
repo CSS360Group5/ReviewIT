@@ -5,9 +5,9 @@
  */
 package business_rules;
 
-import model.Conference;
 import model.ErrorException;
 import model.Paper;
+import model.conference.Conference;
 
 import static org.junit.Assert.*;
 

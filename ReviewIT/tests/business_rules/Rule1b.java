@@ -16,10 +16,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import model.Conference;
 import model.ErrorException;
 import model.Paper;
 import model.UserProfile;
+import model.conference.Conference;
 /**
  * Test unit testing business rule 1b of the ReviewIt application. 
  * Business Rule 1b:

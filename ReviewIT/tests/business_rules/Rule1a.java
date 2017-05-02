@@ -1,8 +1,8 @@
 package business_rules;
 
-import model.Conference;
 import model.ErrorException;
 import model.Paper;
+import model.conference.Conference;
 
 import org.junit.Before;
 import org.junit.Test;

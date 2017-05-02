@@ -10,9 +10,9 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.Conference;
 import model.ErrorException;
 import model.Paper;
+import model.conference.Conference;
 
 
 /**

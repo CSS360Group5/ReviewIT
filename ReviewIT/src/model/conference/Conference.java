@@ -1,4 +1,4 @@
-package model;
+package model.conference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import model.ErrorException;
+import model.Paper;
+import model.UserProfile;
 
 
 /**
@@ -22,46 +26,71 @@ public class Conference implements Serializable{
 	 */
 	private static final long serialVersionUID = -836524014001898470L;
 
-    private final String myConferenceName;
-    /**
-     * Maps a Submitter's UserID to a Paper.
-     */
-    private final Map<String, List<Paper>> myPaperSubmissionMap;
-    /**
-     * Maps an Author/Coauthor's name to a Paper.
-     */
-    private final Map<String, List<Paper>> myPaperAuthorshipMap;
-    /**
-     * Maps a Reviewer's UserID to a Paper.
-     */
-    private final Map<String, List<Paper>> myReviewerAssignmentMap;
-    /**
-     * Maps a Subprogram Chair's UserID to a Paper.
-     */
-    private final Map<String, List<Paper>> mySubprogramAssignmentMap;
-    /**
-     * Maps a User's UserID to a Role. 
-     */
-    private final HashMap<String, ArrayList<String>> myUserRoleMap;
-    private final Date myPaperSubmissionDeadline;
-    private final int myPaperSubmissionLimit;
-    private final int myReviewerAssignmentLimit;
+    
+    private final ConferenceInfo myInfo;
+    private final ReviewRole myReviewRole;
+    
+//    private final String myConferenceName;
+//    
+//    /**
+//     * Maps a Submitter's UserID to a Paper.
+//     */
+//    private final Map<String, List<Paper>> myPaperSubmissionMap;
+//    /**
+//     * Maps an Author/Coauthor's name to a Paper.
+//     */
+//    private final Map<String, List<Paper>> myPaperAuthorshipMap;
+//    /**
+//     * Maps a Reviewer's UserID to a Paper.
+//     */
+//    private final Map<String, List<Paper>> myReviewerAssignmentMap;
+//    /**
+//     * Maps a Subprogram Chair's UserID to a Paper.
+//     */
+//    private final Map<String, List<Paper>> mySubprogramAssignmentMap;
+//    /**
+//     * Maps a User's UserID to a Role. 
+//     */
+//    private final HashMap<String, ArrayList<String>> myUserRoleMap;
+//    private final Date myPaperSubmissionDeadline;
+//    private final int myPaperSubmissionLimit;
+//    private final int myReviewerAssignmentLimit;
 
     private Conference(final String theConferenceName,
                        final Date thePaperDeadline,
                        final int thePaperSubmissionLimit,
                        final int thePaperAssignmentLimit) {
-    	myPaperSubmissionMap = new HashMap<>();
-    	myPaperAuthorshipMap = new HashMap<>();
-        myReviewerAssignmentMap = new HashMap<>();
-        mySubprogramAssignmentMap = new HashMap<>();
-        myUserRoleMap = new HashMap<>();
-        myConferenceName = theConferenceName;
-        myPaperSubmissionDeadline = thePaperDeadline;
-        myPaperSubmissionLimit = thePaperSubmissionLimit;
-        myReviewerAssignmentLimit = thePaperAssignmentLimit;
+    	final Map<UserProfile, List<Paper>> aPaperSubmissionMap = new HashMap<>();
+    	final Map<String, List<Paper>> aPaperAuthorshipMap = new HashMap<>();
+    	final Map<UserProfile, List<Paper>> aReviewerAssignmentMap = new HashMap<>();
+    	final Map<String, List<Paper>> aSubprogramAssignmentMap = new HashMap<>();
+    	final Map<UserProfile, List<String>> aUserRoleMap = new HashMap<>();
+        aConferenceName = theConferenceName;
+        aPaperSubmissionDeadline = thePaperDeadline;
+        aPaperSubmissionLimit = thePaperSubmissionLimit;
+        aReviewerAssignmentLimit = thePaperAssignmentLimit;
+        
+        
+        myInfo = new ConferenceInfo();
+        
+        myReviewRole = new ReviewRole(
+        		myInfo,
+        		myPaperSubmissionMap,
+        		myPaperAuthorshipMap,
+        		myReviewerAssignmentMap,
+        		mySubprogramAssignmentMap
+        		);
     }
 
+    private static ConferenceInfo createConferenceInfo(
+    		final String theConferenceName,
+            final Date thePaperDeadline,
+            final int thePaperSubmissionLimit,
+            final int thePaperAssignmentLimit
+            ){
+    	
+    }
+    
     /**
      * A factory method for creating a Conference Object.
      * @param thePaperDeadline The submission deadline for Authors submitting papers.
@@ -263,31 +292,7 @@ public class Conference implements Serializable{
         return mySubprogramAssignmentMap.get(theUserID);
     }
     
-    /**
-     * Assigns a paper to a reviewer
-     * 
-     * PRECONDITION: isPaperInReviewerAssignmentLimit and !isPaperAuthoredByReviewer
-     * @param theReviewerID the ID 
-     * @param thePaper the paper object to be assigned to a reviewer.
-     * @exception Precondition violated
-     * 
-     * @author Danielle Lambion
-     * @author Dimitar Kumanov
-     */
-    public void assignReviewer(final String theReviewerID,
-    							final String theReviewerName,
-    							Paper thePaper) throws ErrorException {
-    	if(!isPaperInReviewerAssignmentLimit(theReviewerID, thePaper) ||
-    		isPaperAuthoredByReviewer(theReviewerName, thePaper)) {
-    		throw new ErrorException("Cannot assign reviewer to paper");
-    	}
-    	
-    	if(!myReviewerAssignmentMap.containsKey(theReviewerID)){
-    		myReviewerAssignmentMap.put(theReviewerID, new ArrayList<>());
-    	}
-    	myReviewerAssignmentMap.get(theReviewerID).add(thePaper);
-    }
-    
+
     /**
      * 
      * @param thePaper
