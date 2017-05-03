@@ -18,6 +18,8 @@ import model.conference.Conference;
  *
  */
 public class ConsoleUI {
+	private final static String CONTINUE_PROMPT = "Press <Enter> to continue...";
+	
 	//A list of possible screen states:
 	private final static int EXIT_PROGRAM = 0;
 	private final static int PRELOGIN_SCREEN = 1;
@@ -26,6 +28,7 @@ public class ConsoleUI {
 	private final static int CHOOSE_CONFERENCE_SCREEN = 4;
 	private final static int CONFERENCE_SCREEN = 5;
 	private final static int SUBMIT_PAPER_SCREEN = 6;
+	private final static int ASSIGN_REVIEWER_SCREEN = 7;
 	private final static int BAD_INPUT = -10000;
 	
 	/**
@@ -56,15 +59,22 @@ public class ConsoleUI {
 				break;
 			case LOGIN_SCREEN:
 				programState = login(sc, ps);
+				break;
 			case NEW_PROFILE_SCREEN:
 				programState = createProfile(sc, ps);
+				break;
 			case CHOOSE_CONFERENCE_SCREEN:
 				programState = chooseConferenceScreen(sc, ps);
 				break;
 			case CONFERENCE_SCREEN:
 				programState = conferenceScreen(sc, ps);
 				break;
+			case SUBMIT_PAPER_SCREEN:
+				break;
+			case ASSIGN_REVIEWER_SCREEN:
+				break;
 			default:
+				printHeader(ps);
 				ps.println("Unrecognized option. Please follow prompts.");
 				programState = INITIAL_STATE;
 				
@@ -141,19 +151,60 @@ public class ConsoleUI {
 		}
 	}
 
-	private int createProfile(final Scanner sc, final PrintStream ps) {
-		final String chooserUIDPrompt = "Please enter the UserID you wish to use:\nUserID:";
-		final String chooserNamePrompt = "Please enter your first and last name:\nName:";
+	private int createProfile(
+			final Scanner sc,
+			final PrintStream ps
+			) {
+		final int EXIT_OPTION = 1;
+		final String chooseIDPrompt = "Please enter the UserID you wish to use or enter 1 to exit:\nUserID:";
+		final String chooseNamePrompt = "Please enter your first and last name or enter 1 to exit:\nName:";
+		final String userIDTakenPrompt = "UserID is already taken. Please try again.";
+		final String successRegisterPrompt1 = "Successfuly registered as: \n\nUserID: ";
+		final String successRegisterPrompt2 = "\nName:";
 		printHeader(ps);
-		
+		sc.nextLine();
 		while(true){
+			ps.print(chooseIDPrompt);
 			
-			ps.print(chooserUIDPrompt);
-			final String userID = sc.next();
-			if(RSystem.getInstance().getUserProfile(userID) != null){
-				
+			String userInput = sc.nextLine();
+			try{
+				final int chosenOption = Integer.parseInt(userInput);
+				if(chosenOption == EXIT_OPTION){
+					return PRELOGIN_SCREEN;
+				}
+			}
+			catch (NumberFormatException nfe) {
+				//Didn't choose to exit, don't need to do anything.
+			}
+			if(RSystem.getInstance().getUserProfile(userInput) != null){
+				ps.println(userIDTakenPrompt);
+				continue;
 			}
 			
+			//If we get here we can use the input as ID
+			final String userID = userInput;
+			
+			ps.print(chooseNamePrompt);
+			userInput = sc.nextLine();
+			try{
+				final int chosenOption = Integer.parseInt(userInput);
+				if(chosenOption == EXIT_OPTION){
+					return PRELOGIN_SCREEN;
+				}
+			}
+			catch (NumberFormatException nfe) {
+				//Didn't choose to exit, don't need to do anything.
+			}
+			
+			final String userName = userInput;
+			
+			RSystem.getInstance().addUserProfile(new UserProfile(userID, userName));
+			
+			ps.println(successRegisterPrompt1 + userID + successRegisterPrompt2 + userName);
+			ps.println(CONTINUE_PROMPT);
+			sc.nextLine();
+			
+			return LOGIN_SCREEN;
 		}
 		
 	
