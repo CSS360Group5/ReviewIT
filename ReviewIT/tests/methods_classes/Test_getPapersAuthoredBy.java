@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import model.ErrorException;
 import model.Paper;
+import model.UserProfile;
 import model.conference.Conference;
 
 
@@ -48,20 +49,20 @@ public class Test_getPapersAuthoredBy {
 		the_Authors.add("Ca S");
 		String file_name = "Hungry for life.txt";
 		String the_Paper_Title = "Hungry for life";
-		String the_Submitter_UID = "Malik55813";
+		UserProfile the_Submitter_UserProfile = new UserProfile("Malik55813", "Malik Someone");
 		File the_Paper_File = null;
 		try {
 			the_Paper_File = new File(file_name);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UID);
+		new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UserProfile.getUID());
 		
 		/*
 		* Add the paper to the Conference
 		*/
 		try {
-			new_conference.getUserRole().addPaper(the_Submitter_UID, new_paper);
+			new_conference.getUserRole().addPaper(the_Submitter_UserProfile, new_paper);
 		} catch (ErrorException e) {
 			e.printStackTrace();
 		}

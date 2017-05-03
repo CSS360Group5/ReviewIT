@@ -2,6 +2,7 @@ package business_rules;
 
 import model.ErrorException;
 import model.Paper;
+import model.UserProfile;
 import model.conference.Conference;
 
 import org.junit.Before;
@@ -41,7 +42,7 @@ public class Rule1a {
     /**
      * ID of the user submitting a paper.
      */
-    private final String userID = "someid";
+    private final UserProfile userProfile = new UserProfile("some id", "Some Person Name");
 
     @Before
     public void setUp() throws ParseException {
@@ -94,23 +95,23 @@ public class Rule1a {
 
     @Test
     public void testHourEarlySubmission() throws ErrorException {
-        testCon.getUserRole().addPaper(userID, hourEarlyPaper);
-        assertTrue(testCon.getInfo().getPapersSubmittedBy(userID).size() == 1);
+        testCon.getUserRole().addPaper(userProfile, hourEarlyPaper);
+        assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile.getUID()).size() == 1);
     }
 
     @Test
     public void testSecondEarlySubmission() throws ErrorException {
-        testCon.getUserRole().addPaper(userID, secondEarlyPaper);
-        assertTrue(testCon.getInfo().getPapersSubmittedBy(userID).size() == 1);
+        testCon.getUserRole().addPaper(userProfile, secondEarlyPaper);
+        assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile.getUID()).size() == 1);
     }
 
     @Test (expected = ErrorException.class)
     public void testHourLateSubmission() throws ErrorException {
-        testCon.getUserRole().addPaper(userID, hourLatePaper);
+        testCon.getUserRole().addPaper(userProfile, hourLatePaper);
     }
 
     @Test (expected = ErrorException.class)
     public void testSecondLateSubmission() throws ErrorException {
-        testCon.getUserRole().addPaper(userID, secondLatePaper);
+        testCon.getUserRole().addPaper(userProfile, secondLatePaper);
     }
 }

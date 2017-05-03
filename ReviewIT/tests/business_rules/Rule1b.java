@@ -42,8 +42,8 @@ public class Rule1b {
 	/*ArrayList used to store mock papers.*/
 	private final ArrayList<Paper> testPaperList = new ArrayList<>();
 	
-	 /* Mock user id used to represent an author submitting papers to a conference.*/
-	private final String testUID = "UID1";
+	 /* Mock user profile used to represent an author submitting papers to a conference.*/
+	private final UserProfile testUserProfile = new UserProfile("UID1", "Some Name1");
 	
 	/*Date format used to create mock date strings for testing.*/
     SimpleDateFormat format;
@@ -65,17 +65,17 @@ public class Rule1b {
 		testCon = Conference.createConference(conName, deadline, subLimit,assLimit);
 		
 		testPaper1 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUID);
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
 		testPaper2 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUID);
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
 		testPaper3 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUID);
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
 		testPaper4 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUID);
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
 		testPaper5 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUID);
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
 		testPaper6 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUID);
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
 		testPaperList.add(testPaper1);
 		testPaperList.add(testPaper2);
 		testPaperList.add(testPaper3);
@@ -92,9 +92,9 @@ public class Rule1b {
 	@Test
 	public void paperSubmitUnderLimitCheck()throws ErrorException {
 		for(int i = 0; i < 4; i++) {
-			testCon.getUserRole().addPaper(testUID, testPaperList.get(i));
+			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUID).size() == 4);		
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == 4);		
 	}
 	
 	/**
@@ -106,9 +106,9 @@ public class Rule1b {
 	@Test
 	public void paperSubmitExactLimitCheck()throws ErrorException {
 		for(int i = 0; i < 5; i++) {
-			testCon.getUserRole().addPaper(testUID, testPaperList.get(i));
+			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUID).size() == 5);
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == 5);
 	}
 	
 	/**
@@ -120,9 +120,9 @@ public class Rule1b {
 	@Test (expected = ErrorException.class)
 	public void paperSubmitOverLimitCheck() throws ErrorException {
 		for(int i = 0; i < testPaperList.size(); i++) {
-			testCon.getUserRole().addPaper(testUID, testPaperList.get(i));
+			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUID).size() == 5);
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == 5);
 	}
 
 }

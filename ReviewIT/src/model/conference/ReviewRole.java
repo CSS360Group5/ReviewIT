@@ -1,13 +1,16 @@
 package model.conference;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import model.ErrorException;
 import model.Paper;
 import model.UserProfile;
 
+/**
+ * A class containing all the functionality a Reviewer has related to a Conference.
+ * @author Dimitar Kumanov
+ * @version 5/2/2017
+ */
 public class ReviewRole {
 	
 	private final ConferenceData myConferenceInfo;
@@ -31,7 +34,7 @@ public class ReviewRole {
 //    		final String theReviewerID,
 //    							final String theReviewerName,
     							Paper thePaper) throws ErrorException {
-    	if(!myConferenceInfo.isPaperInReviewerAssignmentLimit(theReviewerProfile, thePaper) ||
+    	if(!myConferenceInfo.isReviewerInAssignmentLimit(theReviewerProfile) ||
     			myConferenceInfo.isPaperAuthoredByReviewer(theReviewerProfile.getName(), thePaper)) {
     		throw new ErrorException("Cannot assign reviewer to paper");
     	}

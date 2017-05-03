@@ -24,7 +24,8 @@ public class ConsoleUI {
 	private final static int LOGIN_SCREEN = 2;
 	private final static int NEW_PROFILE_SCREEN = 3;
 	private final static int CHOOSE_CONFERENCE_SCREEN = 4;
-	private final static int SUBMIT_PAPER_SCREEN = 5;
+	private final static int CONFERENCE_SCREEN = 5;
+	private final static int SUBMIT_PAPER_SCREEN = 6;
 	private final static int BAD_INPUT = -10000;
 	
 	/**
@@ -34,7 +35,11 @@ public class ConsoleUI {
 	
 	private UserProfile myCurrentUser;
 	
+	private Conference myCurrentConference;
+	
 	public ConsoleUI(){
+		myCurrentUser = null;
+		myCurrentConference = null;
 		initUsersAndConferences();
 	}
 	
@@ -54,7 +59,10 @@ public class ConsoleUI {
 			case NEW_PROFILE_SCREEN:
 				programState = createProfile(sc, ps);
 			case CHOOSE_CONFERENCE_SCREEN:
-				programState = conferenceMenu(sc, ps);
+				programState = chooseConferenceScreen(sc, ps);
+				break;
+			case CONFERENCE_SCREEN:
+				programState = conferenceScreen(sc, ps);
 				break;
 			default:
 				ps.println("Unrecognized option. Please follow prompts.");
@@ -69,12 +77,58 @@ public class ConsoleUI {
 		}
 	} 
 	
+	final static int CONSOLE_WIDTH = 80;
+	final static int SCREEN_HEIGHT = 160;
+	private void printHeader(final PrintStream ps){
+		ps.println(new String(new char[SCREEN_HEIGHT]).replace("\0", "\n"));
+		
+		ps.println(
+				new String(new char[32]).replace("\0", " ") + 
+				new String(new char[16]).replace("\0", "#") +
+				new String(new char[32]).replace("\0", " ")
+				);
+		ps.println(
+				new String(new char[32]).replace("\0", " ") + 
+				new String(new char[4]).replace("\0", "#") +
+				"ReviewIT" +
+				new String(new char[4]).replace("\0", "#") +
+				new String(new char[32]).replace("\0", " ")
+				);
+		ps.println(
+				new String(new char[32]).replace("\0", " ") + 
+				new String(new char[16]).replace("\0", "#") +
+				new String(new char[32]).replace("\0", " ")
+				);
+		ps.print(new String(new char[3]).replace("\0", "\n"));
+		
+		
+		if(myCurrentUser != null){
+			final int gapWidth1 = CONSOLE_WIDTH - 
+					myCurrentUser.getName().length() - "UserID:".length();
+			ps.println(
+					"UserID:" + 
+					new String(new char[gapWidth1]).replace("\0", " ") + 
+					"Name:"
+			);
+			
+			final int gapWidth2 = CONSOLE_WIDTH - 
+					(myCurrentUser.getUID().length() + myCurrentUser.getName().length());
+			ps.println(
+					myCurrentUser.getUID() +
+					new String(new char[gapWidth2]).replace("\0", " ") +
+					myCurrentUser.getName()
+					);
+			ps.println(new String(new char[CONSOLE_WIDTH]).replace("\0", "-"));
+		}
+
+	}
 	
-	private int login(Scanner sc, PrintStream ps) {
+	private int login(final Scanner sc, final PrintStream ps) {
 		final String loginPrompt = "Please entered your UserID:\nUserID:";
 		
 		String userInput = "";
-		do{
+		while(true){
+			printHeader(ps);
 			ps.println(loginPrompt);
 			userInput = sc.next();
 			
@@ -84,16 +138,32 @@ public class ConsoleUI {
 				myCurrentUser = RSystem.getInstance().getUserProfile(userInput);
 				return CHOOSE_CONFERENCE_SCREEN;
 			}
-		}while(true);
+		}
 	}
 
-	private int createProfile(Scanner sc, PrintStream ps) {
-		return LOGIN_SCREEN;
-	}
-
-	private int prelogin(final Scanner sc,
-			  				final PrintStream ps){
+	private int createProfile(final Scanner sc, final PrintStream ps) {
+		final String chooserUIDPrompt = "Please enter the UserID you wish to use:\nUserID:";
+		final String chooserNamePrompt = "Please enter your first and last name:\nName:";
+		printHeader(ps);
 		
+		while(true){
+			
+			ps.print(chooserUIDPrompt);
+			final String userID = sc.next();
+			if(RSystem.getInstance().getUserProfile(userID) != null){
+				
+			}
+			
+		}
+		
+	
+//		return LOGIN_SCREEN;
+	}
+
+	private int prelogin(
+			final Scanner sc,
+			final PrintStream ps
+			){
 		final int LOGIN_OPTION = 1;
 		final int NEW_PROFILE_OPTION = 2;
 		final int EXIT_PROGRAM_OPTION = 3;
@@ -106,6 +176,7 @@ public class ConsoleUI {
 		int chosenOption = 0;
 		
 		do{
+			printHeader(ps);
 			ps.println(preLoginPrompt);
 			userInput = sc.next();
 			try{
@@ -131,8 +202,11 @@ public class ConsoleUI {
 	}
 	
 
-	private int conferenceMenu(final Scanner sc,
-							   final PrintStream ps){
+	private int chooseConferenceScreen(
+			final Scanner sc,
+			final PrintStream ps
+			){
+		printHeader(ps);
 		ps.println("Welcome " + myCurrentUser.getName() + "\n");
 		ps.println("Please choose a Conference:");
 		List<Conference> conferenceList = RSystem.getInstance().getConferences();
@@ -141,11 +215,19 @@ public class ConsoleUI {
 			final Conference currentConference = conferenceList.get(i);
 			ps.println(i + ") "+ currentConference.getInfo().getName());
 		}
+		//myCurrenteConference
 		
 		return 0;
 	}
 	
-	
+	private int conferenceScreen(
+			final Scanner sc,
+			final PrintStream ps
+			){
+		
+		printHeader(ps);
+		return 0;
+	}
 	/**
 	 * A temporary method for creating some initial Conferences/UserProfiles we can play with.
 	 * Should be replaced by a serialization mechanism which

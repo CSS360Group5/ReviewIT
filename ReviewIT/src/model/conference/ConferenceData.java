@@ -9,6 +9,14 @@ import java.util.Map;
 import model.Paper;
 import model.UserProfile;
 
+/**
+ * A class for specifically holding all the Data related to a Conference.
+ * Implements ConferenceInfo which allows this ConferenceData to serve as a public interface
+ * which client code can interact with.
+ * Allows protected level access of internal data structures for modification purposes.
+ * @author Dimitar Kumanov
+ * @version 5/2/2017
+ */
 public class ConferenceData implements ConferenceInfo{
 	private final String myConferenceName;
     private final Date myPaperSubmissionDeadline;
@@ -118,6 +126,7 @@ public class ConferenceData implements ConferenceInfo{
     }
     
     /**
+     * Checks whether thePaper is within the submission limit of all its authors.
      * @param thePaper The paper to check for.
      * @return true iff all the Paper submitted to this Conference by all
      * authors of thePaper is strictly less than
@@ -139,6 +148,7 @@ public class ConferenceData implements ConferenceInfo{
     
     
     /**
+     * Checks whether thePaper is within the submission deadline of this Conference.
      * @param thePaper The paper to check for.
      * @return true iff thePaper's submission date
      * is strictly before the Conference submission deadline.
@@ -149,25 +159,21 @@ public class ConferenceData implements ConferenceInfo{
     }
     
     /**
-     * 
-     * @param thePaper
-     * @param theReviewerUserID
+     * Checks whether the Reviewer is within this Conference's assignment limit.
+     * @param theReviewerProfile The UserProfile corresponding to the Reviewer.
      * @return true iff all the number of Papers assigned
      * for review are strictly less than the reviewer assignment limit.
      * @author Dimitar Kumanov
      */
-    public boolean isPaperInReviewerAssignmentLimit(
-    		final UserProfile theReviewerProfile,
-    		final Paper thePaper
-    		){
+    public boolean isReviewerInAssignmentLimit(final UserProfile theReviewerProfile){
     	return getPapersAssignedToReviewer(theReviewerProfile).size() < myReviewerAssignmentLimit;
     }
     
     /**
-     * 
-     * @param theReviewerName
-     * @param thePaper
-     * @return
+     * Checks whether any of the authors of thePaper  match with theReviewerName.
+     * @param theReviewerName The name of the Reviewer to check for.
+     * @param thePaper the Paper to check for
+     * @return true iff no author of thePaper matches theReviewerName
      * @author Dimitar Kumanov
      */
     public boolean isPaperAuthoredByReviewer(
