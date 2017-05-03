@@ -1,6 +1,7 @@
 package view;
 
 import java.util.List;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,52 +86,6 @@ public class ConsoleUI {
 			
 			//End of program
 		}
-	} 
-	
-	final static int CONSOLE_WIDTH = 80;
-	final static int SCREEN_HEIGHT = 160;
-	private void printHeader(final PrintStream ps){
-		ps.println(new String(new char[SCREEN_HEIGHT]).replace("\0", "\n"));
-		
-		ps.println(
-				new String(new char[32]).replace("\0", " ") + 
-				new String(new char[16]).replace("\0", "#") +
-				new String(new char[32]).replace("\0", " ")
-				);
-		ps.println(
-				new String(new char[32]).replace("\0", " ") + 
-				new String(new char[4]).replace("\0", "#") +
-				"ReviewIT" +
-				new String(new char[4]).replace("\0", "#") +
-				new String(new char[32]).replace("\0", " ")
-				);
-		ps.println(
-				new String(new char[32]).replace("\0", " ") + 
-				new String(new char[16]).replace("\0", "#") +
-				new String(new char[32]).replace("\0", " ")
-				);
-		ps.print(new String(new char[3]).replace("\0", "\n"));
-		
-		
-		if(myCurrentUser != null){
-			final int gapWidth1 = CONSOLE_WIDTH - 
-					myCurrentUser.getName().length() - "UserID:".length();
-			ps.println(
-					"UserID:" + 
-					new String(new char[gapWidth1]).replace("\0", " ") + 
-					"Name:"
-			);
-			
-			final int gapWidth2 = CONSOLE_WIDTH - 
-					(myCurrentUser.getUID().length() + myCurrentUser.getName().length());
-			ps.println(
-					myCurrentUser.getUID() +
-					new String(new char[gapWidth2]).replace("\0", " ") +
-					myCurrentUser.getName()
-					);
-			ps.println(new String(new char[CONSOLE_WIDTH]).replace("\0", "-"));
-		}
-
 	}
 	
 	private int login(final Scanner sc, final PrintStream ps) {
@@ -151,6 +106,8 @@ public class ConsoleUI {
 		}
 	}
 
+
+	
 	private int createProfile(
 			final Scanner sc,
 			final PrintStream ps
@@ -162,7 +119,8 @@ public class ConsoleUI {
 		final String successRegisterPrompt1 = "Successfuly registered as: \n\nUserID: ";
 		final String successRegisterPrompt2 = "\nName:";
 		printHeader(ps);
-		sc.nextLine();
+		
+		flush();
 		while(true){
 			ps.print(chooseIDPrompt);
 			
@@ -266,6 +224,8 @@ public class ConsoleUI {
 			final Conference currentConference = conferenceList.get(i);
 			ps.println(i + ") "+ currentConference.getInfo().getName());
 		}
+		
+		
 		//myCurrenteConference
 		
 		return 0;
@@ -279,6 +239,61 @@ public class ConsoleUI {
 		printHeader(ps);
 		return 0;
 	}
+	
+	private void flush(){
+		try {
+			while(System.in.available() != 0)
+				System.in.read();
+		} catch (IOException e) {
+		}
+	}
+	
+	final static int CONSOLE_WIDTH = 80;
+	final static int SCREEN_HEIGHT = 160;
+	private void printHeader(final PrintStream ps){
+		ps.println(new String(new char[SCREEN_HEIGHT]).replace("\0", "\n"));
+		
+		ps.println(
+				new String(new char[32]).replace("\0", " ") + 
+				new String(new char[16]).replace("\0", "#") +
+				new String(new char[32]).replace("\0", " ")
+				);
+		ps.println(
+				new String(new char[32]).replace("\0", " ") + 
+				new String(new char[4]).replace("\0", "#") +
+				"ReviewIT" +
+				new String(new char[4]).replace("\0", "#") +
+				new String(new char[32]).replace("\0", " ")
+				);
+		ps.println(
+				new String(new char[32]).replace("\0", " ") + 
+				new String(new char[16]).replace("\0", "#") +
+				new String(new char[32]).replace("\0", " ")
+				);
+		ps.print(new String(new char[3]).replace("\0", "\n"));
+		
+		
+		if(myCurrentUser != null){
+			final int gapWidth1 = CONSOLE_WIDTH - 
+					myCurrentUser.getName().length() - "UserID:".length();
+			ps.println(
+					"UserID:" + 
+					new String(new char[gapWidth1]).replace("\0", " ") + 
+					"Name:"
+			);
+			
+			final int gapWidth2 = CONSOLE_WIDTH - 
+					(myCurrentUser.getUID().length() + myCurrentUser.getName().length());
+			ps.println(
+					myCurrentUser.getUID() +
+					new String(new char[gapWidth2]).replace("\0", " ") +
+					myCurrentUser.getName()
+					);
+			ps.println(new String(new char[CONSOLE_WIDTH]).replace("\0", "-"));
+		}
+
+	}
+	
 	/**
 	 * A temporary method for creating some initial Conferences/UserProfiles we can play with.
 	 * Should be replaced by a serialization mechanism which
