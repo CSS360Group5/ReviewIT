@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
 
@@ -125,4 +126,16 @@ public class RSystem {
 		myUserMap.put(theUserProfile.getUID(), theUserProfile);
 	}
 	
+	/**
+	 * Gets ALL Papers from ALL Conferences submitted by theUserProfile
+	 * @param theUserProfile The UserProfile of the person who submitted the papers
+	 * @return ALL Papers from ALL Conferences submitted by theUserProfile 
+	 */
+	public List<Paper> getAllPapersSubmitted(final UserProfile theUserProfile){
+		final List<Paper> submittedPapers = new ArrayList<>();
+		for(final Conference currentConference: myConferenceMap.values()){
+			submittedPapers.addAll(currentConference.getInfo().getPapersSubmittedBy(theUserProfile));
+		}
+		return submittedPapers;
+	}
 }

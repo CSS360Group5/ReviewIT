@@ -23,5 +23,5 @@ public interface ConferenceInfo {
     		final String theReviewerName,
     		final Paper thePaper
     		);
-	public List<Paper> getPapersSubmittedBy(final String theUserID);
+	public List<Paper> getPapersSubmittedBy(final UserProfile theUserProfile);
 }

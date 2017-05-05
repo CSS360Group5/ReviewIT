@@ -43,7 +43,7 @@ public class UserUtilities {
     		throw new IllegalOperationException("Paper exceeds submission deadline.");
     	}
     	//Add paper to submission map:
-        addPaperToSubmissionMap(theUserProfile.getUID(), thePaper);
+        addPaperToSubmissionMap(theUserProfile, thePaper);
 
     	//Add paper to author map:
     	addPaperToAuthorshipMap(thePaper);
@@ -60,11 +60,11 @@ public class UserUtilities {
      * @author Kevin Ravana
      * @author Dimitar Kumanov
      */
-    private void addPaperToSubmissionMap(final String theUserID, final Paper thePaper){
-    	if(!myConferenceInfo.getPaperSubmissionMap().containsKey(theUserID)){
-    		myConferenceInfo.getPaperSubmissionMap().put(theUserID, new ArrayList<>());
+    private void addPaperToSubmissionMap(final UserProfile theUserProfile, final Paper thePaper){
+    	if(!myConferenceInfo.getPaperSubmissionMap().containsKey(theUserProfile)){
+    		myConferenceInfo.getPaperSubmissionMap().put(theUserProfile, new ArrayList<>());
     	}
-    	myConferenceInfo.getPaperSubmissionMap().get(theUserID).add(thePaper);
+    	myConferenceInfo.getPaperSubmissionMap().get(theUserProfile).add(thePaper);
     }
     
     /**

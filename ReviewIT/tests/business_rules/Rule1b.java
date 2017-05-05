@@ -94,7 +94,7 @@ public class Rule1b {
 		for(int i = 0; i < 4; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == 4);		
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == 4);		
 	}
 	
 	/**
@@ -108,7 +108,7 @@ public class Rule1b {
 		for(int i = 0; i < 5; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == 5);
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == 5);
 	}
 	
 	/**
@@ -122,7 +122,7 @@ public class Rule1b {
 		for(int i = 0; i < testPaperList.size(); i++) {
 			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == 5);
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == 5);
 	}
 
 }
