@@ -2,7 +2,7 @@ package model.conference;
 
 import java.util.ArrayList;
 
-import model.ErrorException;
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -11,11 +11,15 @@ import model.UserProfile;
  * @author Dimitar Kumanov
  * @version 5/2/2017
  */
-public class UserRole {
+public class UserUtilities {
 	private final ConferenceData myConferenceInfo;
     
-    public UserRole(final ConferenceData theConferenceInfo){
-    	myConferenceInfo = theConferenceInfo;
+	/**
+	 * Creates a UserUtilities Object for a Conference. 
+	 * @param theConferenceData The ConferenceData Object to manipulate.
+	 */
+    public UserUtilities(final ConferenceData theConferenceData){
+    	myConferenceInfo = theConferenceData;
     }
     
 	/**
@@ -24,19 +28,19 @@ public class UserRole {
 	 * AND isPaperInSubmissionDeadline()
 	 * @param theUserProfile The UserProfile of the user submitting the paper.
 	 * @param thePaper The paper being submitted.
-	 * @throws ErrorException If the precondition is violated.
+	 * @throws IllegalOperationException If the precondition is violated.
 	 * @author Kevin Ravana
 	 * @author Dimitar Kumanov
 	 */
     public void addPaper(
     		final UserProfile theUserProfile,
     		final Paper thePaper
-    		) throws ErrorException {
+    		) throws IllegalOperationException {
     	if(!myConferenceInfo.isPaperInAuthorSubmissionLimit(thePaper)){
-    		throw new ErrorException("Paper exceeds paper submission limit.");
+    		throw new IllegalOperationException("Paper exceeds paper submission limit.");
     	}
     	else if(!myConferenceInfo.isPaperInSubmissionDeadline(thePaper)){
-    		throw new ErrorException("Paper exceeds submission deadline.");
+    		throw new IllegalOperationException("Paper exceeds submission deadline.");
     	}
     	//Add paper to submission map:
         addPaperToSubmissionMap(theUserProfile.getUID(), thePaper);

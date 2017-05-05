@@ -2,7 +2,7 @@ package model.conference;
 
 import java.util.ArrayList;
 
-import model.ErrorException;
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -11,16 +11,20 @@ import model.UserProfile;
  * @author Dimitar Kumanov
  * @version 5/2/2017
  */
-public class ReviewRole {
+public class ReviewerUtilities {
 	
 	private final ConferenceData myConferenceInfo;
     
-    public ReviewRole(final ConferenceData theConferenceInfo){
-    	myConferenceInfo = theConferenceInfo;
+	/**
+	 * Creates a ReviewerUtilities Object for a Conference. 
+	 * @param theConferenceData The ConferenceData Object to manipulate.
+	 */
+    public ReviewerUtilities(final ConferenceData theConferenceData){
+    	myConferenceInfo = theConferenceData;
     }
     
     /**
-     * Assigns a paper to a reviewer
+     * Assigns a paper to a reviewer.
      * 
      * PRECONDITION: isPaperInReviewerAssignmentLimit and !isPaperAuthoredByReviewer
      * @param theReviewerID the ID 
@@ -30,13 +34,14 @@ public class ReviewRole {
      * @author Danielle Lambion
      * @author Dimitar Kumanov
      */
-    public void assignReviewer(final UserProfile theReviewerProfile,
-//    		final String theReviewerID,
-//    							final String theReviewerName,
-    							Paper thePaper) throws ErrorException {
+    public void assignReviewer(
+    		final UserProfile theReviewerProfile,
+    		Paper thePaper
+    		) throws IllegalOperationException {
+    	
     	if(!myConferenceInfo.isReviewerInAssignmentLimit(theReviewerProfile) ||
     			myConferenceInfo.isPaperAuthoredByReviewer(theReviewerProfile.getName(), thePaper)) {
-    		throw new ErrorException("Cannot assign reviewer to paper");
+    		throw new IllegalOperationException("Cannot assign reviewer to paper");
     	}
     	
     	if(!myConferenceInfo.getReviewerAssignmentMap().containsKey(theReviewerProfile)){

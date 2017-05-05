@@ -11,7 +11,6 @@ import model.UserProfile;
  * to a Conference a client code might need.
  * @author Dimitar Kumanov
  * @version 5/2/2017
- *
  */
 public interface ConferenceInfo {
 	public String getName();

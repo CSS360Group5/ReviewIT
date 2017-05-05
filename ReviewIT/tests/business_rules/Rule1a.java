@@ -1,6 +1,6 @@
 package business_rules;
 
-import model.ErrorException;
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
@@ -70,19 +70,19 @@ public class Rule1a {
         hourEarlyPaper = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(authorArray)),
                 "Title",
-                "someid");
+                userProfile);
         secondEarlyPaper = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(authorArray)),
                 "Title",
-                "someid");
+                userProfile);
         hourLatePaper = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(authorArray)),
                 "Title",
-                "someid");
+                userProfile);
         secondLatePaper = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(authorArray)),
                 "Title",
-                "someid");
+                userProfile);
 
         /*
         Set submission dates of papers to be tested.
@@ -94,24 +94,24 @@ public class Rule1a {
     }
 
     @Test
-    public void testHourEarlySubmission() throws ErrorException {
+    public void testHourEarlySubmission() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, hourEarlyPaper);
         assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile.getUID()).size() == 1);
     }
 
     @Test
-    public void testSecondEarlySubmission() throws ErrorException {
+    public void testSecondEarlySubmission() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, secondEarlyPaper);
         assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile.getUID()).size() == 1);
     }
 
-    @Test (expected = ErrorException.class)
-    public void testHourLateSubmission() throws ErrorException {
+    @Test (expected = IllegalOperationException.class)
+    public void testHourLateSubmission() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, hourLatePaper);
     }
 
-    @Test (expected = ErrorException.class)
-    public void testSecondLateSubmission() throws ErrorException {
+    @Test (expected = IllegalOperationException.class)
+    public void testSecondLateSubmission() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, secondLatePaper);
     }
 }

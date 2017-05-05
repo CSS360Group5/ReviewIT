@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.ErrorException;
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -33,8 +33,8 @@ public class Conference implements Serializable{
 	 * A ConferenceData Object containing all the Data associated with this Conference.
 	 */
     private final ConferenceData myInfo;
-    private final ReviewRole myReviewRole;
-    private final UserRole myUserRole;
+    private final ReviewerUtilities myReviewRole;
+    private final UserUtilities myUserRole;
     
     private Conference(
     		final String theConferenceName,
@@ -49,8 +49,8 @@ public class Conference implements Serializable{
                 thePaperAssignmentLimit
                 );
         
-        myReviewRole = new ReviewRole(myInfo);
-        myUserRole = new UserRole(myInfo);
+        myReviewRole = new ReviewerUtilities(myInfo);
+        myUserRole = new UserUtilities(myInfo);
     }
     
     /**
@@ -60,14 +60,18 @@ public class Conference implements Serializable{
      * @param thePaperAssignmentLimit The total amount of papers that a Reviewer can be assigned.
      * @return a Conference Object
      */
-    public static Conference createConference(final String theConferenceName,
-                                       final Date thePaperDeadline,
-                                       final int thePaperSubmissionLimit,
-                                       final int thePaperAssignmentLimit) {
-        return new Conference(theConferenceName,
+    public static Conference createConference(
+    		final String theConferenceName,
+    		final Date thePaperDeadline,
+    		final int thePaperSubmissionLimit,
+    		final int thePaperAssignmentLimit
+    		) {
+        return new Conference(
+        		theConferenceName,
                 thePaperDeadline,
                 thePaperSubmissionLimit,
-                thePaperAssignmentLimit);
+                thePaperAssignmentLimit
+                );
     }
 
     /**
@@ -81,19 +85,19 @@ public class Conference implements Serializable{
     
     /**
      * A getter method for associated ReviewRole Object.
-     * {@link ReviewRole}
+     * {@link ReviewerUtilities}
      * @return A ReviewRole Object containing all Reviewer's functionality.
      */
-    public ReviewRole getReviewRole(){
+    public ReviewerUtilities getReviewRole(){
     	return myReviewRole;
     }
     
     /**
      * A getter method for associated UserRole Object.
-     * {@link UserRole}
+     * {@link UserUtilities}
      * @return A UserRole Object containing all general User functionality.
      */
-    public UserRole getUserRole(){
+    public UserUtilities getUserRole(){
     	return myUserRole;
     }
 }

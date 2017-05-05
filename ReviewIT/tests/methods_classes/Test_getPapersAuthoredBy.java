@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.ErrorException;
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
@@ -56,14 +56,14 @@ public class Test_getPapersAuthoredBy {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UserProfile.getUID());
+		new_paper = Paper.createPaper(the_Paper_File, the_Authors, the_Paper_Title, the_Submitter_UserProfile);
 		
 		/*
 		* Add the paper to the Conference
 		*/
 		try {
 			new_conference.getUserRole().addPaper(the_Submitter_UserProfile, new_paper);
-		} catch (ErrorException e) {
+		} catch (IllegalOperationException e) {
 			e.printStackTrace();
 		}
 	}

@@ -16,7 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import model.ErrorException;
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
@@ -65,17 +65,17 @@ public class Rule1b {
 		testCon = Conference.createConference(conName, deadline, subLimit,assLimit);
 		
 		testPaper1 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile);
 		testPaper2 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile);
 		testPaper3 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile);
 		testPaper4 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile);
 		testPaper5 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile);
 		testPaper6 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile.getUID());
+				new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})), "Test Title", testUserProfile);
 		testPaperList.add(testPaper1);
 		testPaperList.add(testPaper2);
 		testPaperList.add(testPaper3);
@@ -87,10 +87,10 @@ public class Rule1b {
 	/**
 	 * This test method will add 3 test papers to the test user's submission map
 	 * to ensure that they were added without any issues.
-	 * @throws ErrorException
+	 * @throws IllegalOperationException
 	 */
 	@Test
-	public void paperSubmitUnderLimitCheck()throws ErrorException {
+	public void paperSubmitUnderLimitCheck()throws IllegalOperationException {
 		for(int i = 0; i < 4; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}
@@ -101,10 +101,10 @@ public class Rule1b {
 	 * This test method will add 5 test papers to the test user's submission map
 	 * to ensure that an author can submit the number of papers equal to the submission
 	 * limit set by the conference.
-	 * @throws ErrorException
+	 * @throws IllegalOperationException
 	 */
 	@Test
-	public void paperSubmitExactLimitCheck()throws ErrorException {
+	public void paperSubmitExactLimitCheck()throws IllegalOperationException {
 		for(int i = 0; i < 5; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}
@@ -115,10 +115,10 @@ public class Rule1b {
 	 * This test method attempts to add all 6 of the test papers to ensure
 	 * that an author is not allowed to submit more than the allowed amount
 	 * of papers and also to ensure that the correct ErrorException is thrown.
-	 * @throws ErrorException
+	 * @throws IllegalOperationException
 	 */
-	@Test (expected = ErrorException.class)
-	public void paperSubmitOverLimitCheck() throws ErrorException {
+	@Test (expected = IllegalOperationException.class)
+	public void paperSubmitOverLimitCheck() throws IllegalOperationException {
 		for(int i = 0; i < testPaperList.size(); i++) {
 			testCon.getUserRole().addPaper(testUserProfile, testPaperList.get(i));
 		}

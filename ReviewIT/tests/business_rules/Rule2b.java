@@ -5,7 +5,7 @@
  */
 package business_rules;
 
-import model.ErrorException;
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
@@ -58,6 +58,9 @@ public class Rule2b {
         int assLimit = 8;
         String testID1 = "someid";
         String testID2 = "someid2";
+        UserProfile testUserProfile1 = new UserProfile(testID1, "Some Usersname");
+        UserProfile testUserProfile2 = new UserProfile(testID2, "Some Usersname");
+        
 
         testCon = Conference.createConference(conName,
                 new Date(),
@@ -67,47 +70,47 @@ public class Rule2b {
         paper1 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID1);
+                testUserProfile1);
         
         paper2 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID1);
+                testUserProfile1);
         
         paper3 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID1);
+                testUserProfile1);
         
         paper4 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID1);
+                testUserProfile1);
         
         paper5 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID1);
+                testUserProfile1);
         
         paper6 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID2);
+                testUserProfile2);
         
         paper7 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID2);
+                testUserProfile2);
         
         paper8 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID2);
+                testUserProfile2);
         
         paper9 = Paper.createPaper(new File(""),
                 new ArrayList<>(Arrays.asList(new String[]{"John Doe", "Some Coauthor"})),
                 "Title",
-                testID2);
+                testUserProfile2);
         
         papers.add(paper1);
         papers.add(paper2);
@@ -121,7 +124,7 @@ public class Rule2b {
 
 	}  
     @Test
-    public void test3PapersAssigned() throws ErrorException {
+    public void test3PapersAssigned() throws IllegalOperationException {
     	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Guy");
     	for(int i = 0; i < 3; i++) {
     		testCon.getReviewRole().assignReviewer(
@@ -133,7 +136,7 @@ public class Rule2b {
     }
 
     @Test
-    public void testExactLimit() throws ErrorException {
+    public void testExactLimit() throws IllegalOperationException {
     	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Jane");
     	for(int i = 0; i < 8; i++) {
     		testCon.getReviewRole().assignReviewer(
@@ -144,8 +147,8 @@ public class Rule2b {
         assertTrue(testCon.getInfo().getPapersAssignedToReviewer(aReviewerProfile).size() == 8);
     }
 
-    @Test(expected = ErrorException.class)
-    public void testOverLimit() throws ErrorException {
+    @Test(expected = IllegalOperationException.class)
+    public void testOverLimit() throws IllegalOperationException {
     	UserProfile aUserProfile = new UserProfile(reviewerID, "Reviewer Dylan");
     	for(int i = 0; i < 9; i++) {
     		testCon.getReviewRole().assignReviewer(

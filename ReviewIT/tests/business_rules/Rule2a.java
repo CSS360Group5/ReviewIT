@@ -10,7 +10,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.ErrorException;
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
@@ -41,32 +41,32 @@ public class Rule2a {
 											new ArrayList<>(Arrays.asList(new String[]{"John Reviewer Doe",
 																						"Some Coauthor"})),
 											"Sample Paper Title",
-											"someid@uw.edu");
+											new UserProfile("someid@uw.edu", "Users Name"));
 		aCoauthoredPaper = Paper.createPaper(new File(""),
 												new ArrayList<>(Arrays.asList(new String[]{"Some Author",
 																							"John Reviewer Doe"})),
 												"Sample Paper Title",
-												"someid@uw.edu");
+												new UserProfile("someid@uw.edu", "Users Name"));
 		aNotAuthoredPaper = Paper.createPaper(new File(""),
 												new ArrayList<>(Arrays.asList(new String[]{"Some Author",
 																							"Some Coauthor"})),
 												"Sample Paper Title",
-												"someid@uw.edu");
+												new UserProfile("someid@uw.edu", "Users Name"));
 	}
 	
 
-	@Test(expected = ErrorException.class)
-	public void assignAuthoredPaperForReview() throws ErrorException{
+	@Test(expected = IllegalOperationException.class)
+	public void assignAuthoredPaperForReview() throws IllegalOperationException{
 		aConference.getReviewRole().assignReviewer(aUserProfile, anAuthoredPaper);
 	}
 	
-	@Test(expected = ErrorException.class)
-	public void assignCoauthoredPaperForReview() throws ErrorException{
+	@Test(expected = IllegalOperationException.class)
+	public void assignCoauthoredPaperForReview() throws IllegalOperationException{
 		aConference.getReviewRole().assignReviewer(aUserProfile, aCoauthoredPaper);
 	}
 	
 	@Test
-	public void assignNotAuthoredPaperForReview() throws ErrorException{
+	public void assignNotAuthoredPaperForReview() throws IllegalOperationException{
 		aConference.getReviewRole().assignReviewer(aUserProfile, aNotAuthoredPaper);
 		assertEquals(aConference.getInfo().getPapersAssignedToReviewer(
 				aUserProfile).get(0),

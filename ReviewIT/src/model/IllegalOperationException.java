@@ -6,7 +6,7 @@ package model;
  * @author Harlan Stewart
  * @version 1.0
  */
-public class ErrorException extends Exception {
+public class IllegalOperationException extends Exception {
 
 	/**
 	 * Auto generated UID
@@ -16,17 +16,17 @@ public class ErrorException extends Exception {
 	/**
 	 * Do nothing constructor
 	 */
-	public ErrorException() {
+	public IllegalOperationException() {
 		
 	}
 	
 	/** Public error exception constructor that excepts a string as a 
 	 * parameter which can be use to display any error message.
 	 * @author Harlan Stewart 
-	 * @param errorMessage
+	 * @param theErrorMessage
 	 */
-	public ErrorException(String errorMessage) {
-		super(errorMessage);
+	public IllegalOperationException(final String theErrorMessage) {
+		super(theErrorMessage);
 	}
 	
 
