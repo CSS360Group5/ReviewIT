@@ -1,6 +1,10 @@
 package ConferenceTests;
 
-import static org.junit.Assert.*;
+import model.Paper;
+import model.UserProfile;
+import model.conference.Conference;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.text.ParseException;
@@ -9,12 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import model.Paper;
-import model.UserProfile;
-import model.conference.Conference;
+import static org.junit.Assert.fail;
 
 public class ConferenceModelTests {
 	/* Conference object used for creating mock conference for tests.*/
@@ -76,5 +75,4 @@ public class ConferenceModelTests {
 	public void test() {
 		fail("Not yet implemented");
 	}
-
 }
