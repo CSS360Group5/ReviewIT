@@ -1,6 +1,5 @@
 package view_controller;
 
-import persistance.RSystem;
 import view_controller.console_ui.ConsoleUI;
 
 /**
@@ -12,6 +11,6 @@ public class ReviewItMain {
 	
 	
 	public static void main(final String[] theArgs){
-		(new ConsoleUI()).startConsoleUI();
+		(new ConsoleUI()).run();
 	}
 }

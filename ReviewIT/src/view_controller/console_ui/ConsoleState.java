@@ -10,6 +10,7 @@ import model.conference.Conference;
  * @version 5/4/2017
  */
 public class ConsoleState {
+	//A list of possible screen states:
 	public final static int EXIT_PROGRAM = 0;
 	public final static int PRELOGIN_SCREEN = 1;
 	public final static int LOGIN_SCREEN = 2;

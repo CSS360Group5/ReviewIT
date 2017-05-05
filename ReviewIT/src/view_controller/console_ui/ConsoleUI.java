@@ -1,7 +1,6 @@
 package view_controller.console_ui;
 
 import java.util.List;
-import java.io.PrintStream;
 import java.util.Scanner;
 
 import model.UserProfile;
@@ -16,15 +15,8 @@ import persistance.RSystem;
  */
 public class ConsoleUI {
 	private final static String CONTINUE_PROMPT = "Press <Enter> to continue...";
-	
-	//A list of possible screen states:
 
 	private final static int BAD_INPUT = -10000;
-	
-	/**
-	 * This is the screen our ConsoleUI will start at.
-	 */
-
 	
 	private final Scanner myScanner;
 	
@@ -42,7 +34,7 @@ public class ConsoleUI {
 	/**
 	 * Main method for controlling the flow of operation of the user.
 	 */
-	public void startConsoleUI(){
+	public void run(){
 		//Main logic loop
 		while(myState.getCurrentScreen() != ConsoleState.EXIT_PROGRAM){
 			final int newScreen;

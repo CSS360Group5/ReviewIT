@@ -1,16 +1,7 @@
 package model.conference;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import model.IllegalOperationException;
-import model.Paper;
-import model.UserProfile;
-
 
 /**
  * A master class for Creating and using a Conference.
