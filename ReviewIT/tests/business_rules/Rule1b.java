@@ -100,7 +100,7 @@ public class Rule1b {
 		for(int i = 0; i < SUBMISSION_UNDER_LIMIT_VAL; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == SUBMISSION_UNDER_LIMIT_VAL);		
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_UNDER_LIMIT_VAL);		
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public class Rule1b {
 		for(int i = 0; i < SUBMISSION_LIMIT; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == SUBMISSION_LIMIT);
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
 	}
 	
 	/**
@@ -128,7 +128,7 @@ public class Rule1b {
 		for(int i = 0; i < TEST_PAPER_LIST.size(); i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile.getUID()).size() == SUBMISSION_LIMIT);
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
 	}
 
 }

@@ -23,52 +23,74 @@ public class ConsoleUtility {
 	private final static int CONSOLE_WIDTH = 80;
 	private final static int SCREEN_HEIGHT = 160;
 
+	/**
+	 * 
+	 * @param theScanner
+	 * @param theState
+	 * @param theFirstOption
+	 * @param theLastOption
+	 * @param theInputPrompt
+	 * @return
+	 */
 	public static int inputNumberedOptions(
 			final Scanner theScanner,
 			final ConsoleState theState,
-			final int from,
-			final int to,
-			final String thePrompt
+			final int theFirstOption,
+			final int theLastOption,
+			final String theInputPrompt,
+			final String theInvalidOptionPrompt
 			){
 		
 		boolean isInvalidInput = false;
 		while(true){
-		ConsoleUtility.printHeader(theState);
-		if(isInvalidInput){
-			System.out.println("Unrecognized option. Please follow prompts.");
-			isInvalidInput = false;
-		}
-		System.out.println(thePrompt);
-		final String userInput = theScanner.next();
-		int chosenOption;
-		try{
-			chosenOption = Integer.parseInt(userInput);
-			if(chosenOption < from || chosenOption > to){
-				isInvalidInput = true;
-			}else{
-				return chosenOption;
+			ConsoleUtility.printHeader(theState);
+			if(isInvalidInput){
+				System.out.println(theInvalidOptionPrompt);
+				isInvalidInput = false;
+			}
+			System.out.println(theInputPrompt);
+			flush();
+			final String userInput = theScanner.next();
+			int chosenOption;
+			try{
+				chosenOption = Integer.parseInt(userInput);
+				if(chosenOption < theFirstOption || chosenOption > theLastOption){
+					isInvalidInput = true;
+				}else{
+					return chosenOption;
+				}
+			}
+			catch (final NumberFormatException nfe) {
+				//HANDLE UNPARSABLE STRING
 			}
 		}
-		catch (final NumberFormatException nfe) {
-			//HANDLE UNPARSABLE STRING
-		}
-	}
 	}
 	
 	public static UserProfile inputExistingUserID(
 			final Scanner theScanner,
-			final ConsoleState theState
+			final ConsoleState theState,
+			final String theAdditionalHeader,
+			final String theInputPrompt,
+			final String theNoSuchUserPrompt
 			){
-		final String loginPrompt = "Please entered your UserID:\nUserID:";
+//		final String loginPrompt = "Please entered your UserID:\nUserID:";
 		
 		String userInput = "";
+		boolean isNoSuchUser = false;
+		
 		while(true){
 			ConsoleUtility.printHeader(theState);
-			System.out.println(loginPrompt);
+			System.out.println(theAdditionalHeader);
+			if(isNoSuchUser){
+				System.out.println(String.format(theNoSuchUserPrompt, userInput));
+				isNoSuchUser = false;
+			}
+			System.out.print(theInputPrompt);
+			flush();
 			userInput = theScanner.next();
 			
 			if(RSystem.getInstance().getUserProfile(userInput) == null){
-				
+				isNoSuchUser = true;
 			}else{
 				return RSystem.getInstance().getUserProfile(userInput);
 			}
@@ -77,7 +99,9 @@ public class ConsoleUtility {
 	
 	public static UserProfile inputNewUserID(
 			final Scanner theScanner,
-			final ConsoleState theState
+			final ConsoleState theState,
+			final String inputPrompt,
+			final String userTakenPrompt
 			){
 		return null;
 	}
@@ -96,7 +120,7 @@ public class ConsoleUtility {
 			while(System.in.available() != 0)
 				System.in.read();
 		} catch (IOException e) {
-			System.err.println("Something went terribly wrong.\nPlease contact administrator:\"flush() broke\".");
+			System.out.println("Something went t`ibly wrong.\nPlease contact administrator:\"flush() broke\".");
 		}
 	}
 	

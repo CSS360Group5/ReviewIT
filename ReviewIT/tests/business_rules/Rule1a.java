@@ -96,13 +96,13 @@ public class Rule1a {
     @Test
     public void testHourEarlySubmission() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, hourEarlyPaper);
-        assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile.getUID()).size() == 1);
+        assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile).size() == 1);
     }
 
     @Test
     public void testSecondEarlySubmission() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, secondEarlyPaper);
-        assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile.getUID()).size() == 1);
+        assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile).size() == 1);
     }
 
     @Test (expected = IllegalOperationException.class)

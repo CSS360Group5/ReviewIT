@@ -23,23 +23,23 @@ public class ConferenceData implements ConferenceInfo{
     private final int myPaperSubmissionLimit;
     private final int myReviewerAssignmentLimit;
     /**
-     * Maps a Submitter's UserID to a Paper.
+     * Maps a UserProfile to a Paper.
      */
-    private final Map<String, List<Paper>> myPaperSubmissionMap;
+    private final Map<UserProfile, List<Paper>> myPaperSubmissionMap;
     /**
      * Maps an Author/Coauthor's name to a Paper.
      */
     private final Map<String, List<Paper>> myPaperAuthorshipMap;
     /**
-     * Maps a Reviewer's UserID to a Paper.
+     * Maps a Reviewer's UserProfile to a Paper.
      */
     private final Map<UserProfile, List<Paper>> myReviewerAssignmentMap;
     /**
-     * Maps a Subprogram Chair's UserID to a Paper.
+     * Maps a Subprogram Chair's UserProfile to a Paper.
      */
-    private final Map<String, List<Paper>> mySubprogramAssignmentMap;
+    private final Map<UserProfile, List<Paper>> mySubprogramAssignmentMap;
     /**
-     * Maps a User's UserID to a Role. 
+     * Maps a User's UserProfile to a Role. 
      */
     private final Map<UserProfile, List<String>> myUserRoleMap;
     
@@ -68,17 +68,17 @@ public class ConferenceData implements ConferenceInfo{
 	}
 	
     /**
-     * A method to acquire all papers submitted by the User with theUserID
-     * @param theUserID The name of the Author to match with.
+     * A method to acquire all papers submitted by the User with theUserProfile
+     * @param theUserProfile The UserProfile of the submitter to match with.
      * @return A list of all papers in this conference submitted by the User.
      * Returns an empty list if no papers found.
      * @author Kevin Ravana
      * @author Dimitar Kumanov 
      */
-    public List<Paper> getPapersSubmittedBy(final String theUserID) {
+    public List<Paper> getPapersSubmittedBy(final UserProfile theUserProfile) {
     	final List<Paper> submittedPapers;
-    	if(myPaperSubmissionMap.containsKey(theUserID))
-    		submittedPapers = myPaperSubmissionMap.get(theUserID);
+    	if(myPaperSubmissionMap.containsKey(theUserProfile))
+    		submittedPapers = myPaperSubmissionMap.get(theUserProfile);
     	else{
     		submittedPapers = new ArrayList<>();
     	}
@@ -108,7 +108,7 @@ public class ConferenceData implements ConferenceInfo{
      * Acquires all the papers assigned to a reviewer
      * for a specific conference.
      * 
-     * @param theReviewerUserID  The Reviewer's user ID.
+     * @param theReviewerProfile  The Reviewer's theReviewerProfile
      * @return an ArrayList of papers assigned to this reviewer.
      * 
      * @author Danielle Lambion
@@ -194,7 +194,7 @@ public class ConferenceData implements ConferenceInfo{
 	/**
 	 * @return the myPaperSubmissionMap
 	 */
-	protected Map<String, List<Paper>> getPaperSubmissionMap() {
+	protected Map<UserProfile, List<Paper>> getPaperSubmissionMap() {
 		return myPaperSubmissionMap;
 	}
 	/**
@@ -205,7 +205,7 @@ public class ConferenceData implements ConferenceInfo{
 	}
 	
     /**
-     * Maps a Reviewer's UserID to a Paper.
+     * Maps a Reviewer's UserProfile to a Paper.
      */
     protected Map<UserProfile, List<Paper>> getReviewerAssignmentMap(){
     	return myReviewerAssignmentMap;
@@ -213,7 +213,7 @@ public class ConferenceData implements ConferenceInfo{
 	/**
 	 * @return the mySubprogramAssignmentMap
 	 */
-	protected Map<String, List<Paper>> getSubprogramAssignmentMap() {
+	protected Map<UserProfile, List<Paper>> getSubprogramAssignmentMap() {
 		return mySubprogramAssignmentMap;
 	}
 	/**
