@@ -1,6 +1,7 @@
-package view;
+package view_controller;
 
-import controller.RSystem;
+import persistance.RSystem;
+import view_controller.console_ui.ConsoleUI;
 
 /**
  * Entry point(main) for our system.
