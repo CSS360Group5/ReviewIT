@@ -1,13 +1,10 @@
 package model.conference;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import model.Paper;
 import model.UserProfile;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * A class for specifically holding all the Data related to a Conference.
@@ -17,7 +14,7 @@ import model.UserProfile;
  * @author Dimitar Kumanov
  * @version 5/2/2017
  */
-public class ConferenceData implements ConferenceInfo{
+public class ConferenceData implements ConferenceInfo, Serializable {
 	private final String myConferenceName;
     private final Date myPaperSubmissionDeadline;
     private final int myPaperSubmissionLimit;

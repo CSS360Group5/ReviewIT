@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -13,7 +14,8 @@ import java.util.Objects;
  * @author Dimitar Kumanov
  * @version 5/4/2017
  */
-public class UserProfile {
+public class UserProfile implements Serializable {
+
 	private String myUID;
 	private String myName;
 	

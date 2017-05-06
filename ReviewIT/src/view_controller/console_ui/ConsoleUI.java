@@ -1,11 +1,11 @@
 package view_controller.console_ui;
 
-import java.util.List;
-import java.util.Scanner;
-
 import model.UserProfile;
 import model.conference.Conference;
 import persistance.RSystem;
+
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * A console based UI running the ReviewIt internal model.
@@ -28,7 +28,7 @@ public class ConsoleUI {
 	public ConsoleUI(){
 		myScanner = new Scanner(System.in);
 		myState = new ConsoleState();
-		ConsoleUtility.initUsersAndConferences();
+//		ConsoleUtility.initUsersAndConferences();
 	}
 	
 	/**
@@ -70,9 +70,6 @@ public class ConsoleUI {
 			myState.setCurrentScreen(newScreen);
 			
 			//End of program here:
-			
-			//Makes sure we have everything "saved" (as in serialized) before program closes
-			RSystem.serializeModel();
 		}
 	}
 	
@@ -90,6 +87,9 @@ public class ConsoleUI {
 			return ConsoleState.PRELOGIN_SCREEN;
 		}
 		myState.setCurrentUser(selectedProfile);
+
+		//Makes sure we have everything "saved" (as in serialized) before program closes
+		RSystem.serializeModel();
 		return ConsoleState.CHOOSE_CONFERENCE_SCREEN;
 	}
 
@@ -108,6 +108,7 @@ public class ConsoleUI {
 		while(true){
 			System.out.print(chooseIDPrompt);
 			ConsoleUtility.flush();
+			myScanner.nextLine();
 			String userInput = myScanner.nextLine();
 			try{
 				final int chosenOption = Integer.parseInt(userInput);
@@ -122,10 +123,11 @@ public class ConsoleUI {
 				System.out.println(userIDTakenPrompt);
 				continue;
 			}
-			
+
+
 			//If we get here we can use the input as ID
 			final String userID = userInput;
-			
+
 			System.out.print(chooseNamePrompt);
 			ConsoleUtility.flush();
 			userInput = myScanner.nextLine();
@@ -138,16 +140,18 @@ public class ConsoleUI {
 			catch (NumberFormatException nfe) {
 				//Didn't choose to exit, don't need to do anything.
 			}
-			
+
 			final String userName = userInput;
-			
+
 			RSystem.getInstance().addUserProfile(new UserProfile(userID, userName));
-			
+
 			System.out.println(successRegisterPrompt1 + userID + successRegisterPrompt2 + userName);
 			System.out.println(CONTINUE_PROMPT);
 			ConsoleUtility.flush();
 			myScanner.nextLine();
-			
+
+			//Makes sure we have everything "saved" (as in serialized) before program closes
+			RSystem.serializeModel();
 			return ConsoleState.LOGIN_SCREEN;
 		}
 	}

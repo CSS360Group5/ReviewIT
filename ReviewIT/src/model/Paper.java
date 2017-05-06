@@ -1,6 +1,7 @@
 package model;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @author Dimitar Kumanov
  * @version 04/24/2017
  */
-public class Paper {
+public class Paper implements Serializable {
 	private final File myPaperFile;
 	private Date mySubmissionDate;
 	private final List<String> myAuthors;

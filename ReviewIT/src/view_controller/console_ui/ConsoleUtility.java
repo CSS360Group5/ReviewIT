@@ -1,15 +1,11 @@
 package view_controller.console_ui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
-
 import model.UserProfile;
 import model.conference.Conference;
 import persistance.RSystem;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * A utility class containing static helper methods for implementing a Console UI.
@@ -180,7 +176,7 @@ public class ConsoleUtility {
 	 * brings up all the Conference/UserProfiles from the last system execution.
 	 */
 	public static void initUsersAndConferences(){
-		
+
 		final List<String> sampleConferenceNames =
 				new ArrayList<>(Arrays.asList(
 						"Annual Conference of the European Association for Computer Graphics",
@@ -191,19 +187,19 @@ public class ConsoleUtility {
 						 "Western Canadian Conference on Computing Education"));
 		final int paperSubmitLimit = 5;
 		final int paperAssignLimit = 8;
-		
+
 		for(final String currentSampleConferenceName: sampleConferenceNames){
 			RSystem.getInstance().addConference(Conference.createConference(currentSampleConferenceName,
 														   	   				new Date(),
 														   	   				paperSubmitLimit,
 														   	   				paperAssignLimit));
 		}
-		
+
 		final List<UserProfile> sampleUserProfiles =
 				new ArrayList<>(Arrays.asList(
 						new UserProfile("reviewer@uw.edu", "Reviewer John Doe"),
 						new UserProfile("author@uw.edu", "Author John Doe")));
-		
+
 		for(final UserProfile currentSampleUserProfile: sampleUserProfiles){
 			RSystem.getInstance().addUserProfile(currentSampleUserProfile);
 		}
