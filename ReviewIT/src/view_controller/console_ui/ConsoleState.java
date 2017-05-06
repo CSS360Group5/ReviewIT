@@ -5,7 +5,7 @@ import model.conference.Conference;
 
 
 /**
- * A container class containing relevant state for the ConsoleUI.
+ * A container class containing relevant state data for the ConsoleUI.
  * @author Dimitar Kumanov
  * @version 5/4/2017
  */

@@ -20,6 +20,7 @@ public class ConsoleUtility {
 	
 	public final static String EXIT_INPUTTING = "\b\b\b\b";
 	
+	
 	private final static int CONSOLE_WIDTH = 80;
 	private final static int SCREEN_HEIGHT = 160;
 
@@ -50,7 +51,7 @@ public class ConsoleUtility {
 			}
 			System.out.println(theInputPrompt);
 			flush();
-			final String userInput = theScanner.next();
+			final String userInput = theScanner.nextLine();
 			int chosenOption;
 			try{
 				chosenOption = Integer.parseInt(userInput);
@@ -66,7 +67,7 @@ public class ConsoleUtility {
 		}
 	}
 	
-	public static UserProfile inputExistingUserID(
+	public static UserProfile inputExistingUserProfile(
 			final Scanner theScanner,
 			final ConsoleState theState,
 			final String theAdditionalHeader,
@@ -87,7 +88,7 @@ public class ConsoleUtility {
 			}
 			System.out.print(theInputPrompt);
 			flush();
-			userInput = theScanner.next();
+			userInput = theScanner.nextLine();
 			
 			if(RSystem.getInstance().getUserProfile(userInput) == null){
 				isNoSuchUser = true;
@@ -97,13 +98,60 @@ public class ConsoleUtility {
 		}
 	}
 	
-	public static UserProfile inputNewUserID(
+	/**
+	 * Returns null if user wanted to exit out.
+	 */
+	public static UserProfile inputNewUserPofile(
 			final Scanner theScanner,
 			final ConsoleState theState,
-			final String inputPrompt,
-			final String userTakenPrompt
+			final String theChooseIDPrompt,
+			final String theIDTakenPrompt,
+			final String theChooseNamePrompt
 			){
-		return null;
+		final int EXIT_OPTION = 1;
+		
+		while(true){
+			System.out.print(theChooseIDPrompt);
+			ConsoleUtility.flush();
+			String userInput = theScanner.nextLine();
+			try{
+				final int chosenOption = Integer.parseInt(userInput);
+				if(chosenOption == EXIT_OPTION){
+					return null;
+				}
+			}
+			catch (NumberFormatException nfe) {
+				//Didn't choose to exit, don't need to do anything.
+			}
+			if(RSystem.getInstance().getUserProfile(userInput) != null){
+				System.out.println(theIDTakenPrompt);
+				continue;
+			}
+			
+			//If we get here we can use the input as ID
+			final String userID = userInput;
+			
+			System.out.print(theChooseNamePrompt);
+			ConsoleUtility.flush();
+			userInput = theScanner.nextLine();
+			
+			try{
+				final int chosenOption = Integer.parseInt(userInput);
+				if(chosenOption == EXIT_OPTION){
+					return null;
+				}
+			}
+			catch (NumberFormatException nfe) {
+				//Didn't choose to exit, don't need to do anything.
+			}
+			
+			final String userName = userInput;
+			
+			final UserProfile createdProfile = new UserProfile(userID, userName);
+			RSystem.getInstance().addUserProfile(createdProfile);
+			return createdProfile;
+
+		}
 	}
 	
 	
