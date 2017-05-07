@@ -207,6 +207,13 @@ public class ConsoleUtility {
 		System.out.print(new String(new char[3]).replace("\0", "\n"));
 		
 		
+		if(theState.getCurrentConference() != null){
+			System.out.println(
+					"Conference:\n" + 
+					theState.getCurrentConference().getInfo().getName() + "\n\n"
+					);
+		}			
+		
 		if(theState.getCurrentUser() != null){
 			final int gapWidth1 = CONSOLE_WIDTH - 
 					theState.getCurrentUser().getName().length() - "UserID:".length();

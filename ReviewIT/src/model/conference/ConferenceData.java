@@ -41,7 +41,7 @@ public class ConferenceData implements ConferenceInfo{
     /**
      * Maps a User's UserProfile to a Role. 
      */
-    private final Map<UserProfile, List<String>> myUserRoleMap;
+    private final Map<UserProfile, List<Integer>> myUserRoleMap;
     
     protected ConferenceData(final String theConferenceName,
             final Date thePaperDeadline,
@@ -65,6 +65,23 @@ public class ConferenceData implements ConferenceInfo{
 	*/
 	public String getName(){
 		return myConferenceName;
+	}
+	
+	/**
+	 * A getter method for  all user roles
+	 * associated with theUserProfile for this Conference.
+	 * @return A list of roles associated with theUserProfile for this Conference.
+	 * returns an empty list if no roles are associated with theUserProfile. 
+	 */
+	@Override
+	public List<Integer> getUserRoles(final UserProfile theUserProfile) {
+		final List<Integer> userRoles;
+    	if(myUserRoleMap.containsKey(theUserProfile))
+    		userRoles = myUserRoleMap.get(theUserProfile);
+    	else{
+    		userRoles = new ArrayList<>();
+    	}
+        return userRoles;
 	}
 	
     /**
@@ -219,7 +236,7 @@ public class ConferenceData implements ConferenceInfo{
 	/**
 	 * @return the myUserRoleMap
 	 */
-	protected Map<UserProfile, List<String>> getUserRoleMap() {
+	protected Map<UserProfile, List<Integer>> getUserRoleMap() {
 		return myUserRoleMap;
 	}
 }

@@ -261,8 +261,26 @@ public class ConsoleUI {
 	 * @return the new screen to go to.
 	 */
 	private int conferenceScreen(){
-		ConsoleUtility.printHeader(myState);
-		//Finish me...
+//		final int SUBMIT_PAPER_OPTION = 1;
+//		final int NEW_PROFILE_OPTION = 2;
+//		final int EXIT_PROGRAM_OPTION = 3;
+//		final String inputPrompt = "Please use one of the following options:\n" +
+//											"1) Login with an existing UserID\n" +
+//											"2) Create a new Profile\n" + 
+//											"3) Exit program\n";
+//		
+//		final int chosenOption = ConsoleUtility.inputNumberedOptions(
+//				myScanner, myState, 1, 3, inputPrompt);
+//		switch(chosenOption){
+//		case SUBMIT_PAPER_OPTION:
+//			return ConsoleState.LOGIN_SCREEN;
+//		case NEW_PROFILE_OPTION:
+//			return ConsoleState.NEW_PROFILE_SCREEN;
+//		case EXIT_PROGRAM_OPTION:
+//			return ConsoleState.EXIT_PROGRAM;
+//		default:
+//			return BAD_INPUT;
+//		}
 		return 0;
 	}
 	

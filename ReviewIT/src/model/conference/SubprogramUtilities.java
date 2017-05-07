@@ -7,11 +7,11 @@ import model.Paper;
 import model.UserProfile;
 
 /**
- * A class containing all the functionality a Reviewer has related to a Conference.
+ * A class containing all the functionality a Subprogram Chair has related to a Conference.
  * @author Dimitar Kumanov
  * @version 5/2/2017
  */
-public class ReviewerUtilities {
+public class SubprogramUtilities {
 	
 	private final ConferenceData myConferenceInfo;
     
@@ -19,7 +19,7 @@ public class ReviewerUtilities {
 	 * Creates a ReviewerUtilities Object for a Conference. 
 	 * @param theConferenceData The ConferenceData Object to manipulate.
 	 */
-    public ReviewerUtilities(final ConferenceData theConferenceData){
+    public SubprogramUtilities(final ConferenceData theConferenceData){
     	myConferenceInfo = theConferenceData;
     }
     

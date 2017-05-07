@@ -14,8 +14,12 @@ import model.UserProfile;
  */
 public interface ConferenceInfo {
 	public String getName();
+	
+	public List<Integer> getUserRoles(final UserProfile theUserProfile);
+	public List<Paper> getPapersSubmittedBy(final UserProfile theUserProfile);
 	public List<Paper> getPapersAuthoredBy(final String theAuthorName);
 	public List<Paper> getPapersAssignedToReviewer(final UserProfile theReviewerProfile);
+	
 	public boolean isPaperInAuthorSubmissionLimit(final Paper thePaper);
 	public boolean isPaperInSubmissionDeadline(final Paper thePaper);
 	public boolean isReviewerInAssignmentLimit(final UserProfile theReviewerProfile);
@@ -23,5 +27,5 @@ public interface ConferenceInfo {
     		final String theReviewerName,
     		final Paper thePaper
     		);
-	public List<Paper> getPapersSubmittedBy(final UserProfile theUserProfile);
+	
 }
