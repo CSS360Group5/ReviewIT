@@ -15,12 +15,16 @@ public class ConsoleState {
 	public final static int PRELOGIN_SCREEN = 1;
 	public final static int LOGIN_SCREEN = 2;
 	public final static int NEW_PROFILE_SCREEN = 3;
-	public final static int CHOOSE_CONFERENCE_SCREEN = 4;
-	public final static int CONFERENCE_SCREEN = 5;
-	public final static int SUBMIT_PAPER_SCREEN = 6;
-	public final static int ASSIGN_REVIEWER_SCREEN = 7;
+	public final static int USER_HOME_SCREEN = 4;
+	public static final int VIEW_All_SUBMITTED_PAPERS_SCREEN = 5;
+	public static final int VIEW_All_ASSIGNED_PAPERS_SCREEN = 6;
+	public final static int CHOOSE_CONFERENCE_SCREEN = 7;
+	public final static int CONFERENCE_SCREEN = 8;
+	public final static int SUBMIT_PAPER_SCREEN = 9;
+	public final static int ASSIGN_REVIEWER_SCREEN = 10;
 	
 	public final static int STARTING_SCREEN = PRELOGIN_SCREEN;
+	
 	
 	private int myCurrentScreen;
 	private UserProfile myCurrentUser;

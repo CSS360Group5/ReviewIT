@@ -1,12 +1,17 @@
 package view_controller.console_ui;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import model.IllegalOperationException;
+import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
 import persistance.RSystem;
@@ -20,10 +25,12 @@ public class ConsoleUtility {
 	
 	public final static String EXIT_INPUTTING = "\b\b\b\b";
 	
+	private static final String INVALID_OPTION_PROMPT = "Unrecognized option. Please follow prompts.";
 	
 	private final static int CONSOLE_WIDTH = 80;
 	private final static int SCREEN_HEIGHT = 160;
 
+	private final static String CONTINUE_PROMPT = "Press <Enter> to continue...";
 	/**
 	 * 
 	 * @param theScanner
@@ -38,15 +45,14 @@ public class ConsoleUtility {
 			final ConsoleState theState,
 			final int theFirstOption,
 			final int theLastOption,
-			final String theInputPrompt,
-			final String theInvalidOptionPrompt
+			final String theInputPrompt
 			){
 		
 		boolean isInvalidInput = false;
 		while(true){
 			ConsoleUtility.printHeader(theState);
 			if(isInvalidInput){
-				System.out.println(theInvalidOptionPrompt);
+				System.out.println(INVALID_OPTION_PROMPT);
 				isInvalidInput = false;
 			}
 			System.out.println(theInputPrompt);
@@ -239,21 +245,57 @@ public class ConsoleUtility {
 						 "Western Canadian Conference on Computing Education"));
 		final int paperSubmitLimit = 5;
 		final int paperAssignLimit = 8;
-		
+	
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		for(final String currentSampleConferenceName: sampleConferenceNames){
-			RSystem.getInstance().addConference(Conference.createConference(currentSampleConferenceName,
-														   	   				new Date(),
-														   	   				paperSubmitLimit,
-														   	   				paperAssignLimit));
+			try {
+				RSystem.getInstance().addConference(
+						Conference.createConference(
+								currentSampleConferenceName,
+								format.parse("2017/05/20 23:59:59"),
+								paperSubmitLimit,
+								paperAssignLimit
+								)
+						);
+			} catch (IllegalArgumentException e) {
+//				e.printStackTrace();
+			} catch (ParseException e) {
+//				e.printStackTrace();
+			}
 		}
+		
+		final UserProfile sampleAuthorUser = new UserProfile("author@uw.edu", "Author John Doe"); 
 		
 		final List<UserProfile> sampleUserProfiles =
 				new ArrayList<>(Arrays.asList(
 						new UserProfile("reviewer@uw.edu", "Reviewer John Doe"),
-						new UserProfile("author@uw.edu", "Author John Doe")));
+						sampleAuthorUser));
 		
 		for(final UserProfile currentSampleUserProfile: sampleUserProfiles){
 			RSystem.getInstance().addUserProfile(currentSampleUserProfile);
 		}
+		
+		final Paper samplePaper = Paper.createPaper(
+				new File(""),
+				new ArrayList<>(Arrays.asList("Xu Zhuang", "Yan Zhu", "Chin-Chen Chang", "Qiang Peng")),
+				"Feature bundling in decision tree algorithm.",
+				sampleAuthorUser
+				);
+		try {
+			RSystem.getInstance().getConference("Western Canadian Conference on Computing Education").getUserRole().addPaper(sampleAuthorUser, samplePaper);
+		} catch (IllegalOperationException e) {
+			System.err.println(e.getMessage());
+//			e.printStackTrace();
+		}
+	}
+	
+	public static void showMessageToUser(
+			final Scanner theScanner,
+			final String theMessage
+			){
+		System.out.println(theMessage);
+		System.out.println(CONTINUE_PROMPT);
+		ConsoleUtility.flush();
+		theScanner.nextLine();
 	}
 }

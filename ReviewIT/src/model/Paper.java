@@ -28,14 +28,14 @@ public class Paper {
 			final Date theSubmissionDate,
 			final List<String> theAuthors,
 			final String thePaperTitle,
-			final UserProfile theSubmitterUID
+			final UserProfile theSubmitterUserProfile
 			) throws IllegalArgumentException{
 		
 		myPaperFile = Objects.requireNonNull(thePaper);
 		mySubmissionDate = Objects.requireNonNull(theSubmissionDate);
 		myAuthors = Objects.requireNonNull(theAuthors);
 		myTitle = Objects.requireNonNull(thePaperTitle);
-		mySubmitter = Objects.requireNonNull(theSubmitterUID);
+		mySubmitter = Objects.requireNonNull(theSubmitterUserProfile);
 		if(thePaperTitle.isEmpty())
 			throw new IllegalArgumentException();
 	}
@@ -47,7 +47,7 @@ public class Paper {
 	 * @param thePaperFile The file associated with the text itself.
 	 * @param theAuthors The list of Authors of this paper.
 	 * @param thePaperTitle The title of the paper.
-	 * @param theSubmitterUID The System UID of the person actually submitting the paper.
+	 * @param theSubmitterUserProfile The System UserProfile of the person actually submitting the paper.
 	 * @exception When the precondition is violated.
 	 * @return a Paper Object that has all the information associated with the paper.
 	 */
@@ -55,7 +55,7 @@ public class Paper {
 			final File thePaperFile,
 			final List<String> theAuthors,
 			final String thePaperTitle,
-			final UserProfile theSubmitterUID
+			final UserProfile theSubmitterUserProfile
 			) throws IllegalArgumentException{
 
 		return new Paper(
@@ -63,7 +63,7 @@ public class Paper {
 				new Date(),
 				theAuthors,
 				thePaperTitle,
-				theSubmitterUID
+				theSubmitterUserProfile
 				);
 	}
 	
@@ -95,7 +95,7 @@ public class Paper {
 	 * Gets the (non-null) UserProfile of the user submitting this Paper.
 	 * @return the (non-null) UserProfile of the user submitting this Paper.
 	 */
-	public UserProfile getSubmitterUID(){
+	public UserProfile getSubmitterUserProfile(){
 		return mySubmitter;
 	}
 	
