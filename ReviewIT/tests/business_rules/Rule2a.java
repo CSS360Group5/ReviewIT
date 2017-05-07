@@ -57,17 +57,17 @@ public class Rule2a {
 
 	@Test(expected = IllegalOperationException.class)
 	public void assignAuthoredPaperForReview() throws IllegalOperationException{
-		aConference.getReviewRole().assignReviewer(aUserProfile, anAuthoredPaper);
+		aConference.getSubprogramRole().assignReviewer(aUserProfile, anAuthoredPaper);
 	}
 	
 	@Test(expected = IllegalOperationException.class)
 	public void assignCoauthoredPaperForReview() throws IllegalOperationException{
-		aConference.getReviewRole().assignReviewer(aUserProfile, aCoauthoredPaper);
+		aConference.getSubprogramRole().assignReviewer(aUserProfile, aCoauthoredPaper);
 	}
 	
 	@Test
 	public void assignNotAuthoredPaperForReview() throws IllegalOperationException{
-		aConference.getReviewRole().assignReviewer(aUserProfile, aNotAuthoredPaper);
+		aConference.getSubprogramRole().assignReviewer(aUserProfile, aNotAuthoredPaper);
 		assertEquals(aConference.getInfo().getPapersAssignedToReviewer(
 				aUserProfile).get(0),
 				aNotAuthoredPaper

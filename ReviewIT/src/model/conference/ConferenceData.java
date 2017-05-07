@@ -67,6 +67,23 @@ public class ConferenceData implements ConferenceInfo{
 		return myConferenceName;
 	}
 	
+	/**
+	 * A getter method for  all user roles
+	 * associated with theUserProfile for this Conference.
+	 * @return A list of roles associated with theUserProfile for this Conference.
+	 * returns an empty list if no roles are associated with theUserProfile. 
+	 */
+	@Override
+	public List<String> getUserRoles(final UserProfile theUserProfile) {
+		final List<String> userRoles;
+    	if(myUserRoleMap.containsKey(theUserProfile))
+    		userRoles = myUserRoleMap.get(theUserProfile);
+    	else{
+    		userRoles = new ArrayList<>();
+    	}
+        return userRoles;
+	}
+	
     /**
      * A method to acquire all papers submitted by the User with theUserProfile
      * @param theUserProfile The UserProfile of the submitter to match with.
@@ -189,7 +206,60 @@ public class ConferenceData implements ConferenceInfo{
     		}
     	}
     	return result;
- 
+    }
+    @Override
+	public boolean isUserAuthor(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.AUTHOR_ROLE);
+	}
+
+	@Override
+	public boolean isUserReviewer(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.REVIEW_ROLE);
+	}
+
+	@Override
+	public boolean isUserSubprogramChair(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.SUBPROGRAM_ROLE);
+	}
+
+	@Override
+	public boolean isUserProgramChair(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.PROGRAM_ROLE);
+	}
+
+	@Override
+	public boolean isUserDirector(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.DIRECTOR_ROLE);
+	}
+	
+    /**
+     * Adds theRole to theUserProfile for this Conference.
+     */
+    protected void addUserToRole(
+    		final UserProfile theUserProfile,
+    		final String theUserRole){
+    	if(!myUserRoleMap.containsKey(theUserProfile)){
+    		myUserRoleMap.put(theUserProfile, new ArrayList<>());
+    	}
+    	
+    	if(!myUserRoleMap.get(theUserProfile).contains(theUserRole)){
+    		myUserRoleMap.get(theUserProfile).add(theUserRole);
+    	}
     }
 	/**
 	 * @return the myPaperSubmissionMap
