@@ -14,10 +14,10 @@ import java.util.Scanner;
  *
  */
 public class ConsoleUI {
-	private final static String CONTINUE_PROMPT = "Press <Enter> to continue...";
-
 	private final static int BAD_INPUT = -10000;
 	
+	private final static String CONTINUE_PROMPT = "Press <Enter> to continue...";
+
 	private final Scanner myScanner;
 	
 	private final ConsoleState myState;
@@ -27,6 +27,7 @@ public class ConsoleUI {
 	 */
 	public ConsoleUI(){
 		myScanner = new Scanner(System.in);
+		myScanner.useDelimiter("\\n");
 		myState = new ConsoleState();
 //		ConsoleUtility.initUsersAndConferences();
 	}
@@ -82,7 +83,8 @@ public class ConsoleUI {
 				"Sign In to ReviewIT\n\n\n\n";
 		final String inputPrompt =  "Please entered your UserID:\nUserID:";
 		final String noSuchUserPrompt = "Sorry no UserID \"%s\" found in the System.\nPlease try again.\n";
-		final UserProfile selectedProfile = ConsoleUtility.inputExistingUserID(myScanner, myState, loginHeader, inputPrompt, noSuchUserPrompt);
+
+		final UserProfile selectedProfile = ConsoleUtility.inputExistingUserProfile(myScanner, myState, loginHeader, inputPrompt, noSuchUserPrompt);
 		if(selectedProfile == null){
 			return ConsoleState.PRELOGIN_SCREEN;
 		}
@@ -97,63 +99,27 @@ public class ConsoleUI {
 	 * Handles the creating a new UserProfile screen.
 	 * @return the new screen to go to.
 	 */	private int createProfile() {
-		final int EXIT_OPTION = 1;
 		final String chooseIDPrompt = "Please enter the UserID you wish to use or enter 1 to exit:\nUserID:";
 		final String chooseNamePrompt = "Please enter your first and last name or enter 1 to exit:\nName:";
 		final String userIDTakenPrompt = "UserID is already taken. Please try again.";
 		final String successRegisterPrompt1 = "Successfuly registered as: \n\nUserID: ";
 		final String successRegisterPrompt2 = "\nName:";
+		final String successRegisterPrompt3 = "Press <Enter> to go to Sign In screen...";
 		ConsoleUtility.printHeader(myState);
 		
-		while(true){
-			System.out.print(chooseIDPrompt);
+		final UserProfile inputtedUserProfile = ConsoleUtility.inputNewUserPofile(myScanner, myState, chooseIDPrompt, userIDTakenPrompt, chooseNamePrompt);
+		if(inputtedUserProfile != null){
+			System.out.println(successRegisterPrompt1 + inputtedUserProfile.getUID() +
+					successRegisterPrompt2 + inputtedUserProfile.getName());
+			System.out.println(successRegisterPrompt3);
 			ConsoleUtility.flush();
 			myScanner.nextLine();
-			String userInput = myScanner.nextLine();
-			try{
-				final int chosenOption = Integer.parseInt(userInput);
-				if(chosenOption == EXIT_OPTION){
-					return ConsoleState.PRELOGIN_SCREEN;
-				}
-			}
-			catch (NumberFormatException nfe) {
-				//Didn't choose to exit, don't need to do anything.
-			}
-			if(RSystem.getInstance().getUserProfile(userInput) != null){
-				System.out.println(userIDTakenPrompt);
-				continue;
-			}
-
-
-			//If we get here we can use the input as ID
-			final String userID = userInput;
-
-			System.out.print(chooseNamePrompt);
-			ConsoleUtility.flush();
-			userInput = myScanner.nextLine();
-			try{
-				final int chosenOption = Integer.parseInt(userInput);
-				if(chosenOption == EXIT_OPTION){
-					return ConsoleState.PRELOGIN_SCREEN;
-				}
-			}
-			catch (NumberFormatException nfe) {
-				//Didn't choose to exit, don't need to do anything.
-			}
-
-			final String userName = userInput;
-
-			RSystem.getInstance().addUserProfile(new UserProfile(userID, userName));
-
-			System.out.println(successRegisterPrompt1 + userID + successRegisterPrompt2 + userName);
-			System.out.println(CONTINUE_PROMPT);
-			ConsoleUtility.flush();
-			myScanner.nextLine();
-
-			//Makes sure we have everything "saved" (as in serialized) before program closes
-			RSystem.serializeModel();
 			return ConsoleState.LOGIN_SCREEN;
+		}else{
+			//They wanted to exit of of inputting userProfile
+			return ConsoleState.PRELOGIN_SCREEN;
 		}
+
 	}
 
 	/**
