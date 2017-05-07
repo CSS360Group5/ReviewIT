@@ -44,7 +44,7 @@ public class RSystem {
 	private RSystem(){
 		myConferenceMap = new HashMap<>();
 		myUserMap = new HashMap<>();
-		deserializeData();
+//		deserializeData();
 	}
 	
 	/**
@@ -62,16 +62,16 @@ public class RSystem {
 	/**
 	 * Loads up all Conference/UserProfile objects into the RSYstem.
 	 */
-	private void deserializeData() {
+	public void deserializeData() {
 		/*
 		 * TO DO: Code for deserializing Data, aka loading up our
 		 * Conference/UserProfile objects should happen here
 		 */
-		if((new File("./UserMap.ser")).exists() && (new File("./ConfereneMap.ser")).exists()){
+		if((new File("./UserMap.ser")).exists() && (new File("./ConferenceMap.ser")).exists()){
 			try {
-				FileInputStream fisUser = new FileInputStream("UserMap.ser");
+				FileInputStream fisUser = new FileInputStream("./UserMap.ser");
 				ObjectInputStream oisUser = new ObjectInputStream(fisUser);
-				FileInputStream fisCon = new FileInputStream("ConferenceMap.ser");
+				FileInputStream fisCon = new FileInputStream("./ConferenceMap.ser");
 				ObjectInputStream oisCon = new ObjectInputStream(fisCon);
 	
 				Map<String, UserProfile> newUserMap = new HashMap<>((HashMap<String, UserProfile>) oisUser.readObject());
@@ -89,6 +89,8 @@ public class RSystem {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+			}finally{
+				
 			}
 			System.out.print("Deserialization successful.");
 		}
@@ -105,17 +107,21 @@ public class RSystem {
 		 * Conference/UserProfile objects should happen here
 		 */
 		try {
-			FileOutputStream fosUser = new FileOutputStream("UserMap.ser");
+			FileOutputStream fosUser = new FileOutputStream("./UserMap.ser");
 			ObjectOutputStream oosUser = new ObjectOutputStream(fosUser);
-			FileOutputStream fosCon = new FileOutputStream("ConferenceMap.ser");
+			FileOutputStream fosCon = new FileOutputStream("./ConferenceMap.ser");
 			ObjectOutputStream oosCon = new ObjectOutputStream(fosCon);
 
 			oosUser.writeObject(myUserMap);
 			oosCon.writeObject(myConferenceMap);
-
+			
+			oosUser.flush();
 			oosUser.close();
+			fosUser.flush();
 			fosUser.close();
+			oosCon.flush();
 			oosCon.close();
+			fosCon.flush();
 			fosCon.close();
 		} catch (IOException e) {
 			e.printStackTrace();

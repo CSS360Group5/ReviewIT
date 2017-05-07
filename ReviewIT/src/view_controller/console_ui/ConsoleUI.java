@@ -33,7 +33,11 @@ public class ConsoleUI {
 		myScanner = new Scanner(System.in);
 		myScanner.useDelimiter("\\n");
 		myState = new ConsoleState();
-		ConsoleUtility.initUsersAndConferences();
+		
+//		ConsoleUtility.initUsersAndConferences();
+		
+		RSystem.getInstance().deserializeData();
+		
 	}
 	
 	/**

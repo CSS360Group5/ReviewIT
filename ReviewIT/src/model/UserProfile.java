@@ -57,4 +57,17 @@ public class UserProfile implements Serializable{
 	public String getName(){
 		return myName;
 	}
+	
+	@Override
+	public int hashCode(){
+		return Objects.hash(myUID);
+	}
+	
+	@Override
+	public boolean equals(final Object theOtherProfile){
+		if(!(theOtherProfile instanceof UserProfile)){
+			return false;
+		}
+		return this.myUID.equals(((UserProfile) theOtherProfile).myUID);
+	}
 }
