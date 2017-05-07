@@ -15,10 +15,16 @@ import model.UserProfile;
 public interface ConferenceInfo {
 	public String getName();
 	
-	public List<Integer> getUserRoles(final UserProfile theUserProfile);
+	public List<String> getUserRoles(final UserProfile theUserProfile);
 	public List<Paper> getPapersSubmittedBy(final UserProfile theUserProfile);
 	public List<Paper> getPapersAuthoredBy(final String theAuthorName);
 	public List<Paper> getPapersAssignedToReviewer(final UserProfile theReviewerProfile);
+	
+	public boolean isUserAuthor(final UserProfile theUserProfile);
+	public boolean isUserReviewer(final UserProfile theUserProfile);
+	public boolean isUserSubprogramChair(final UserProfile theUserProfile);
+	public boolean isUserProgramChair(final UserProfile theUserProfile);
+	public boolean isUserDirector(final UserProfile theUserProfile);
 	
 	public boolean isPaperInAuthorSubmissionLimit(final Paper thePaper);
 	public boolean isPaperInSubmissionDeadline(final Paper thePaper);

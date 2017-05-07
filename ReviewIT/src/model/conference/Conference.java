@@ -20,11 +20,11 @@ public class Conference implements Serializable{
 	 */
 	private static final long serialVersionUID = -836524014001898470L;
 	
-	public static final int AUTHOR_ROLE = 1;
-	public static final int REVIEW_ROLE = 2;
-	public static final int SUBPROGRAM_ROLE = 3;
-	public static final int PROGRAM_ROLE = 4;
-	public static final int DIRECTOR_ROLE = 5;
+	public static final String AUTHOR_ROLE = "Author";
+	public static final String REVIEW_ROLE = "Reviewer";
+	public static final String SUBPROGRAM_ROLE = "Subprogram Chair";
+	public static final String PROGRAM_ROLE = "Program Chair";
+	public static final String DIRECTOR_ROLE = "Director";
 
 	/**
 	 * A ConferenceData Object containing all the Data associated with this Conference.

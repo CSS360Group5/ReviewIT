@@ -1,7 +1,9 @@
 package view_controller.console_ui;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 import model.Paper;
 import model.UserProfile;
@@ -127,8 +129,8 @@ public class ConsoleUI {
 				"4) Sign out.\n" + 
 				"5) Exit.\n";
 		final int chosenOption = ConsoleUtility.inputNumberedOptions(
-				myScanner, myState, 1, 5, inputPrompt);
-		
+				myScanner, myState, ConsoleUtility.createConsecutiveList(1, 5), inputPrompt);
+	 	
 		switch(chosenOption){
 		case VIEW_ALL_MY_SUBMITTED_PAPERS_OPTION:
 			return ConsoleState.VIEW_All_SUBMITTED_PAPERS_SCREEN;
@@ -207,7 +209,7 @@ public class ConsoleUI {
 											"3) Exit program\n";
 		
 		final int chosenOption = ConsoleUtility.inputNumberedOptions(
-				myScanner, myState, 1, 3, inputPrompt);
+				myScanner, myState, ConsoleUtility.createConsecutiveList(1, 3), inputPrompt);
 		switch(chosenOption){
 		case LOGIN_OPTION:
 			return ConsoleState.LOGIN_SCREEN;
@@ -242,7 +244,7 @@ public class ConsoleUI {
 		promptBuilder.append(EXIT_PROGRAM_OPTION + ") Exit Program.\n");
 		
 		final int chosenOption = ConsoleUtility.inputNumberedOptions(
-				myScanner, myState, 1, EXIT_PROGRAM_OPTION, promptBuilder.toString());
+				myScanner, myState, ConsoleUtility.createConsecutiveList(1, EXIT_PROGRAM_OPTION), promptBuilder.toString());
 		
 		if(chosenOption == GO_BACK_OPTION){
 			return ConsoleState.USER_HOME_SCREEN;
@@ -261,8 +263,13 @@ public class ConsoleUI {
 	 * @return the new screen to go to.
 	 */
 	private int conferenceScreen(){
+		ConsoleUtility.printHeader(myState);
+		final int SUBMIT_PAPER_OPTION = 1;
+		final int VIEW_SUBMITTED_PAPERS = 2;
+		final int ASSIGN_REVIEWER = 4;
+		
 //		final int SUBMIT_PAPER_OPTION = 1;
-//		final int NEW_PROFILE_OPTION = 2;
+//		final int VIEW_SUBMITTED_PAPERS = 2;
 //		final int EXIT_PROGRAM_OPTION = 3;
 //		final String inputPrompt = "Please use one of the following options:\n" +
 //											"1) Login with an existing UserID\n" +

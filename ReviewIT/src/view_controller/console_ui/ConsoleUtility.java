@@ -43,8 +43,7 @@ public class ConsoleUtility {
 	public static int inputNumberedOptions(
 			final Scanner theScanner,
 			final ConsoleState theState,
-			final int theFirstOption,
-			final int theLastOption,
+			final List<Integer> validOptions,
 			final String theInputPrompt
 			){
 		
@@ -61,7 +60,7 @@ public class ConsoleUtility {
 			int chosenOption;
 			try{
 				chosenOption = Integer.parseInt(userInput);
-				if(chosenOption < theFirstOption || chosenOption > theLastOption){
+				if(!validOptions.contains(chosenOption)) {
 					isInvalidInput = true;
 				}else{
 					return chosenOption;
@@ -210,7 +209,11 @@ public class ConsoleUtility {
 		if(theState.getCurrentConference() != null){
 			System.out.println(
 					"Conference:\n" + 
-					theState.getCurrentConference().getInfo().getName() + "\n\n"
+					theState.getCurrentConference().getInfo().getName() + "\n"
+					);
+			System.out.println(
+					"Role(s):\n" + 
+					theState.getCurrentConference().getInfo().getUserRoles(theState.getCurrentUser()) + "\n"
 					);
 		}			
 		
@@ -295,6 +298,15 @@ public class ConsoleUtility {
 //			e.printStackTrace();
 		}
 	}
+	
+	public static List<Integer> createConsecutiveList(final int from, final int to){
+		final List<Integer> listResult = new ArrayList<>();
+		for(int i = from; i <= to; ++i){
+			listResult.add(i);
+		}
+		return listResult;
+	}
+	
 	
 	public static void showMessageToUser(
 			final Scanner theScanner,
