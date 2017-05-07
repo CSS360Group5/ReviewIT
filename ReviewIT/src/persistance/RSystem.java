@@ -1,5 +1,11 @@
 package persistance;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,12 +34,12 @@ public class RSystem {
 	/**
 	 * Maps Conference name to a Conference.
 	 */
-	Map<String, Conference> myConferenceMap;
+	private Map<String, Conference> myConferenceMap;
 	
 	/**
 	 * Maps UserID to a UserProfile.
 	 */
-	Map<String, UserProfile> myUserMap;
+	private Map<String, UserProfile> myUserMap;
 	
 	private RSystem(){
 		myConferenceMap = new HashMap<>();
@@ -47,19 +53,45 @@ public class RSystem {
 	 * @author Dimitar Kumanov
 	 */
 	public static RSystem getInstance(){
-		if(myInstance == null)
+		if(myInstance == null){
 			myInstance = new RSystem();
+		}
 		return myInstance;
 	}
 	
 	/**
 	 * Loads up all Conference/UserProfile objects into the RSYstem.
 	 */
-	private void deserializeData(){
+	private void deserializeData() {
 		/*
 		 * TO DO: Code for deserializing Data, aka loading up our
 		 * Conference/UserProfile objects should happen here
 		 */
+		if((new File("./UserMap.ser")).exists() && (new File("./ConfereneMap.ser")).exists()){
+			try {
+				FileInputStream fisUser = new FileInputStream("UserMap.ser");
+				ObjectInputStream oisUser = new ObjectInputStream(fisUser);
+				FileInputStream fisCon = new FileInputStream("ConferenceMap.ser");
+				ObjectInputStream oisCon = new ObjectInputStream(fisCon);
+	
+				Map<String, UserProfile> newUserMap = new HashMap<>((HashMap<String, UserProfile>) oisUser.readObject());
+				Map<String, Conference> newConfMap = new HashMap<>((HashMap<String, Conference>) oisCon.readObject());
+	
+				if (newUserMap != null && newConfMap != null) {
+					myUserMap = new HashMap<>(newUserMap);
+					myConferenceMap = new HashMap<>(newConfMap);
+				}
+				oisUser.close();
+				fisUser.close();
+				oisCon.close();
+				fisCon.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			System.out.print("Deserialization successful.");
+		}
 	}
 	
 	/**
@@ -67,11 +99,28 @@ public class RSystem {
 	 * This method should be called before closing the
 	 * application to save all of its Conference/UserProfile Objects.
 	 */
-	public static void serializeModel(){
+	public void serializeModel() {
 		/*
 		 * TO DO: Code for serializing Data, aka saving up our
 		 * Conference/UserProfile objects should happen here
 		 */
+		try {
+			FileOutputStream fosUser = new FileOutputStream("UserMap.ser");
+			ObjectOutputStream oosUser = new ObjectOutputStream(fosUser);
+			FileOutputStream fosCon = new FileOutputStream("ConferenceMap.ser");
+			ObjectOutputStream oosCon = new ObjectOutputStream(fosCon);
+
+			oosUser.writeObject(myUserMap);
+			oosCon.writeObject(myConferenceMap);
+
+			oosUser.close();
+			fosUser.close();
+			oosCon.close();
+			fosCon.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.print("Serialization successful.");
 	}
 	
 	/**

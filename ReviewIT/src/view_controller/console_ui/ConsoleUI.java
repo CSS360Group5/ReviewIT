@@ -1,5 +1,6 @@
 package view_controller.console_ui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -85,7 +86,7 @@ public class ConsoleUI {
 		//End of program here:
 		
 		//Makes sure we have everything "saved" (as in serialized) before program closes
-		RSystem.serializeModel();
+		RSystem.getInstance().serializeModel();
 		
 		ConsoleUtility.showMessageToUser(myScanner, "Exiting Program!");
 	}
@@ -267,6 +268,23 @@ public class ConsoleUI {
 		final int SUBMIT_PAPER_OPTION = 1;
 		final int VIEW_SUBMITTED_PAPERS = 2;
 		final int ASSIGN_REVIEWER = 4;
+		
+		final int SIGN_OUT_OPTION = 19;
+		final int EXIT_PROGRAM = 20;
+		
+		final StringBuilder promptBuilder = new StringBuilder();
+		promptBuilder.append("Please use one of the following options:\n");
+		
+		final List<Integer> availableOptions = new ArrayList<>();
+		
+		promptBuilder.append(SUBMIT_PAPER_OPTION + ") Submit a Paper.");
+		availableOptions.add(SUBMIT_PAPER_OPTION);
+		
+//		if()
+//		promptBuilder.append(VIEW_SUBMITTED_PAPERS + ")"
+		
+		availableOptions.addAll(Arrays.asList(SUBMIT_PAPER_OPTION, SIGN_OUT_OPTION, EXIT_PROGRAM));
+		
 		
 //		final int SUBMIT_PAPER_OPTION = 1;
 //		final int VIEW_SUBMITTED_PAPERS = 2;
