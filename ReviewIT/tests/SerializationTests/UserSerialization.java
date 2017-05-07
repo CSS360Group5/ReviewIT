@@ -6,4 +6,5 @@ package SerializationTests;
 public class UserSerialization {
 
 
+
 }
