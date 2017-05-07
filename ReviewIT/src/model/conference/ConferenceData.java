@@ -206,7 +206,21 @@ public class ConferenceData implements ConferenceInfo{
     		}
     	}
     	return result;
- 
+    }
+    
+    /**
+     * Adds theRole to theUserProfile for this Conference.
+     */
+    protected void addUserToRole(
+    		final UserProfile theUserProfile,
+    		final int theUserRole){
+    	if(!myUserRoleMap.containsKey(theUserProfile)){
+    		myUserRoleMap.put(theUserProfile, new ArrayList<>());
+    	}
+    	
+    	if(!myUserRoleMap.get(theUserProfile).contains(theUserRole)){
+    		myUserRoleMap.get(theUserProfile).add(theUserRole);
+    	}
     }
 	/**
 	 * @return the myPaperSubmissionMap

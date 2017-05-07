@@ -12,18 +12,19 @@ import model.UserProfile;
  * @version 5/2/2017
  */
 public class UserUtilities {
-	private final ConferenceData myConferenceInfo;
+	private final ConferenceData myConferenceData;
     
 	/**
 	 * Creates a UserUtilities Object for a Conference. 
 	 * @param theConferenceData The ConferenceData Object to manipulate.
 	 */
     public UserUtilities(final ConferenceData theConferenceData){
-    	myConferenceInfo = theConferenceData;
+    	myConferenceData = theConferenceData;
     }
     
 	/**
 	 * Adds a Paper to the associated Conference.
+	 * Also adds theUserProfile as an Author for this Conference if not added already.
 	 * PRECONDITION: thePaper is isPaperInAuthorSubmissionLimit()
 	 * AND isPaperInSubmissionDeadline()
 	 * @param theUserProfile The UserProfile of the user submitting the paper.
@@ -36,10 +37,10 @@ public class UserUtilities {
     		final UserProfile theUserProfile,
     		final Paper thePaper
     		) throws IllegalOperationException {
-    	if(!myConferenceInfo.isPaperInAuthorSubmissionLimit(thePaper)){
+    	if(!myConferenceData.isPaperInAuthorSubmissionLimit(thePaper)){
     		throw new IllegalOperationException("Paper exceeds paper submission limit.");
     	}
-    	else if(!myConferenceInfo.isPaperInSubmissionDeadline(thePaper)){
+    	else if(!myConferenceData.isPaperInSubmissionDeadline(thePaper)){
     		throw new IllegalOperationException("Paper exceeds submission deadline.");
     	}
     	//Add paper to submission map:
@@ -47,6 +48,8 @@ public class UserUtilities {
 
     	//Add paper to author map:
     	addPaperToAuthorshipMap(thePaper);
+    	
+    	myConferenceData.addUserToRole(theUserProfile, Conference.AUTHOR_ROLE);
     }
     
     /**
@@ -61,10 +64,10 @@ public class UserUtilities {
      * @author Dimitar Kumanov
      */
     private void addPaperToSubmissionMap(final UserProfile theUserProfile, final Paper thePaper){
-    	if(!myConferenceInfo.getPaperSubmissionMap().containsKey(theUserProfile)){
-    		myConferenceInfo.getPaperSubmissionMap().put(theUserProfile, new ArrayList<>());
+    	if(!myConferenceData.getPaperSubmissionMap().containsKey(theUserProfile)){
+    		myConferenceData.getPaperSubmissionMap().put(theUserProfile, new ArrayList<>());
     	}
-    	myConferenceInfo.getPaperSubmissionMap().get(theUserProfile).add(thePaper);
+    	myConferenceData.getPaperSubmissionMap().get(theUserProfile).add(thePaper);
     }
     
     /**
@@ -77,10 +80,10 @@ public class UserUtilities {
      */
     private void addPaperToAuthorshipMap(final Paper thePaper) {
         for(final String currentAuthor: thePaper.getAuthors()){
-            if(!myConferenceInfo.getPaperAuthorshipMap().containsKey(currentAuthor)){
-            	myConferenceInfo.getPaperAuthorshipMap().put(currentAuthor, new ArrayList<>());
+            if(!myConferenceData.getPaperAuthorshipMap().containsKey(currentAuthor)){
+            	myConferenceData.getPaperAuthorshipMap().put(currentAuthor, new ArrayList<>());
             }
-            myConferenceInfo.getPaperAuthorshipMap().get(currentAuthor).add(thePaper);
+            myConferenceData.getPaperAuthorshipMap().get(currentAuthor).add(thePaper);
         }
     }
 }

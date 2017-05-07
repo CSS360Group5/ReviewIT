@@ -21,6 +21,9 @@ public class Conference implements Serializable{
 	private static final long serialVersionUID = -836524014001898470L;
 	
 	public static final int AUTHOR_ROLE = 1;
+	public static final int REVIEW_ROLE = 2;
+	public static final int SUBPROGRAM_ROLE = 3;
+	public static final int PROGRAM_ROLE = 4;
 	public static final int DIRECTOR_ROLE = 5;
 
 	/**
