@@ -1,11 +1,11 @@
 package view_controller.console_ui;
 
-import java.util.List;
-import java.util.Scanner;
-
 import model.UserProfile;
 import model.conference.Conference;
 import persistance.RSystem;
+
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * A console based UI running the ReviewIt internal model.
