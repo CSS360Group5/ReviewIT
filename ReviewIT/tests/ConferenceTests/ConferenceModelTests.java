@@ -1,6 +1,12 @@
 package ConferenceTests;
 
-import static org.junit.Assert.*;
+import model.IllegalOperationException;
+import model.Paper;
+import model.UserProfile;
+import model.conference.Conference;
+import model.conference.UserUtilities;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.text.ParseException;
@@ -10,14 +16,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import model.IllegalOperationException;
-import model.Paper;
-import model.UserProfile;
-import model.conference.Conference;
-import model.conference.UserUtilities;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * The purpose of this unit of tests is to ensure that the model code of the various conference classes

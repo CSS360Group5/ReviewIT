@@ -1,15 +1,11 @@
 package model.conference;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import model.Paper;
 import model.UserProfile;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * A class for specifically holding all the Data related to a Conference.
