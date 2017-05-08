@@ -1,19 +1,14 @@
 package persistance;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import model.Paper;
+import model.UserProfile;
+import model.conference.Conference;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import model.Paper;
-import model.UserProfile;
-import model.conference.Conference;
 
 /**
  * A singleton system class which is responsible for holding
@@ -67,31 +62,31 @@ public class RSystem {
 		 * TO DO: Code for deserializing Data, aka loading up our
 		 * Conference/UserProfile objects should happen here
 		 */
-		if((new File("./UserMap.ser")).exists() && (new File("./ConfereneMap.ser")).exists()){
-			try {
-				FileInputStream fisUser = new FileInputStream("UserMap.ser");
-				ObjectInputStream oisUser = new ObjectInputStream(fisUser);
-				FileInputStream fisCon = new FileInputStream("ConferenceMap.ser");
-				ObjectInputStream oisCon = new ObjectInputStream(fisCon);
-	
-				Map<String, UserProfile> newUserMap = new HashMap<>((HashMap<String, UserProfile>) oisUser.readObject());
-				Map<String, Conference> newConfMap = new HashMap<>((HashMap<String, Conference>) oisCon.readObject());
-	
-				if (newUserMap != null && newConfMap != null) {
-					myUserMap = new HashMap<>(newUserMap);
-					myConferenceMap = new HashMap<>(newConfMap);
-				}
-				oisUser.close();
-				fisUser.close();
-				oisCon.close();
-				fisCon.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			System.out.print("Deserialization successful.");
-		}
+		if((new File("UserMap.ser")).exists() && (new File("ConferenceMap.ser")).exists()) {
+            try {
+                FileInputStream fisUser = new FileInputStream("UserMap.ser");
+                ObjectInputStream oisUser = new ObjectInputStream(fisUser);
+                FileInputStream fisCon = new FileInputStream("ConferenceMap.ser");
+                ObjectInputStream oisCon = new ObjectInputStream(fisCon);
+
+                Map<String, UserProfile> newUserMap = new HashMap<>((HashMap<String, UserProfile>) oisUser.readObject());
+                Map<String, Conference> newConfMap = new HashMap<>((HashMap<String, Conference>) oisCon.readObject());
+
+                if (newUserMap != null && newConfMap != null) {
+                    myUserMap = new HashMap<>(newUserMap);
+                    myConferenceMap = new HashMap<>(newConfMap);
+                }
+                oisUser.close();
+                fisUser.close();
+                oisCon.close();
+                fisCon.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            System.out.print("Deserialization successful.");
+        }
 	}
 	
 	/**
