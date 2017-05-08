@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
@@ -36,9 +37,9 @@ public class ConsoleUI {
 		myScanner.useDelimiter("\\n");
 		myState = new ConsoleState();
 		
-//		ConsoleUtility.initUsersAndConferences();
+		ConsoleUtility.initUsersAndConferences();
 		
-		RSystem.getInstance().deserializeData();
+//		RSystem.getInstance().deserializeData();
 		
 	}
 	
@@ -82,10 +83,10 @@ public class ConsoleUI {
 				newScreen = ConsoleState.STARTING_SCREEN; //TEMP,should = method call
 				break;
 			case ConsoleState.SUBMIT_PAPER_SCREEN:
-				newScreen = submitPaper(); //TEMP,should = method call
+				newScreen = submitPaper();
 				break;
 			case ConsoleState.ASSIGN_REVIEWER_SCREEN:
-				newScreen = ConsoleState.STARTING_SCREEN; //TEMP,should = method call
+				newScreen = assignReviewer(); //TEMP,should = method call
 				break;
 			default:
 				ConsoleUtility.printHeader(myState);
@@ -102,22 +103,65 @@ public class ConsoleUI {
 		
 		ConsoleUtility.showMessageToUser(myScanner, "Exiting Program!");
 	}
-	
+
 	private int submitPaper() {
-//		final File thePaper,
-//		final Date theSubmissionDate,
-//		final List<String> theAuthors,
-//		final String thePaperTitle,
-//		final UserProfile theSubmitterUserProfile
+
+		ConsoleUtility.printHeader(myState);
 		if(!myState.getCurrentConference().getInfo().isSubmissionOpen(new Date())){
 			ConsoleUtility.showMessageToUser(
 					myScanner,
 					"Sorry, Conference is closed for paper submissions.\n" +
 					"Conference Submission Deadline was: " + myState.getCurrentConference().getInfo().getSubmissionDate() + "\n" +
 					"Current System Date is: " + new Date());
+			return ConsoleState.CONFERENCE_SCREEN;
+		}else{
+			final File paperFile = ConsoleUtility.inputFile(
+					myScanner,
+					myState,
+					"SUBMITTING PAPER:\nPlease type in the path to a .pdf file.\nPATH:",
+					"File does not exist. Please type in a valid path!\n",
+					"File must be .pdf\n");
+			
+			if(paperFile == null){
+				return ConsoleState.CONFERENCE_SCREEN;
+			}
+			
+			final List<String> authors =
+					Arrays.asList(
+							ConsoleUtility.inputNonEmptyString(
+									myScanner,
+									myState,
+									"Please enter all Paper Authors separated by comma\nAuthors: ", 
+									"Paper must have at least 1 author!"
+									).split(",")
+							);
+			final String paperTitle =
+					ConsoleUtility.inputNonEmptyString(
+							myScanner,
+							myState,
+							"Please enter the Paper Title\nTitle: ",
+							"Cannot have an empty Title!"
+							);
+			
+			final Paper enteredPaper = Paper.createPaper(
+					paperFile, authors, paperTitle, myState.getCurrentUser());
+			
+			try {
+				myState.getCurrentConference().getUserRole().addPaper(myState.getCurrentUser(), enteredPaper);
+			} catch (final IllegalOperationException theException) {
+				theException.printStackTrace();
+				ConsoleUtility.showMessageToUser(
+						myScanner,
+						"Could not submit Paper:\n\"" + theException.getMessage() + "\"\n"
+						);
+				return ConsoleState.CONFERENCE_SCREEN;
+			}
+			ConsoleUtility.showMessageToUser(
+					myScanner,
+					"Paper submitted successfully!"
+					);
+			return ConsoleState.CONFERENCE_SCREEN;
 		}
-		
-		return 0;
 	}
 
 	private int viewConferenceAssignedPapersScreen() {
@@ -126,6 +170,11 @@ public class ConsoleUI {
 	}
 
 	private int viewAllAssignedPapersScreen() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	private int assignReviewer() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -303,6 +352,7 @@ public class ConsoleUI {
 		final int VIEW_ASSIGNED_PAPERS = 3;
 		final int ASSIGN_REVIEWER_OPTION = 5;
 		
+		final int CHOOSE_DIFFERENT_CONFERENCE = 18;
 		final int SIGN_OUT_OPTION = 19;
 		final int EXIT_PROGRAM = 20;
 		
@@ -333,10 +383,11 @@ public class ConsoleUI {
 		}
 		
 		promptBuilder.append(
+				CHOOSE_DIFFERENT_CONFERENCE + ") Choose another Conference.\n" + 
 				SIGN_OUT_OPTION + ") Sign out.\n" + 
 				EXIT_PROGRAM + ") Exit program."
 				);
-		availableOptions.addAll(Arrays.asList(SIGN_OUT_OPTION, EXIT_PROGRAM));
+		availableOptions.addAll(Arrays.asList(CHOOSE_DIFFERENT_CONFERENCE, SIGN_OUT_OPTION, EXIT_PROGRAM));
 		
 		final int chosenOption = ConsoleUtility.inputNumberedOptions(
 				myScanner, myState, availableOptions, promptBuilder.toString());
@@ -350,6 +401,9 @@ public class ConsoleUI {
 			return ConsoleState.VIEW_ASSIGNED_PAPERS_FOR_CONFERENCE_SCREEN;
 		case VIEW_ASSIGNED_PAPERS:
 			return ConsoleState.VIEW_ASSIGNED_PAPERS_FOR_CONFERENCE_SCREEN;
+		case CHOOSE_DIFFERENT_CONFERENCE:
+			myState.setCurrentConference(null);
+			return ConsoleState.CHOOSE_CONFERENCE_SCREEN;
 		case SIGN_OUT_OPTION:
 			ConsoleUtility.signOut(myScanner, myState);
 			return ConsoleState.PRELOGIN_SCREEN;

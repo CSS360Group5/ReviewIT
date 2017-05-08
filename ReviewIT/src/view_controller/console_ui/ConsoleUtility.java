@@ -173,18 +173,73 @@ public class ConsoleUtility {
 	/**
 	 * Returns null if user wanted to exit out.
 	 */
-	public File inputFile(
+	public static File inputFile(
 			final Scanner theScanner,
 			final ConsoleState theState,
 			final String theInputPrompt,
 			final String theFileNotExistPrompt,
 			final String theWrongExtensionPrompt){
 		
-		return null;
+		boolean fileDoesntExist = false;
+		boolean fileWrongExtension = false;
+		
+		
+		while(true){
+			if(fileDoesntExist){
+				fileDoesntExist = false;
+				System.out.print(theFileNotExistPrompt);
+			}else if(fileWrongExtension){
+				fileWrongExtension = false;
+				System.out.print(theWrongExtensionPrompt);
+			}
+			
+			System.out.print(theInputPrompt);
+			ConsoleUtility.flush();
+			String userInput = theScanner.nextLine();
+			try{
+				final int chosenOption = Integer.parseInt(userInput);
+				if(chosenOption == EXIT_OPTION){
+					return null;
+				}
+			}
+			catch (NumberFormatException nfe) {
+				//Didn't choose to exit, don't need to do anything.
+			}
+			
+			final File inputtedFile = new File(userInput);
+			
+			if(!inputtedFile.exists()){
+				fileDoesntExist = true;
+				continue;
+			}else if(!inputtedFile.getName().endsWith(".pdf")){
+				fileWrongExtension = true;
+				continue;
+			}
+			return inputtedFile;
+		}
 	}
 	
-	public static String inputNonEmptyString(final String thePrompt){
-		return "";
+	public static String inputNonEmptyString(
+			final Scanner theScanner,
+			final ConsoleState theState,
+			final String thePrompt,
+			final String theEmptyStringPrompt){
+		boolean emptyStringInputted = false;
+		
+		while(true){
+			if(emptyStringInputted){
+				emptyStringInputted = false;
+				System.out.print(theEmptyStringPrompt);
+			}
+			System.out.print(thePrompt);
+			ConsoleUtility.flush();
+			String userInput = theScanner.nextLine();
+			if(userInput.trim().isEmpty()){
+				emptyStringInputted = true;
+				continue;
+			}
+			return userInput;
+		}
 	}
 	
 	/**
@@ -270,7 +325,6 @@ public class ConsoleUtility {
 		
 		final List<String> sampleConferenceNames =
 				new ArrayList<>(Arrays.asList(
-						"Annual Conference of the European Association for Computer Graphics",
 						 "Conference on Animation, Effects, VR, Games and Transmedia",
 						 "19th International Conference on Enterprise Information Systems",
 						 "3rd International Conference on Information and Communication Technologies for Ageing Well and e-Health",
@@ -279,35 +333,33 @@ public class ConsoleUtility {
 		final int paperSubmitLimit = 5;
 		final int paperAssignLimit = 8;
 	
+		
+		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		for(final String currentSampleConferenceName: sampleConferenceNames){
-			try {
-				if(currentSampleConferenceName.contains("Annual Conference of the European")){
-					RSystem.getInstance().addConference(
-							Conference.createConference(
-									currentSampleConferenceName,
-									format.parse("2017/04/19 23:59:59"),
-									paperSubmitLimit,
-									paperAssignLimit
-									)
-							);
-				}else{
-					RSystem.getInstance().addConference(
-							Conference.createConference(
-									currentSampleConferenceName,
-									format.parse("2017/05/20 23:59:59"),
-									paperSubmitLimit,
-									paperAssignLimit
-									)
-							);
-				}
-				
-				
-			} catch (IllegalArgumentException e) {
-//				e.printStackTrace();
-			} catch (ParseException e) {
-//				e.printStackTrace();
+		
+		try {
+			RSystem.getInstance().addConference(
+					Conference.createConference(
+							"Annual Conference of the European Association for Computer Graphics",
+							format.parse("2017/04/19 23:59:59"),
+							paperSubmitLimit,
+							paperAssignLimit
+							)
+					);
+			for(final String currentSampleConferenceName: sampleConferenceNames){
+				RSystem.getInstance().addConference(
+						Conference.createConference(
+								currentSampleConferenceName,
+								format.parse("2017/05/20 23:59:59"),
+								paperSubmitLimit,
+								paperAssignLimit
+								)
+						);
 			}
+		} catch (IllegalArgumentException e) {
+//				e.printStackTrace();
+		} catch (ParseException e) {
+//				e.printStackTrace();
 		}
 		
 		final UserProfile sampleAuthorUser = new UserProfile("author@uw.edu", "Author John Doe"); 
