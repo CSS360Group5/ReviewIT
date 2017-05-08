@@ -1,19 +1,14 @@
 package persistance;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import model.Paper;
+import model.UserProfile;
+import model.conference.Conference;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import model.Paper;
-import model.UserProfile;
-import model.conference.Conference;
 
 /**
  * A singleton system class which is responsible for holding
