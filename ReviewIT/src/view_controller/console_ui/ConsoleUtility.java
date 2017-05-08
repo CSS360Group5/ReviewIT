@@ -289,10 +289,16 @@ public class ConsoleUtility {
 					"Conference:\n" + 
 					theState.getCurrentConference().getInfo().getName() + "\n"
 					);
+			
+			System.out.println(
+					"Submission Deadline: " + 
+					theState.getCurrentConference().getInfo().getSubmissionDate() + "\n"
+					);
 			System.out.println(
 					"Role(s):\n" + 
 					theState.getCurrentConference().getInfo().getUserRoles(theState.getCurrentUser()) + "\n"
 					);
+			
 		}			
 		
 		if(theState.getCurrentUser() != null){
@@ -322,14 +328,7 @@ public class ConsoleUtility {
 	 * brings up all the Conference/UserProfiles from the last system execution.
 	 */
 	public static void initUsersAndConferences(){
-		
-		final List<String> sampleConferenceNames =
-				new ArrayList<>(Arrays.asList(
-						 "Conference on Animation, Effects, VR, Games and Transmedia",
-						 "19th International Conference on Enterprise Information Systems",
-						 "3rd International Conference on Information and Communication Technologies for Ageing Well and e-Health",
-						 "CHI Conference on Human Factors in Computing Systems",
-						 "Western Canadian Conference on Computing Education"));
+
 		final int paperSubmitLimit = 5;
 		final int paperAssignLimit = 8;
 	
@@ -338,53 +337,117 @@ public class ConsoleUtility {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		
 		try {
-			RSystem.getInstance().addConference(
-					Conference.createConference(
-							"Annual Conference of the European Association for Computer Graphics",
-							format.parse("2017/04/19 23:59:59"),
-							paperSubmitLimit,
-							paperAssignLimit
-							)
+			Conference conf1 = Conference.createConference(
+					"19th International Conference on Enterprise Information Systems *Af.",
+					format.parse("2017/05/06 23:59:59"),
+					paperSubmitLimit,
+					paperAssignLimit
 					);
-			for(final String currentSampleConferenceName: sampleConferenceNames){
-				RSystem.getInstance().addConference(
-						Conference.createConference(
-								currentSampleConferenceName,
-								format.parse("2017/05/20 23:59:59"),
-								paperSubmitLimit,
-								paperAssignLimit
-								)
+			Conference conf2 = Conference.createConference(
+					"Conference on Animation, Effects, VR, Games and Transmedia *Bef.",
+					format.parse("2017/05/08 23:59:59"),
+					paperSubmitLimit,
+					paperAssignLimit
+					);
+			Conference conf3 = Conference.createConference(
+					"Western Canadian Conference on Computing Education *Af",
+					format.parse("2017/05/20 23:59:59"),
+					paperSubmitLimit,
+					paperAssignLimit
+					);
+			RSystem.getInstance().addConference(conf1);
+			RSystem.getInstance().addConference(conf2);
+			RSystem.getInstance().addConference(conf3);
+
+			final UserProfile sampleAuthorUser = new UserProfile("submitalot@uw.edu", "Garrett Wolfe");
+			final UserProfile sampleAuthorUser2 = new UserProfile("submitertoo@uw.edu", "Irma Turner");
+			final UserProfile sampleReviewerUser = new UserProfile("reviewer@uw.edu", "Geoffre Tucker");
+			final UserProfile sampleSubprogramUser = new UserProfile("subprogram@uw.edu", "Laverne Rogers ");
+
+			for(int i = 0; i < 4; ++i){
+				final Paper currentPaper = Paper.createPaper(
+						new File("C;/Paper" + i + ".pdf"),
+						Arrays.asList("Garrett Wolfe"),
+						"Sample Paper" + i,
+						sampleAuthorUser);
+				conf2.getUserRole().addPaper(
+						sampleAuthorUser,
+						currentPaper
+						);
+				conf2.getSubprogramRole().assignReviewer(
+						sampleReviewerUser,
+						currentPaper
 						);
 			}
+			for(int i = 0; i < 3; ++i){
+				final Paper currentPaper = Paper.createPaper(
+						new File("C;/Paper" + i + ".pdf"),
+						Arrays.asList("Irma Turner"),
+						"Sample Paper" + i,
+						sampleAuthorUser2);
+				conf2.getUserRole().addPaper(
+						sampleAuthorUser2,
+						currentPaper
+						);
+				conf2.getSubprogramRole().assignReviewer(
+						sampleReviewerUser,
+						currentPaper
+						);
+			}
+			
+			
+			conf2.getDirectorRole().addUserRole(sampleSubprogramUser, Conference.SUBPROGRAM_ROLE);
+			
+			
+			conf3.getUserRole().addPaper(sampleAuthorUser, 
+					Paper.createPaper(
+							new File("C:/ROC_Curve.pdf"),
+							Arrays.asList("Garrett Wolfe"),
+							"The use of the area under the ROC curve in the evaluation of machine learning algorithms",
+							sampleAuthorUser));
+			conf3.getUserRole().addPaper(sampleAuthorUser, 
+					Paper.createPaper(
+							new File("C:/KernelClassifiers.pdf"),
+							Arrays.asList("Garrett Wolfe"),
+							"Learning kernel classifiers: theory and algorithms",
+							sampleAuthorUser));
+//			conf3.getUserRole().addPaper(sampleAuthorUser, 
+//					Paper.createPaper(
+//							new File("C:/InstanceBased.pdf"),
+//							Arrays.asList("Garrett Wolfe"),
+//							"Instance-based learning algorithms",
+//							sampleAuthorUser));
+			final List<UserProfile> sampleUserProfiles =
+					new ArrayList<>(Arrays.asList(
+							sampleReviewerUser,
+							sampleAuthorUser,
+							sampleSubprogramUser,
+							sampleAuthorUser2
+							)
+							);
+			
+			for(final UserProfile currentSampleUserProfile: sampleUserProfiles){
+				RSystem.getInstance().addUserProfile(currentSampleUserProfile);
+			}
+
+			
+			final Paper samplePaper1 = Paper.createPaper(
+					new File(""),
+					new ArrayList<>(Arrays.asList("Xu Zhuang", "Yan Zhu", "Chin-Chen Chang", "Qiang Peng", "Garrett Wolfe")),
+					"Feature bundling in decision tree algorithm.",
+					sampleAuthorUser
+					);
+			conf3.getUserRole().addPaper(sampleAuthorUser, samplePaper1);
+			
+			
 		} catch (IllegalArgumentException e) {
 //				e.printStackTrace();
 		} catch (ParseException e) {
 //				e.printStackTrace();
-		}
-		
-		final UserProfile sampleAuthorUser = new UserProfile("author@uw.edu", "Author John Doe"); 
-		
-		final List<UserProfile> sampleUserProfiles =
-				new ArrayList<>(Arrays.asList(
-						new UserProfile("reviewer@uw.edu", "Reviewer John Doe"),
-						sampleAuthorUser));
-		
-		for(final UserProfile currentSampleUserProfile: sampleUserProfiles){
-			RSystem.getInstance().addUserProfile(currentSampleUserProfile);
-		}
-		
-		final Paper samplePaper = Paper.createPaper(
-				new File(""),
-				new ArrayList<>(Arrays.asList("Xu Zhuang", "Yan Zhu", "Chin-Chen Chang", "Qiang Peng")),
-				"Feature bundling in decision tree algorithm.",
-				sampleAuthorUser
-				);
-		try {
-			RSystem.getInstance().getConference("Western Canadian Conference on Computing Education").getUserRole().addPaper(sampleAuthorUser, samplePaper);
 		} catch (IllegalOperationException e) {
-			System.err.println(e.getMessage());
-//			e.printStackTrace();
+//				e.printStackTrace();
 		}
+
 	}
 	
 	public static List<Integer> createConsecutiveList(final int from, final int to){
