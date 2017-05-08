@@ -1,4 +1,4 @@
-package SerializationTests;
+package TestResources;
 
 import model.Paper;
 import model.UserProfile;
