@@ -1,5 +1,6 @@
 package SerializationTests;
 
+import TestResources.TestRSystem;
 import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
