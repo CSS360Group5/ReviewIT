@@ -19,6 +19,10 @@ import model.UserProfile;
  * @version 5/2/2017
  */
 public class ConferenceData implements ConferenceInfo, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3694105038281388854L;
 	private final String myConferenceName;
     private final Date myPaperSubmissionDeadline;
     private final int myPaperSubmissionLimit;

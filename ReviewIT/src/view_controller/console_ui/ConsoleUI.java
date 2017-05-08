@@ -1,14 +1,15 @@
 package view_controller.console_ui;
 
-import model.Paper;
-import model.UserProfile;
-import model.conference.Conference;
-import persistance.RSystem;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
+
+import model.Paper;
+import model.UserProfile;
+import model.conference.Conference;
+import persistance.RSystem;
 
 /**
  * A console based UI running the ReviewIt internal model.
@@ -32,7 +33,11 @@ public class ConsoleUI {
 		myScanner = new Scanner(System.in);
 		myScanner.useDelimiter("\\n");
 		myState = new ConsoleState();
+		
 //		ConsoleUtility.initUsersAndConferences();
+		
+		RSystem.getInstance().deserializeData();
+		
 	}
 	
 	/**
