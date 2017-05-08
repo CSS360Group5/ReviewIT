@@ -39,7 +39,6 @@ public class RSystem {
 	private RSystem(){
 		myConferenceMap = new HashMap<>();
 		myUserMap = new HashMap<>();
-//		deserializeData();
 	}
 	
 	/**
@@ -81,13 +80,13 @@ public class RSystem {
 				oisCon.close();
 				fisCon.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}finally{
 				
 			}
-			System.out.print("Deserialization successful.");
+//			System.out.print("Deserialization successful.");
 		}
 	}
 	
@@ -119,9 +118,9 @@ public class RSystem {
 			fosCon.flush();
 			fosCon.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
-		System.out.print("Serialization successful.");
+//		System.out.print("Serialization successful.");
 	}
 	
 	/**
@@ -185,6 +184,19 @@ public class RSystem {
 		final List<Paper> submittedPapers = new ArrayList<>();
 		for(final Conference currentConference: myConferenceMap.values()){
 			submittedPapers.addAll(currentConference.getInfo().getPapersSubmittedBy(theUserProfile));
+		}
+		return submittedPapers;
+	}
+	
+	/**
+	 * Gets ALL Papers from ALL Conferences assigned for Review to theUserProfile
+	 * @param theUserProfile The UserProfile of assigned person
+	 * @return ALL Papers from ALL Conferences assigned for review to theUserProfile 
+	 */
+	public List<Paper> getAllPapersAssignedTo(final UserProfile theUserProfile){
+		final List<Paper> submittedPapers = new ArrayList<>();
+		for(final Conference currentConference: myConferenceMap.values()){
+			submittedPapers.addAll(currentConference.getInfo().getPapersAssignedToReviewer(theUserProfile));
 		}
 		return submittedPapers;
 	}

@@ -1,14 +1,18 @@
 package view_controller.console_ui;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.IntStream;
+
+import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 import model.conference.Conference;
 import persistance.RSystem;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
 
 /**
  * A console based UI running the ReviewIt internal model.
@@ -33,9 +37,9 @@ public class ConsoleUI {
 		myScanner.useDelimiter("\\n");
 		myState = new ConsoleState();
 		
-//		ConsoleUtility.initUsersAndConferences();
+		ConsoleUtility.initUsersAndConferences();
 		
-		RSystem.getInstance().deserializeData();
+//		RSystem.getInstance().deserializeData();
 		
 	}
 	
@@ -72,11 +76,26 @@ public class ConsoleUI {
 			case ConsoleState.CONFERENCE_SCREEN:
 				newScreen = conferenceScreen();
 				break;
-			case ConsoleState.SUBMIT_PAPER_SCREEN:
-				newScreen = ConsoleState.STARTING_SCREEN; //TEMP,should = method call
+			case ConsoleState.VIEW_SUBMITTED_PAPERS_FOR_CONFERENCE_SCREEN:
+				newScreen = viewConferenceSubmittedPaperScreen();
 				break;
-			case ConsoleState.ASSIGN_REVIEWER_SCREEN:
-				newScreen = ConsoleState.STARTING_SCREEN; //TEMP,should = method call
+			case ConsoleState.VIEW_ASSIGNED_PAPERS_FOR_CONFERENCE_SCREEN:
+				newScreen = viewConferenceAssignedPapersScreen();
+				break;
+			case ConsoleState.SUBMIT_PAPER_SCREEN:
+				newScreen = submitPaper();
+				break;
+			case ConsoleState.ASSIGN_REVIEWER_START_SCREEN:
+				newScreen = assignReviewer();
+				break;
+			case ConsoleState.ASSIGN_REVIEWER_ID_SCREEN:
+				newScreen = assignReviewerByID();
+				break;
+			case ConsoleState.ASSIGN_REVIEWER_LIST_SCREEN:
+				newScreen = assignReviewerFromList();
+				break;
+			case ConsoleState.ASSIGN_REVIEWER_TO_PAPER_SCREEN:
+				newScreen = assignReviewerToPaper();
 				break;
 			default:
 				ConsoleUtility.printHeader(myState);
@@ -93,9 +112,244 @@ public class ConsoleUI {
 		
 		ConsoleUtility.showMessageToUser(myScanner, "Exiting Program!");
 	}
+
+	private int assignReviewerFromList() {
+		ConsoleUtility.printHeader(myState);
+		final StringBuilder promptBuilder = new StringBuilder();
+		promptBuilder.append("Please choose a Reviewer:\n");
+		List<UserProfile> reviewerList = myState.getCurrentConference().getInfo().getReviewers();
+		
+		int i = 1;
+		for(; i < reviewerList.size(); ++i){
+			final UserProfile currentReviewer = reviewerList.get(i);
+			promptBuilder.append(i + ") ID: "+ currentReviewer.getUID() + ", Name: " + currentReviewer.getName() + "\n");
+		}
+		
+		final int GO_BACK_OPTION = i;
+		promptBuilder.append(GO_BACK_OPTION + ") Back to Conference screen.\n");
+		final int EXIT_PROGRAM_OPTION = i + 1;
+		promptBuilder.append(EXIT_PROGRAM_OPTION + ") Exit Program.\n");
+		
+		final int chosenOption = ConsoleUtility.inputNumberedOptions(
+				myScanner, myState, ConsoleUtility.createConsecutiveList(1, EXIT_PROGRAM_OPTION), promptBuilder.toString());
+		
+		if(chosenOption == GO_BACK_OPTION){
+			return ConsoleState.CONFERENCE_SCREEN;
+		}
+		else if(chosenOption == EXIT_PROGRAM_OPTION){
+			return ConsoleState.EXIT_PROGRAM;
+		}else{ //They chose a reviewer:
+			myState.setSelectedUserForAssignment(reviewerList.get(chosenOption));
+			return ConsoleState.ASSIGN_REVIEWER_TO_PAPER_SCREEN;
+		}
+	}
+
+	private int assignReviewerToPaper(){
+		ConsoleUtility.printHeader(myState);
+		final StringBuilder promptBuilder = new StringBuilder();
+		promptBuilder.append("Choose a Paper to assign to User ID: " + myState.getSelectedUserForAssignment().getUID() + ", Name: " + myState.getSelectedUserForAssignment().getName() + "\n");
+		List<Paper> paperList = myState.getCurrentConference().getInfo().getAllPapers();
+		
+		int i = 1;
+		for(; i < paperList.size(); ++i){
+			final Paper currentPaper = paperList.get(i);
+			promptBuilder.append(
+					i + ") Title: \"" + currentPaper.getTitle() + "\"\n" +
+					"Authors: " + currentPaper.getAuthors() + "\n" +
+					"Paper's File: " + currentPaper.getPaperFile() + "\n" +
+					"Submitted on: " + currentPaper.getSubmitDate() + "\n" +
+					"Submitted by: \"" + currentPaper.getSubmitterUserProfile().getUID() + "\"\n"
+					);
+		}
+		
+		final int GO_BACK_OPTION = i;
+		promptBuilder.append(GO_BACK_OPTION + ") Back to Conference screen.\n");
+		final int EXIT_PROGRAM_OPTION = i + 1;
+		promptBuilder.append(EXIT_PROGRAM_OPTION + ") Exit Program.\n");
+		
+		final int chosenOption = ConsoleUtility.inputNumberedOptions(
+				myScanner, myState, ConsoleUtility.createConsecutiveList(1, EXIT_PROGRAM_OPTION), promptBuilder.toString());
+		
+		if(chosenOption == GO_BACK_OPTION){
+			return ConsoleState.CONFERENCE_SCREEN;
+		}
+		else if(chosenOption == EXIT_PROGRAM_OPTION){
+			return ConsoleState.EXIT_PROGRAM;
+		}else{ //They chose a paper:
+			final Paper chosenPaper = paperList.get(chosenOption);
+			ConsoleUtility.showMessageToUser(
+					myScanner,
+					"You've successfully assigned Reviewer with UID: " +
+					myState.getSelectedUserForAssignment().getUID() +
+					", Name: " + myState.getSelectedUserForAssignment().getName() +
+					" to review " + chosenPaper.getTitle()
+					);
+			return ConsoleState.CONFERENCE_SCREEN;
+		}
+	}
 	
+	private int assignReviewerByID() {
+		final String loginHeader = new String(new char[30]).replace("\0", " ") +
+				"Assign Paper to a Reviewer\n\n\n\n";
+		final String inputPrompt =  "Please type in the Reviewer UserID or enter " + ConsoleUtility.EXIT_OPTION + " to exit:\nUserID:";
+		final String noSuchUserPrompt = "Sorry no UserID \"%s\" found in the System.\nPlease try again.\n";
+		
+		final UserProfile selectedProfile = ConsoleUtility.inputExistingUserProfile(myScanner, myState, loginHeader, inputPrompt, noSuchUserPrompt);
+		if(selectedProfile == null){
+			return ConsoleState.CONFERENCE_SCREEN;
+		}
+		myState.setSelectedUserForAssignment(selectedProfile);
+		return ConsoleState.ASSIGN_REVIEWER_TO_PAPER_SCREEN;
+		
+	}
+	private int viewConferenceAssignedPapersScreen() {
+		ConsoleUtility.printHeader(myState);
+		System.out.println("All assigned papers:\n");
+		int paperNum = 0;
+		for(final Paper currentPaper: myState.getCurrentConference().getInfo().getPapersAssignedToReviewer(myState.getCurrentUser())){
+			++paperNum;
+			System.out.println(
+				String.valueOf(paperNum) + ") " +
+				"Title: \"" + currentPaper.getTitle() + "\"\n" +
+				"Authors: " + currentPaper.getAuthors() + "\n" +
+				"Paper's File: " + currentPaper.getPaperFile() + "\n" +
+				"Submitted on: " + currentPaper.getSubmitDate() + "\n" +
+				"Submitted by: \"" + currentPaper.getSubmitterUserProfile().getUID() + "\"\n"
+			);
+		}
+		
+		ConsoleUtility.showMessageToUser(myScanner, "");
+		
+		return ConsoleState.CONFERENCE_SCREEN;
+	}
+
 	private int viewAllAssignedPapersScreen() {
-		// TODO Auto-generated method stub
+		ConsoleUtility.printHeader(myState);
+		System.out.println("All papers assigned to me:\n");
+		int paperNum = 0;
+		for(final Paper currentPaper: RSystem.getInstance().getAllPapersAssignedTo(myState.getCurrentUser())){
+			++paperNum;
+			System.out.println(
+				String.valueOf(paperNum) + ") " +
+				"Title: \"" + currentPaper.getTitle() + "\"\n" +
+				"Authors: " + currentPaper.getAuthors() + "\n" +
+				"Paper's File: " + currentPaper.getPaperFile() + "\n" +
+				"Submitted on: " + currentPaper.getSubmitDate() + "\n" +
+				"Submitted by: \"" + currentPaper.getSubmitterUserProfile().getUID() + "\"\n"
+			);
+		}
+		
+		ConsoleUtility.showMessageToUser(myScanner, "");
+		
+		return ConsoleState.USER_HOME_SCREEN;
+	}
+	
+	private int viewConferenceSubmittedPaperScreen() {
+		ConsoleUtility.printHeader(myState);
+		System.out.println("Papers submitted to this Conference:\n");
+		int paperNum = 0;
+		for(final Paper currentPaper: myState.getCurrentConference().getInfo().getPapersSubmittedBy(myState.getCurrentUser())){
+			++paperNum;
+			System.out.println(
+				String.valueOf(paperNum) + ") " +
+				"Title: \"" + currentPaper.getTitle() + "\"\n" +
+				"Authors: " + currentPaper.getAuthors() + "\n" +
+				"Paper's File: " + currentPaper.getPaperFile() + "\n" +
+				"Submitted on: " + currentPaper.getSubmitDate() + "\n" +
+				"Submitted by: \"" + currentPaper.getSubmitterUserProfile().getUID() + "\"\n"
+			);
+		}
+		
+		ConsoleUtility.showMessageToUser(myScanner, "");
+		
+		return ConsoleState.CONFERENCE_SCREEN;
+	}
+
+	private int submitPaper() {
+
+		ConsoleUtility.printHeader(myState);
+		if(!myState.getCurrentConference().getInfo().isSubmissionOpen(new Date())){
+			ConsoleUtility.showMessageToUser(
+					myScanner,
+					"Sorry, Conference is closed for paper submissions.\n" +
+					"Conference Submission Deadline was: " + myState.getCurrentConference().getInfo().getSubmissionDate() + "\n" +
+					"Current System Date is: " + new Date());
+			return ConsoleState.CONFERENCE_SCREEN;
+		}else{
+			final File paperFile = ConsoleUtility.inputFile(
+					myScanner,
+					myState,
+					"SUBMITTING PAPER:\nPlease type in the path to a .pdf file.\nPATH:",
+					"File does not exist. Please type in a valid path!\n",
+					"File must be .pdf\n");
+			
+			if(paperFile == null){
+				return ConsoleState.CONFERENCE_SCREEN;
+			}
+			
+			final List<String> authors =
+					Arrays.asList(
+							ConsoleUtility.inputNonEmptyString(
+									myScanner,
+									myState,
+									"Please enter all Paper Authors separated by comma\nAuthors: ", 
+									"Paper must have at least 1 author!"
+									).split(",")
+							);
+			final String paperTitle =
+					ConsoleUtility.inputNonEmptyString(
+							myScanner,
+							myState,
+							"Please enter the Paper Title\nTitle: ",
+							"Cannot have an empty Title!"
+							);
+			
+			final Paper enteredPaper = Paper.createPaper(
+					paperFile, authors, paperTitle, myState.getCurrentUser());
+			
+			try {
+				myState.getCurrentConference().getUserRole().addPaper(myState.getCurrentUser(), enteredPaper);
+			} catch (final IllegalOperationException theException) {
+				theException.printStackTrace();
+				ConsoleUtility.showMessageToUser(
+						myScanner,
+						"Could not submit Paper:\n\"" + theException.getMessage() + "\"\n"
+						);
+				return ConsoleState.CONFERENCE_SCREEN;
+			}
+			ConsoleUtility.showMessageToUser(
+					myScanner,
+					"Paper submitted successfully!"
+					);
+			return ConsoleState.CONFERENCE_SCREEN;
+		}
+	}
+	
+	private int assignReviewer() {
+		final int ASSIGN_BY_ID_OPTION = 1;
+		final int ASSIGN_FROM_LIST_OPTION = 2;
+		final int GO_BACK_OPTION = 3;
+		final int EXIT_PROGRAM = 4;
+		
+		final String inputPrompt = "Please use one of the following options:\n" +
+				"1) Assign Reviewer by UserID(and promote User to Reviewer)\n" +
+				"2) Assign Reviewer from Conference's Reviewer list\n" + 
+				"3) Go back.\n" +
+				"4) Exit program.\n";
+		
+		final int chosenOption = ConsoleUtility.inputNumberedOptions(
+				myScanner, myState, ConsoleUtility.createConsecutiveList(1, 4), inputPrompt);
+	 	
+		switch(chosenOption){
+		case ASSIGN_BY_ID_OPTION:
+			return ConsoleState.VIEW_All_SUBMITTED_PAPERS_SCREEN;
+		case ASSIGN_FROM_LIST_OPTION:
+			return ConsoleState.VIEW_All_ASSIGNED_PAPERS_SCREEN;
+		case GO_BACK_OPTION:
+			return ConsoleState.CONFERENCE_SCREEN;
+		case EXIT_PROGRAM:
+			return ConsoleState.EXIT_PROGRAM;
+		}
 		return 0;
 	}
 
@@ -143,8 +397,7 @@ public class ConsoleUI {
 		case SELECT_CONFERENCE_OPTION:
 			return ConsoleState.CHOOSE_CONFERENCE_SCREEN;
 		case SIGN_OUT_OPTION:
-			myState.setCurrentUser(null);
-			ConsoleUtility.showMessageToUser(myScanner, "You have signed out successfuly!");
+			ConsoleUtility.signOut(myScanner, myState);
 			return ConsoleState.PRELOGIN_SCREEN;
 		case EXIT_PROGRAM_OPTION:
 			return ConsoleState.EXIT_PROGRAM;
@@ -161,7 +414,7 @@ public class ConsoleUI {
 	private int login() {
 		final String loginHeader = new String(new char[30]).replace("\0", " ") +
 				"Sign In to ReviewIT\n\n\n\n";
-		final String inputPrompt =  "Please entered your UserID:\nUserID:";
+		final String inputPrompt =  "Please entered your UserID or enter " + ConsoleUtility.EXIT_OPTION + " to exit:\nUserID:";
 		final String noSuchUserPrompt = "Sorry no UserID \"%s\" found in the System.\nPlease try again.\n";
 		
 		final UserProfile selectedProfile = ConsoleUtility.inputExistingUserProfile(myScanner, myState, loginHeader, inputPrompt, noSuchUserPrompt);
@@ -176,8 +429,8 @@ public class ConsoleUI {
 	 * Handles the creating a new UserProfile screen.
 	 * @return the new screen to go to.
 	 */	private int createProfile() {
-		final String chooseIDPrompt = "Please enter the UserID you wish to use or enter 1 to exit:\nUserID:";
-		final String chooseNamePrompt = "Please enter your first and last name or enter 1 to exit:\nName:";
+		final String chooseIDPrompt = "Please enter the UserID you wish to use or enter " + ConsoleUtility.EXIT_OPTION + " to exit:\nUserID:";
+		final String chooseNamePrompt = "Please enter your first and last name or enter " + ConsoleUtility.EXIT_OPTION + " to exit:\nName:";
 		final String userIDTakenPrompt = "UserID is already taken. Please try again.";
 		final String successRegisterPrompt1 = "Successfuly registered as: \n\nUserID: \"";
 		final String successRegisterPrompt2 = "\"\nName: \"";
@@ -236,7 +489,7 @@ public class ConsoleUI {
 		promptBuilder.append("Please choose a Conference:\n");
 		List<Conference> conferenceList = RSystem.getInstance().getConferences();
 		
-		int i = 0;
+		int i = 1;
 		for(; i < conferenceList.size(); ++i){
 			final Conference currentConference = conferenceList.get(i);
 			promptBuilder.append(i + ") "+ currentConference.getInfo().getName() + "\n");
@@ -270,8 +523,10 @@ public class ConsoleUI {
 		ConsoleUtility.printHeader(myState);
 		final int SUBMIT_PAPER_OPTION = 1;
 		final int VIEW_SUBMITTED_PAPERS = 2;
-		final int ASSIGN_REVIEWER = 4;
+		final int VIEW_ASSIGNED_PAPERS = 3;
+		final int ASSIGN_REVIEWER_OPTION = 5;
 		
+		final int CHOOSE_DIFFERENT_CONFERENCE = 18;
 		final int SIGN_OUT_OPTION = 19;
 		final int EXIT_PROGRAM = 20;
 		
@@ -280,35 +535,56 @@ public class ConsoleUI {
 		
 		final List<Integer> availableOptions = new ArrayList<>();
 		
-		promptBuilder.append(SUBMIT_PAPER_OPTION + ") Submit a Paper.");
+		promptBuilder.append(SUBMIT_PAPER_OPTION + ") Submit a Paper.\n");
 		availableOptions.add(SUBMIT_PAPER_OPTION);
 		
-//		if()
-//		promptBuilder.append(VIEW_SUBMITTED_PAPERS + ")"
+		if(myState.getCurrentConference().getInfo().isUserAuthor(myState.getCurrentUser())){
+			promptBuilder.append("As an Author you can:\n");
+			promptBuilder.append("\t" + VIEW_SUBMITTED_PAPERS + ") View submitted Papers.\n");
+			availableOptions.add(VIEW_SUBMITTED_PAPERS);
+		}
 		
-		availableOptions.addAll(Arrays.asList(SUBMIT_PAPER_OPTION, SIGN_OUT_OPTION, EXIT_PROGRAM));
+		if(myState.getCurrentConference().getInfo().isUserReviewer(myState.getCurrentUser())){
+			promptBuilder.append("As a Reviewer you can:\n");
+			promptBuilder.append("\t" + VIEW_ASSIGNED_PAPERS + ") View assigned Papers.\n");
+			availableOptions.add(VIEW_ASSIGNED_PAPERS);
+		}
 		
+		if(myState.getCurrentConference().getInfo().isUserSubprogramChair(myState.getCurrentUser())){
+			promptBuilder.append("As a Subprogram Chair you can:\n");
+			promptBuilder.append("\t" + ASSIGN_REVIEWER_OPTION + ") Assign a Reviewer.\n");
+			availableOptions.add(ASSIGN_REVIEWER_OPTION);
+		}
 		
-//		final int SUBMIT_PAPER_OPTION = 1;
-//		final int VIEW_SUBMITTED_PAPERS = 2;
-//		final int EXIT_PROGRAM_OPTION = 3;
-//		final String inputPrompt = "Please use one of the following options:\n" +
-//											"1) Login with an existing UserID\n" +
-//											"2) Create a new Profile\n" + 
-//											"3) Exit program\n";
-//		
-//		final int chosenOption = ConsoleUtility.inputNumberedOptions(
-//				myScanner, myState, 1, 3, inputPrompt);
-//		switch(chosenOption){
-//		case SUBMIT_PAPER_OPTION:
-//			return ConsoleState.LOGIN_SCREEN;
-//		case NEW_PROFILE_OPTION:
-//			return ConsoleState.NEW_PROFILE_SCREEN;
-//		case EXIT_PROGRAM_OPTION:
-//			return ConsoleState.EXIT_PROGRAM;
-//		default:
-//			return BAD_INPUT;
-//		}
+		promptBuilder.append(
+				CHOOSE_DIFFERENT_CONFERENCE + ") Choose another Conference.\n" + 
+				SIGN_OUT_OPTION + ") Sign out.\n" + 
+				EXIT_PROGRAM + ") Exit program."
+				);
+		availableOptions.addAll(Arrays.asList(CHOOSE_DIFFERENT_CONFERENCE, SIGN_OUT_OPTION, EXIT_PROGRAM));
+		
+		final int chosenOption = ConsoleUtility.inputNumberedOptions(
+				myScanner, myState, availableOptions, promptBuilder.toString());
+		
+		switch(chosenOption){
+		case SUBMIT_PAPER_OPTION:
+			return ConsoleState.SUBMIT_PAPER_SCREEN;
+		case ASSIGN_REVIEWER_OPTION:
+			return ConsoleState.ASSIGN_REVIEWER_START_SCREEN;
+		case VIEW_SUBMITTED_PAPERS:
+			return ConsoleState.VIEW_SUBMITTED_PAPERS_FOR_CONFERENCE_SCREEN;
+		case VIEW_ASSIGNED_PAPERS:
+			return ConsoleState.VIEW_ASSIGNED_PAPERS_FOR_CONFERENCE_SCREEN;
+		case CHOOSE_DIFFERENT_CONFERENCE:
+			myState.setCurrentConference(null);
+			return ConsoleState.CHOOSE_CONFERENCE_SCREEN;
+		case SIGN_OUT_OPTION:
+			ConsoleUtility.signOut(myScanner, myState);
+			return ConsoleState.PRELOGIN_SCREEN;
+		case EXIT_PROGRAM:
+			return ConsoleState.EXIT_PROGRAM;
+		}
+
 		return 0;
 	}
 	

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import model.Paper;
 import model.UserProfile;
@@ -70,6 +71,11 @@ public class ConferenceData implements ConferenceInfo, Serializable{
 	*/
 	public String getName(){
 		return myConferenceName;
+	}
+	
+	@Override
+	public Date getSubmissionDate() {
+		return myPaperSubmissionDeadline;
 	}
 	
 	/**
@@ -167,7 +173,10 @@ public class ConferenceData implements ConferenceInfo, Serializable{
     	return result;
     }
     
-    
+	@Override
+	public boolean isSubmissionOpen(final Date theDate) {
+		return theDate.before(myPaperSubmissionDeadline);
+	}
     
     /**
      * Checks whether thePaper is within the submission deadline of this Conference.
@@ -297,4 +306,32 @@ public class ConferenceData implements ConferenceInfo, Serializable{
 	protected Map<UserProfile, List<String>> getUserRoleMap() {
 		return myUserRoleMap;
 	}
+
+	/**
+	 * Empty list if no reviewers exist for this Conference.
+	 */
+	@Override
+	public List<UserProfile> getReviewers() {
+		final List<UserProfile> reviewerList = new ArrayList<>();
+		for(final UserProfile currentUserProfile: myUserRoleMap.keySet()){
+			if(myUserRoleMap.get(currentUserProfile).contains(Conference.REVIEW_ROLE)){
+				reviewerList.add(currentUserProfile);
+			}
+		}
+		
+		return reviewerList;
+	}
+
+	/**
+	 * Empty list if no papers have been submitted to this Conference.
+	 */
+	@Override
+	public List<Paper> getAllPapers() {
+		final List<Paper> paperList = new ArrayList<>();
+		for(final Entry<UserProfile, List<Paper>> currentUserPaperEntry: myPaperSubmissionMap.entrySet()) {
+			paperList.addAll(currentUserPaperEntry.getValue());
+		}
+		return paperList;
+	}
+
 }

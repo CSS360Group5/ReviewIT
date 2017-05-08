@@ -22,7 +22,10 @@ public class DirectorUtilities {
     	myConferenceInfo = theConferenceData;
     }
     
-	public void addUserRole(final UserProfile theUserProfile, final int theUserRole){
-		
+	public void addUserRole(
+			final UserProfile theUserProfile,
+			final String theUserRole
+			){
+		myConferenceInfo.addUserToRole(theUserProfile, theUserRole);
 	}
 }
