@@ -29,17 +29,16 @@ public class RSystem {
 	/**
 	 * Maps Conference name to a Conference.
 	 */
-	private static Map<String, Conference> myConferenceMap;
+	private Map<String, Conference> myConferenceMap;
 	
 	/**
 	 * Maps UserID to a UserProfile.
 	 */
-	private static Map<String, UserProfile> myUserMap;
+	private Map<String, UserProfile> myUserMap;
 	
 	private RSystem(){
 		myConferenceMap = new HashMap<>();
 		myUserMap = new HashMap<>();
-		deserializeData();
 	}
 	
 	/**
@@ -48,42 +47,47 @@ public class RSystem {
 	 * @author Dimitar Kumanov
 	 */
 	public static RSystem getInstance(){
-		if(myInstance == null)
+		if(myInstance == null){
 			myInstance = new RSystem();
+		}
 		return myInstance;
 	}
 	
 	/**
 	 * Loads up all Conference/UserProfile objects into the RSYstem.
 	 */
-	private void deserializeData() {
+	public void deserializeData() {
 		/*
 		 * TO DO: Code for deserializing Data, aka loading up our
 		 * Conference/UserProfile objects should happen here
 		 */
-		try {
-			FileInputStream fisUser = new FileInputStream("UserMap.ser");
-			ObjectInputStream oisUser = new ObjectInputStream(fisUser);
-			FileInputStream fisCon = new FileInputStream("ConferenceMap.ser");
-			ObjectInputStream oisCon = new ObjectInputStream(fisCon);
-
-			Map<String, UserProfile> newUserMap = new HashMap<>((HashMap<String, UserProfile>) oisUser.readObject());
-			Map<String, Conference> newConfMap = new HashMap<>((HashMap<String, Conference>) oisCon.readObject());
-
-			if (newUserMap != null && newConfMap != null) {
-				myUserMap = new HashMap<>(newUserMap);
-				myConferenceMap = new HashMap<>(newConfMap);
+		if((new File("./UserMap.ser")).exists() && (new File("./ConferenceMap.ser")).exists()){
+			try {
+				FileInputStream fisUser = new FileInputStream("./UserMap.ser");
+				ObjectInputStream oisUser = new ObjectInputStream(fisUser);
+				FileInputStream fisCon = new FileInputStream("./ConferenceMap.ser");
+				ObjectInputStream oisCon = new ObjectInputStream(fisCon);
+	
+				Map<String, UserProfile> newUserMap = new HashMap<>((HashMap<String, UserProfile>) oisUser.readObject());
+				Map<String, Conference> newConfMap = new HashMap<>((HashMap<String, Conference>) oisCon.readObject());
+	
+				if (newUserMap != null && newConfMap != null) {
+					myUserMap = new HashMap<>(newUserMap);
+					myConferenceMap = new HashMap<>(newConfMap);
+				}
+				oisUser.close();
+				fisUser.close();
+				oisCon.close();
+				fisCon.close();
+			} catch (IOException e) {
+//				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+//				e.printStackTrace();
+			}finally{
+				
 			}
-			oisUser.close();
-			fisUser.close();
-			oisCon.close();
-			fisCon.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+//			System.out.print("Deserialization successful.");
 		}
-		System.out.print("Deserialization successful.");
 	}
 	
 	/**
@@ -91,28 +95,32 @@ public class RSystem {
 	 * This method should be called before closing the
 	 * application to save all of its Conference/UserProfile Objects.
 	 */
-	public static void serializeModel() {
+	public void serializeModel() {
 		/*
 		 * TO DO: Code for serializing Data, aka saving up our
 		 * Conference/UserProfile objects should happen here
 		 */
 		try {
-			FileOutputStream fosUser = new FileOutputStream("UserMap.ser");
+			FileOutputStream fosUser = new FileOutputStream("./UserMap.ser");
 			ObjectOutputStream oosUser = new ObjectOutputStream(fosUser);
-			FileOutputStream fosCon = new FileOutputStream("ConferenceMap.ser");
+			FileOutputStream fosCon = new FileOutputStream("./ConferenceMap.ser");
 			ObjectOutputStream oosCon = new ObjectOutputStream(fosCon);
 
 			oosUser.writeObject(myUserMap);
 			oosCon.writeObject(myConferenceMap);
-
+			
+			oosUser.flush();
 			oosUser.close();
+			fosUser.flush();
 			fosUser.close();
+			oosCon.flush();
 			oosCon.close();
+			fosCon.flush();
 			fosCon.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
-		System.out.print("Serialization successful.");
+//		System.out.print("Serialization successful.");
 	}
 	
 	/**
@@ -152,11 +160,7 @@ public class RSystem {
 	 * @return the Profile of the User. null if no profile found.
 	 */
 	public UserProfile getUserProfile(final String theUserID){
-		try {
-			return myUserMap.get(theUserID);
-		} catch (NullPointerException e) {
-			return null;
-		}
+		return myUserMap.get(theUserID);
 	}
 	
 	/**
@@ -165,7 +169,7 @@ public class RSystem {
 	 * @throws IllegalArgumentException  if theUserProfile's userID matches a UserProfile's userID already in the RSystem.
 	 */
 	public void addUserProfile(final UserProfile theUserProfile) throws IllegalArgumentException{
-		if(myUserMap.containsKey(theUserProfile.getUID())){
+		if(myUserMap.containsKey(theUserProfile.getName())){
 			throw new IllegalArgumentException("There exists a UserProfile with userID in the RSystem already!");
 		}
 		myUserMap.put(theUserProfile.getUID(), theUserProfile);
@@ -180,6 +184,19 @@ public class RSystem {
 		final List<Paper> submittedPapers = new ArrayList<>();
 		for(final Conference currentConference: myConferenceMap.values()){
 			submittedPapers.addAll(currentConference.getInfo().getPapersSubmittedBy(theUserProfile));
+		}
+		return submittedPapers;
+	}
+	
+	/**
+	 * Gets ALL Papers from ALL Conferences assigned for Review to theUserProfile
+	 * @param theUserProfile The UserProfile of assigned person
+	 * @return ALL Papers from ALL Conferences assigned for review to theUserProfile 
+	 */
+	public List<Paper> getAllPapersAssignedTo(final UserProfile theUserProfile){
+		final List<Paper> submittedPapers = new ArrayList<>();
+		for(final Conference currentConference: myConferenceMap.values()){
+			submittedPapers.addAll(currentConference.getInfo().getPapersAssignedToReviewer(theUserProfile));
 		}
 		return submittedPapers;
 	}

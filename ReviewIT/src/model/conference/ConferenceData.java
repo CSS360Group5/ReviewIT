@@ -5,6 +5,7 @@ import model.UserProfile;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * A class for specifically holding all the Data related to a Conference.
@@ -14,7 +15,11 @@ import java.util.*;
  * @author Dimitar Kumanov
  * @version 5/2/2017
  */
-public class ConferenceData implements ConferenceInfo, Serializable {
+public class ConferenceData implements ConferenceInfo, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3694105038281388854L;
 	private final String myConferenceName;
     private final Date myPaperSubmissionDeadline;
     private final int myPaperSubmissionLimit;
@@ -62,6 +67,28 @@ public class ConferenceData implements ConferenceInfo, Serializable {
 	*/
 	public String getName(){
 		return myConferenceName;
+	}
+	
+	@Override
+	public Date getSubmissionDate() {
+		return myPaperSubmissionDeadline;
+	}
+	
+	/**
+	 * A getter method for  all user roles
+	 * associated with theUserProfile for this Conference.
+	 * @return A list of roles associated with theUserProfile for this Conference.
+	 * returns an empty list if no roles are associated with theUserProfile. 
+	 */
+	@Override
+	public List<String> getUserRoles(final UserProfile theUserProfile) {
+		final List<String> userRoles;
+    	if(myUserRoleMap.containsKey(theUserProfile))
+    		userRoles = myUserRoleMap.get(theUserProfile);
+    	else{
+    		userRoles = new ArrayList<>();
+    	}
+        return userRoles;
 	}
 	
     /**
@@ -142,7 +169,10 @@ public class ConferenceData implements ConferenceInfo, Serializable {
     	return result;
     }
     
-    
+	@Override
+	public boolean isSubmissionOpen(final Date theDate) {
+		return theDate.before(myPaperSubmissionDeadline);
+	}
     
     /**
      * Checks whether thePaper is within the submission deadline of this Conference.
@@ -186,7 +216,60 @@ public class ConferenceData implements ConferenceInfo, Serializable {
     		}
     	}
     	return result;
- 
+    }
+    @Override
+	public boolean isUserAuthor(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.AUTHOR_ROLE);
+	}
+
+	@Override
+	public boolean isUserReviewer(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.REVIEW_ROLE);
+	}
+
+	@Override
+	public boolean isUserSubprogramChair(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.SUBPROGRAM_ROLE);
+	}
+
+	@Override
+	public boolean isUserProgramChair(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.PROGRAM_ROLE);
+	}
+
+	@Override
+	public boolean isUserDirector(final UserProfile theUserProfile) {
+		if(!myUserRoleMap.containsKey(theUserProfile)){
+			return false; //User doesn't have ANY role
+		}
+		return myUserRoleMap.get(theUserProfile).contains(Conference.DIRECTOR_ROLE);
+	}
+	
+    /**
+     * Adds theRole to theUserProfile for this Conference.
+     */
+    protected void addUserToRole(
+    		final UserProfile theUserProfile,
+    		final String theUserRole){
+    	if(!myUserRoleMap.containsKey(theUserProfile)){
+    		myUserRoleMap.put(theUserProfile, new ArrayList<>());
+    	}
+    	
+    	if(!myUserRoleMap.get(theUserProfile).contains(theUserRole)){
+    		myUserRoleMap.get(theUserProfile).add(theUserRole);
+    	}
     }
 	/**
 	 * @return the myPaperSubmissionMap
@@ -219,4 +302,32 @@ public class ConferenceData implements ConferenceInfo, Serializable {
 	protected Map<UserProfile, List<String>> getUserRoleMap() {
 		return myUserRoleMap;
 	}
+
+	/**
+	 * Empty list if no reviewers exist for this Conference.
+	 */
+	@Override
+	public List<UserProfile> getReviewers() {
+		final List<UserProfile> reviewerList = new ArrayList<>();
+		for(final UserProfile currentUserProfile: myUserRoleMap.keySet()){
+			if(myUserRoleMap.get(currentUserProfile).contains(Conference.REVIEW_ROLE)){
+				reviewerList.add(currentUserProfile);
+			}
+		}
+		
+		return reviewerList;
+	}
+
+	/**
+	 * Empty list if no papers have been submitted to this Conference.
+	 */
+	@Override
+	public List<Paper> getAllPapers() {
+		final List<Paper> paperList = new ArrayList<>();
+		for(final Entry<UserProfile, List<Paper>> currentUserPaperEntry: myPaperSubmissionMap.entrySet()) {
+			paperList.addAll(currentUserPaperEntry.getValue());
+		}
+		return paperList;
+	}
+
 }

@@ -19,13 +19,20 @@ public class Conference implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -836524014001898470L;
+	
+	public static final String AUTHOR_ROLE = "Author";
+	public static final String REVIEW_ROLE = "Reviewer";
+	public static final String SUBPROGRAM_ROLE = "Subprogram Chair";
+	public static final String PROGRAM_ROLE = "Program Chair";
+	public static final String DIRECTOR_ROLE = "Director";
 
 	/**
 	 * A ConferenceData Object containing all the Data associated with this Conference.
 	 */
     private final ConferenceData myInfo;
-    private final transient ReviewerUtilities myReviewRole;
     private final transient UserUtilities myUserRole;
+    private final transient SubprogramUtilities mySubprogramRole;
+    private final transient DirectorUtilities myDirectorRole;
     
     private Conference(
     		final String theConferenceName,
@@ -40,8 +47,9 @@ public class Conference implements Serializable{
                 thePaperAssignmentLimit
                 );
         
-        myReviewRole = new ReviewerUtilities(myInfo);
         myUserRole = new UserUtilities(myInfo);
+        mySubprogramRole = new SubprogramUtilities(myInfo);
+        myDirectorRole = new DirectorUtilities(myInfo);
     }
     
     /**
@@ -75,20 +83,29 @@ public class Conference implements Serializable{
     }
     
     /**
-     * A getter method for associated ReviewRole Object.
-     * {@link ReviewerUtilities}
-     * @return A ReviewRole Object containing all Reviewer's functionality.
-     */
-    public ReviewerUtilities getReviewRole(){
-    	return myReviewRole;
-    }
-    
-    /**
-     * A getter method for associated UserRole Object.
+     * A getter method for associated UserUtilities Object.
      * {@link UserUtilities}
-     * @return A UserRole Object containing all general User functionality.
+     * @return A UserUtilities Object containing all general User functionality.
      */
     public UserUtilities getUserRole(){
     	return myUserRole;
+    }
+    
+    /**
+     * A getter method for associated SubprogramUtilities Object.
+     * {@link SubprogramUtilities}
+     * @return A SubprogramUtilities Object containing all Reviewer's functionality.
+     */
+    public SubprogramUtilities getSubprogramRole(){
+    	return mySubprogramRole;
+    }
+    
+    /**
+     * A getter method for associated DirectorUtilities Object.
+     * {@link SubprogramUtilities}
+     * @return A ReviewRole Object containing all Director's functionality.
+     */
+    public DirectorUtilities getDirectorRole(){
+    	return myDirectorRole;
     }
 }

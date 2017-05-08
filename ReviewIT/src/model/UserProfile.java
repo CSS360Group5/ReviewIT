@@ -14,8 +14,11 @@ import java.util.Objects;
  * @author Dimitar Kumanov
  * @version 5/4/2017
  */
-public class UserProfile implements Serializable {
-
+public class UserProfile implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3960715525297567136L;
 	private String myUID;
 	private String myName;
 	
@@ -53,5 +56,18 @@ public class UserProfile implements Serializable {
 	 */
 	public String getName(){
 		return myName;
+	}
+	
+	@Override
+	public int hashCode(){
+		return Objects.hash(myUID);
+	}
+	
+	@Override
+	public boolean equals(final Object theOtherProfile){
+		if(!(theOtherProfile instanceof UserProfile)){
+			return false;
+		}
+		return this.myUID.equals(((UserProfile) theOtherProfile).myUID);
 	}
 }

@@ -127,7 +127,7 @@ public class Rule2b {
     public void test3PapersAssigned() throws IllegalOperationException {
     	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Guy");
     	for(int i = 0; i < 3; i++) {
-    		testCon.getReviewRole().assignReviewer(
+    		testCon.getSubprogramRole().assignReviewer(
     				aReviewerProfile, 
     				papers.get(i)
     				);
@@ -139,7 +139,7 @@ public class Rule2b {
     public void testExactLimit() throws IllegalOperationException {
     	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Jane");
     	for(int i = 0; i < 8; i++) {
-    		testCon.getReviewRole().assignReviewer(
+    		testCon.getSubprogramRole().assignReviewer(
     				aReviewerProfile,
     				papers.get(i)
     				);
@@ -151,7 +151,7 @@ public class Rule2b {
     public void testOverLimit() throws IllegalOperationException {
     	UserProfile aUserProfile = new UserProfile(reviewerID, "Reviewer Dylan");
     	for(int i = 0; i < 9; i++) {
-    		testCon.getReviewRole().assignReviewer(
+    		testCon.getSubprogramRole().assignReviewer(
     				aUserProfile,
     				papers.get(i)
     				);

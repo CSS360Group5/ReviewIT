@@ -7,24 +7,25 @@ import model.Paper;
 import model.UserProfile;
 
 /**
- * A class containing all the functionality a Reviewer has related to a Conference.
+ * A class containing all the functionality a Subprogram Chair has related to a Conference.
  * @author Dimitar Kumanov
  * @version 5/2/2017
  */
-public class ReviewerUtilities {
+public class SubprogramUtilities {
 	
-	private final ConferenceData myConferenceInfo;
+	private final ConferenceData myConferenceData;
     
 	/**
 	 * Creates a ReviewerUtilities Object for a Conference. 
 	 * @param theConferenceData The ConferenceData Object to manipulate.
 	 */
-    public ReviewerUtilities(final ConferenceData theConferenceData){
-    	myConferenceInfo = theConferenceData;
+    public SubprogramUtilities(final ConferenceData theConferenceData){
+    	myConferenceData = theConferenceData;
     }
     
     /**
      * Assigns a paper to a reviewer.
+     * Also adds theReviewerProfile to the Reviewers for this Conference. 
      * 
      * PRECONDITION: isPaperInReviewerAssignmentLimit and !isPaperAuthoredByReviewer
      * @param theReviewerID the ID 
@@ -39,14 +40,17 @@ public class ReviewerUtilities {
     		Paper thePaper
     		) throws IllegalOperationException {
     	
-    	if(!myConferenceInfo.isReviewerInAssignmentLimit(theReviewerProfile) ||
-    			myConferenceInfo.isPaperAuthoredByReviewer(theReviewerProfile.getName(), thePaper)) {
+    	if(!myConferenceData.isReviewerInAssignmentLimit(theReviewerProfile) ||
+    			myConferenceData.isPaperAuthoredByReviewer(theReviewerProfile.getName(), thePaper)) {
     		throw new IllegalOperationException("Cannot assign reviewer to paper");
     	}
     	
-    	if(!myConferenceInfo.getReviewerAssignmentMap().containsKey(theReviewerProfile)){
-    		myConferenceInfo.getReviewerAssignmentMap().put(theReviewerProfile, new ArrayList<>());
+    	if(!myConferenceData.getReviewerAssignmentMap().containsKey(theReviewerProfile)){
+    		myConferenceData.getReviewerAssignmentMap().put(theReviewerProfile, new ArrayList<>());
     	}
-    	myConferenceInfo.getReviewerAssignmentMap().get(theReviewerProfile).add(thePaper);
+    	
+    	myConferenceData.addUserToRole(theReviewerProfile, Conference.REVIEW_ROLE);
+    	
+    	myConferenceData.getReviewerAssignmentMap().get(theReviewerProfile).add(thePaper);
     }
 }
