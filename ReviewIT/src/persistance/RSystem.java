@@ -192,4 +192,17 @@ public class RSystem {
 		}
 		return submittedPapers;
 	}
+	
+	/**
+	 * Gets ALL Papers from ALL Conferences assigned for Review to theUserProfile
+	 * @param theUserProfile The UserProfile of assigned person
+	 * @return ALL Papers from ALL Conferences assigned for review to theUserProfile 
+	 */
+	public List<Paper> getAllPapersAssignedTo(final UserProfile theUserProfile){
+		final List<Paper> submittedPapers = new ArrayList<>();
+		for(final Conference currentConference: myConferenceMap.values()){
+			submittedPapers.addAll(currentConference.getInfo().getPapersAssignedToReviewer(theUserProfile));
+		}
+		return submittedPapers;
+	}
 }

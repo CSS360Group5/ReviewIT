@@ -18,9 +18,11 @@ public interface ConferenceInfo {
 	
 	public Date getSubmissionDate();
 	public List<String> getUserRoles(final UserProfile theUserProfile);
+	public List<Paper> getAllPapers();
 	public List<Paper> getPapersSubmittedBy(final UserProfile theUserProfile);
 	public List<Paper> getPapersAuthoredBy(final String theAuthorName);
 	public List<Paper> getPapersAssignedToReviewer(final UserProfile theReviewerProfile);
+	public List<UserProfile> getReviewers();
 	
 	public boolean isUserAuthor(final UserProfile theUserProfile);
 	public boolean isUserReviewer(final UserProfile theUserProfile);
