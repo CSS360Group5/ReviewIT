@@ -55,6 +55,7 @@ public class RSystem {
 	
 	/**
 	 * Loads up all Conference/UserProfile objects into the RSYstem.
+	 * @author Kevin Ravana
 	 */
 	public void deserializeData() {
 		/*
@@ -94,6 +95,7 @@ public class RSystem {
 	 * Saves all state(data) into files for a later session of the program.
 	 * This method should be called before closing the
 	 * application to save all of its Conference/UserProfile Objects.
+	 * @author Kevin Ravana
 	 */
 	public void serializeModel() {
 		/*
