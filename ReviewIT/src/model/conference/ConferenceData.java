@@ -159,7 +159,6 @@ public class ConferenceData implements ConferenceInfo, Serializable{
      */
     public boolean isPaperInAuthorSubmissionLimit(final Paper thePaper){
     	boolean result = true;
-    	
     	for(final String currentAuthor: thePaper.getAuthors()){
     		if(getPapersAuthoredBy(currentAuthor).size() >= myPaperSubmissionLimit){
     			result = false;

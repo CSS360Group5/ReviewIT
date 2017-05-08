@@ -38,6 +38,7 @@ public class ConsoleUI {
 		myState = new ConsoleState();
 		
 		ConsoleUtility.initUsersAndConferences();
+//		RSystem.getInstance().serializeModel();
 		
 //		RSystem.getInstance().deserializeData();
 		
@@ -119,7 +120,7 @@ public class ConsoleUI {
 		promptBuilder.append("Please choose a Reviewer:\n");
 		List<UserProfile> reviewerList = myState.getCurrentConference().getInfo().getReviewers();
 		
-		int i = 1;
+		int i = 0;
 		for(; i < reviewerList.size(); ++i){
 			final UserProfile currentReviewer = reviewerList.get(i);
 			promptBuilder.append(i + ") ID: "+ currentReviewer.getUID() + ", Name: " + currentReviewer.getName() + "\n");
@@ -131,7 +132,7 @@ public class ConsoleUI {
 		promptBuilder.append(EXIT_PROGRAM_OPTION + ") Exit Program.\n");
 		
 		final int chosenOption = ConsoleUtility.inputNumberedOptions(
-				myScanner, myState, ConsoleUtility.createConsecutiveList(1, EXIT_PROGRAM_OPTION), promptBuilder.toString());
+				myScanner, myState, ConsoleUtility.createConsecutiveList(0, EXIT_PROGRAM_OPTION), promptBuilder.toString());
 		
 		if(chosenOption == GO_BACK_OPTION){
 			return ConsoleState.CONFERENCE_SCREEN;
@@ -140,6 +141,10 @@ public class ConsoleUI {
 			return ConsoleState.EXIT_PROGRAM;
 		}else{ //They chose a reviewer:
 			myState.setSelectedUserForAssignment(reviewerList.get(chosenOption));
+			if(!myState.getCurrentConference().getInfo().isReviewerInAssignmentLimit(reviewerList.get(chosenOption))){
+				ConsoleUtility.showMessageToUser(myScanner, "Reviewer " + reviewerList.get(chosenOption).getUID() +  " is already at the assignment limit.");
+				return ConsoleState.CONFERENCE_SCREEN;
+			}
 			return ConsoleState.ASSIGN_REVIEWER_TO_PAPER_SCREEN;
 		}
 	}
@@ -150,7 +155,7 @@ public class ConsoleUI {
 		promptBuilder.append("Choose a Paper to assign to User ID: " + myState.getSelectedUserForAssignment().getUID() + ", Name: " + myState.getSelectedUserForAssignment().getName() + "\n");
 		List<Paper> paperList = myState.getCurrentConference().getInfo().getAllPapers();
 		
-		int i = 1;
+		int i = 0;
 		for(; i < paperList.size(); ++i){
 			final Paper currentPaper = paperList.get(i);
 			promptBuilder.append(
@@ -168,7 +173,7 @@ public class ConsoleUI {
 		promptBuilder.append(EXIT_PROGRAM_OPTION + ") Exit Program.\n");
 		
 		final int chosenOption = ConsoleUtility.inputNumberedOptions(
-				myScanner, myState, ConsoleUtility.createConsecutiveList(1, EXIT_PROGRAM_OPTION), promptBuilder.toString());
+				myScanner, myState, ConsoleUtility.createConsecutiveList(0, EXIT_PROGRAM_OPTION), promptBuilder.toString());
 		
 		if(chosenOption == GO_BACK_OPTION){
 			return ConsoleState.CONFERENCE_SCREEN;
@@ -196,6 +201,10 @@ public class ConsoleUI {
 		
 		final UserProfile selectedProfile = ConsoleUtility.inputExistingUserProfile(myScanner, myState, loginHeader, inputPrompt, noSuchUserPrompt);
 		if(selectedProfile == null){
+			return ConsoleState.CONFERENCE_SCREEN;
+		}
+		if(!myState.getCurrentConference().getInfo().isReviewerInAssignmentLimit(selectedProfile)){
+			ConsoleUtility.showMessageToUser(myScanner, "Reviewer " + selectedProfile.getUID() +  " is already at the assignment limit.");
 			return ConsoleState.CONFERENCE_SCREEN;
 		}
 		myState.setSelectedUserForAssignment(selectedProfile);
@@ -310,7 +319,6 @@ public class ConsoleUI {
 			try {
 				myState.getCurrentConference().getUserRole().addPaper(myState.getCurrentUser(), enteredPaper);
 			} catch (final IllegalOperationException theException) {
-				theException.printStackTrace();
 				ConsoleUtility.showMessageToUser(
 						myScanner,
 						"Could not submit Paper:\n\"" + theException.getMessage() + "\"\n"
@@ -342,9 +350,9 @@ public class ConsoleUI {
 	 	
 		switch(chosenOption){
 		case ASSIGN_BY_ID_OPTION:
-			return ConsoleState.VIEW_All_SUBMITTED_PAPERS_SCREEN;
+			return ConsoleState.ASSIGN_REVIEWER_ID_SCREEN;
 		case ASSIGN_FROM_LIST_OPTION:
-			return ConsoleState.VIEW_All_ASSIGNED_PAPERS_SCREEN;
+			return ConsoleState.ASSIGN_REVIEWER_LIST_SCREEN;
 		case GO_BACK_OPTION:
 			return ConsoleState.CONFERENCE_SCREEN;
 		case EXIT_PROGRAM:
@@ -489,7 +497,7 @@ public class ConsoleUI {
 		promptBuilder.append("Please choose a Conference:\n");
 		List<Conference> conferenceList = RSystem.getInstance().getConferences();
 		
-		int i = 1;
+		int i = 0;
 		for(; i < conferenceList.size(); ++i){
 			final Conference currentConference = conferenceList.get(i);
 			promptBuilder.append(i + ") "+ currentConference.getInfo().getName() + "\n");
@@ -501,7 +509,7 @@ public class ConsoleUI {
 		promptBuilder.append(EXIT_PROGRAM_OPTION + ") Exit Program.\n");
 		
 		final int chosenOption = ConsoleUtility.inputNumberedOptions(
-				myScanner, myState, ConsoleUtility.createConsecutiveList(1, EXIT_PROGRAM_OPTION), promptBuilder.toString());
+				myScanner, myState, ConsoleUtility.createConsecutiveList(0, EXIT_PROGRAM_OPTION), promptBuilder.toString());
 		
 		if(chosenOption == GO_BACK_OPTION){
 			return ConsoleState.USER_HOME_SCREEN;
