@@ -72,6 +72,11 @@ public class ConferenceData implements ConferenceInfo, Serializable{
 		return myConferenceName;
 	}
 	
+	@Override
+	public Date getSubmissionDate() {
+		return myPaperSubmissionDeadline;
+	}
+	
 	/**
 	 * A getter method for  all user roles
 	 * associated with theUserProfile for this Conference.
@@ -167,7 +172,10 @@ public class ConferenceData implements ConferenceInfo, Serializable{
     	return result;
     }
     
-    
+	@Override
+	public boolean isSubmissionOpen(final Date theDate) {
+		return theDate.before(myPaperSubmissionDeadline);
+	}
     
     /**
      * Checks whether thePaper is within the submission deadline of this Conference.
@@ -297,4 +305,5 @@ public class ConferenceData implements ConferenceInfo, Serializable{
 	protected Map<UserProfile, List<String>> getUserRoleMap() {
 		return myUserRoleMap;
 	}
+
 }

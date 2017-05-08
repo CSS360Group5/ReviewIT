@@ -23,7 +23,7 @@ import persistance.RSystem;
  */
 public class ConsoleUtility {
 	
-	public final static String EXIT_INPUTTING = "\b\b\b\b";
+	public static final int EXIT_OPTION = 1;
 	
 	private static final String INVALID_OPTION_PROMPT = "Unrecognized option. Please follow prompts.";
 	
@@ -94,6 +94,17 @@ public class ConsoleUtility {
 			System.out.print(theInputPrompt);
 			flush();
 			userInput = theScanner.nextLine();
+			try{
+				final int chosenOption = Integer.parseInt(userInput);
+				if(chosenOption == EXIT_OPTION){
+					return null;
+				}
+			}
+			catch (NumberFormatException nfe) {
+				//Didn't choose to exit, don't need to do anything.
+			}
+			
+			
 			
 			if(RSystem.getInstance().getUserProfile(userInput) == null){
 				isNoSuchUser = true;
@@ -113,7 +124,7 @@ public class ConsoleUtility {
 			final String theIDTakenPrompt,
 			final String theChooseNamePrompt
 			){
-		final int EXIT_OPTION = 1;
+		
 		
 		while(true){
 			System.out.print(theChooseIDPrompt);
@@ -159,6 +170,18 @@ public class ConsoleUtility {
 		}
 	}
 	
+	/**
+	 * Returns null if user wanted to exit out.
+	 */
+	public File inputFile(
+			final Scanner theScanner,
+			final ConsoleState theState,
+			final String theInputPrompt,
+			final String theFileNotExistPrompt,
+			final String theWrongExtensionPrompt){
+		
+		return null;
+	}
 	
 	public static String inputNonEmptyString(final String thePrompt){
 		return "";
@@ -259,14 +282,27 @@ public class ConsoleUtility {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		for(final String currentSampleConferenceName: sampleConferenceNames){
 			try {
-				RSystem.getInstance().addConference(
-						Conference.createConference(
-								currentSampleConferenceName,
-								format.parse("2017/05/20 23:59:59"),
-								paperSubmitLimit,
-								paperAssignLimit
-								)
-						);
+				if(currentSampleConferenceName.contains("Annual Conference of the European")){
+					RSystem.getInstance().addConference(
+							Conference.createConference(
+									currentSampleConferenceName,
+									format.parse("2017/04/19 23:59:59"),
+									paperSubmitLimit,
+									paperAssignLimit
+									)
+							);
+				}else{
+					RSystem.getInstance().addConference(
+							Conference.createConference(
+									currentSampleConferenceName,
+									format.parse("2017/05/20 23:59:59"),
+									paperSubmitLimit,
+									paperAssignLimit
+									)
+							);
+				}
+				
+				
 			} catch (IllegalArgumentException e) {
 //				e.printStackTrace();
 			} catch (ParseException e) {
@@ -316,5 +352,14 @@ public class ConsoleUtility {
 		System.out.println(CONTINUE_PROMPT);
 		ConsoleUtility.flush();
 		theScanner.nextLine();
+	}
+	
+	public static void signOut(
+			final Scanner theScanner,
+			final ConsoleState theState
+			){
+		theState.setCurrentUser(null);
+		theState.setCurrentConference(null);
+		ConsoleUtility.showMessageToUser(theScanner, "You have signed out successfuly!");
 	}
 }

@@ -20,8 +20,11 @@ public class ConsoleState {
 	public static final int VIEW_All_ASSIGNED_PAPERS_SCREEN = 6;
 	public final static int CHOOSE_CONFERENCE_SCREEN = 7;
 	public final static int CONFERENCE_SCREEN = 8;
-	public final static int SUBMIT_PAPER_SCREEN = 9;
-	public final static int ASSIGN_REVIEWER_SCREEN = 10;
+	public final static int VIEW_SUBMITTED_PAPERS_FOR_CONFERENCE_SCREEN = 9;
+	public final static int VIEW_ASSIGNED_PAPERS_FOR_CONFERENCE_SCREEN = 10;
+	public final static int SUBMIT_PAPER_SCREEN = 11;
+	public final static int ASSIGN_REVIEWER_SCREEN = 12;
+
 	
 	public final static int STARTING_SCREEN = PRELOGIN_SCREEN;
 	
