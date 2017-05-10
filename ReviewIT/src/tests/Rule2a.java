@@ -1,4 +1,4 @@
-package business_rules;
+package tests;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,10 +10,10 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.Conference;
 import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
-import model.conference.Conference;
 
 /**
  * A test unit for business rule 2a):

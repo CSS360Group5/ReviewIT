@@ -3,12 +3,12 @@
  * Group 5
  * 
  */
-package business_rules;
+package tests;
 
+import model.Conference;
 import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
-import model.conference.Conference;
 
 import static org.junit.Assert.*;
 

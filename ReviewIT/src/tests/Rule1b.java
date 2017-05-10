@@ -1,4 +1,4 @@
-package business_rules;
+package tests;
 
 import static org.junit.Assert.*;
 
@@ -10,10 +10,11 @@ import java.util.Arrays;
 import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
+
+import model.Conference;
 import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
-import model.conference.Conference;
 /**
  * Test unit testing business rule 1b of the ReviewIt application. 
  * Business Rule 1b:

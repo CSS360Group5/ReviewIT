@@ -1,10 +1,4 @@
-package model.conference;
-
-import java.util.ArrayList;
-
-import model.IllegalOperationException;
-import model.Paper;
-import model.UserProfile;
+package model;
 
 /**
  * A class containing all the functionality a Director has related to a Conference.
