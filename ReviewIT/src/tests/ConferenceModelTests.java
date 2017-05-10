@@ -1,4 +1,4 @@
-package ConferenceTests;
+package tests;
 
 import static org.junit.Assert.*;
 
@@ -13,11 +13,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.Conference;
 import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
-import model.conference.Conference;
-import model.conference.UserUtilities;
+import model.UserUtilities;
 
 /**
  * The purpose of this unit of tests is to ensure that the model code of the various conference classes

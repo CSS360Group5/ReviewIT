@@ -1,4 +1,4 @@
-package view_controller.console_ui;
+package view;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,13 +6,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.IntStream;
 
+import model.Conference;
 import model.IllegalOperationException;
 import model.Paper;
+import model.ConferenceSystem;
 import model.UserProfile;
-import model.conference.Conference;
-import persistance.RSystem;
 
 /**
  * A console based UI running the ReviewIt internal model.
@@ -109,7 +108,7 @@ public class ConsoleUI {
 		//End of program here:
 		
 		//Makes sure we have everything "saved" (as in serialized) before program closes
-		RSystem.getInstance().serializeModel();
+		ConferenceSystem.getInstance().serializeModel();
 		
 		ConsoleUtility.showMessageToUser(myScanner, "Exiting Program!");
 	}
@@ -236,7 +235,7 @@ public class ConsoleUI {
 		ConsoleUtility.printHeader(myState);
 		System.out.println("All papers assigned to me:\n");
 		int paperNum = 0;
-		for(final Paper currentPaper: RSystem.getInstance().getAllPapersAssignedTo(myState.getCurrentUser())){
+		for(final Paper currentPaper: ConferenceSystem.getInstance().getAllPapersAssignedTo(myState.getCurrentUser())){
 			++paperNum;
 			System.out.println(
 				String.valueOf(paperNum) + ") " +
@@ -365,7 +364,7 @@ public class ConsoleUI {
 		ConsoleUtility.printHeader(myState);
 		System.out.println("All submitted papers:\n");
 		int paperNum = 0;
-		for(final Paper currentPaper: RSystem.getInstance().getAllPapersSubmitted(myState.getCurrentUser())){
+		for(final Paper currentPaper: ConferenceSystem.getInstance().getAllPapersSubmitted(myState.getCurrentUser())){
 			++paperNum;
 			System.out.println(
 				String.valueOf(paperNum) + ") " +
@@ -495,7 +494,7 @@ public class ConsoleUI {
 		ConsoleUtility.printHeader(myState);
 		final StringBuilder promptBuilder = new StringBuilder();
 		promptBuilder.append("Please choose a Conference:\n");
-		List<Conference> conferenceList = RSystem.getInstance().getConferences();
+		List<Conference> conferenceList = ConferenceSystem.getInstance().getConferences();
 		
 		int i = 0;
 		for(; i < conferenceList.size(); ++i){

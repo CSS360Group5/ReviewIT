@@ -1,6 +1,4 @@
-package view_controller;
-
-import view_controller.console_ui.ConsoleUI;
+package view;
 
 /**
  * Entry point(main) for our system.

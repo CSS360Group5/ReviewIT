@@ -1,7 +1,7 @@
-package view_controller.console_ui;
+package view;
 
+import model.Conference;
 import model.UserProfile;
-import model.conference.Conference;
 
 
 /**

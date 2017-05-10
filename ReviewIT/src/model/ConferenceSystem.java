@@ -1,4 +1,4 @@
-package persistance;
+package model;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,10 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.Paper;
-import model.UserProfile;
-import model.conference.Conference;
-
 /**
  * A singleton system class which is responsible for holding
  * global information such as user profiles and conferences.
@@ -24,12 +20,12 @@ import model.conference.Conference;
  * @author Dimitar Kumanov
  * @version 4/27/2017
  */
-public class RSystem {
+public class ConferenceSystem {
 	
 	/**
 	 * My only Object instance. This is what is returned from getInstance().
 	 */
-	private static RSystem myInstance;
+	private static ConferenceSystem myInstance;
 	
 	/**
 	 * Maps Conference name to a Conference.
@@ -41,7 +37,7 @@ public class RSystem {
 	 */
 	private Map<String, UserProfile> myUserMap;
 	
-	private RSystem(){
+	private ConferenceSystem(){
 		myConferenceMap = new HashMap<>();
 		myUserMap = new HashMap<>();
 	}
@@ -51,9 +47,9 @@ public class RSystem {
 	 * @return a RSystem Object which keeps track of our Conferences/UserProfiles/etc.
 	 * @author Dimitar Kumanov
 	 */
-	public static RSystem getInstance(){
+	public static ConferenceSystem getInstance(){
 		if(myInstance == null){
-			myInstance = new RSystem();
+			myInstance = new ConferenceSystem();
 		}
 		return myInstance;
 	}
@@ -72,8 +68,11 @@ public class RSystem {
 				ObjectInputStream oisUser = new ObjectInputStream(fisUser);
 				FileInputStream fisCon = new FileInputStream("./ConferenceMap.ser");
 				ObjectInputStream oisCon = new ObjectInputStream(fisCon);
-	
+				
+				@SuppressWarnings("unchecked")
 				Map<String, UserProfile> newUserMap = new HashMap<>((HashMap<String, UserProfile>) oisUser.readObject());
+				
+				@SuppressWarnings("unchecked")
 				Map<String, Conference> newConfMap = new HashMap<>((HashMap<String, Conference>) oisCon.readObject());
 	
 				if (newUserMap != null && newConfMap != null) {

@@ -1,10 +1,7 @@
-package model.conference;
+package model;
 
 import java.util.Date;
 import java.util.List;
-
-import model.Paper;
-import model.UserProfile;
 
 /**
  * An Interface for relevant Conference getter methods,
