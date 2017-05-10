@@ -1,4 +1,4 @@
-package view_controller.console_ui;
+package view;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,15 +6,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import model.Conference;
 import model.IllegalOperationException;
 import model.Paper;
+import model.ConferenceSystem;
 import model.UserProfile;
-import model.conference.Conference;
-import persistance.RSystem;
 
 /**
  * A utility class containing static helper methods for implementing a Console UI.
@@ -106,10 +105,10 @@ public class ConsoleUtility {
 			
 			
 			
-			if(RSystem.getInstance().getUserProfile(userInput) == null){
+			if(ConferenceSystem.getInstance().getUserProfile(userInput) == null){
 				isNoSuchUser = true;
 			}else{
-				return RSystem.getInstance().getUserProfile(userInput);
+				return ConferenceSystem.getInstance().getUserProfile(userInput);
 			}
 		}
 	}
@@ -139,7 +138,7 @@ public class ConsoleUtility {
 			catch (NumberFormatException nfe) {
 				//Didn't choose to exit, don't need to do anything.
 			}
-			if(RSystem.getInstance().getUserProfile(userInput) != null){
+			if(ConferenceSystem.getInstance().getUserProfile(userInput) != null){
 				System.out.println(theIDTakenPrompt);
 				continue;
 			}
@@ -164,7 +163,7 @@ public class ConsoleUtility {
 			final String userName = userInput;
 			
 			final UserProfile createdProfile = new UserProfile(userID, userName);
-			RSystem.getInstance().addUserProfile(createdProfile);
+			ConferenceSystem.getInstance().addUserProfile(createdProfile);
 			return createdProfile;
 
 		}
@@ -355,9 +354,9 @@ public class ConsoleUtility {
 					paperSubmitLimit,
 					paperAssignLimit
 					);
-			RSystem.getInstance().addConference(conf1);
-			RSystem.getInstance().addConference(conf2);
-			RSystem.getInstance().addConference(conf3);
+			ConferenceSystem.getInstance().addConference(conf1);
+			ConferenceSystem.getInstance().addConference(conf2);
+			ConferenceSystem.getInstance().addConference(conf3);
 
 			final UserProfile sampleAuthorUser = new UserProfile("submitalot@uw.edu", "Garrett Wolfe");
 			final UserProfile sampleAuthorUser2 = new UserProfile("submitertoo@uw.edu", "Irma Turner");
@@ -427,7 +426,7 @@ public class ConsoleUtility {
 							);
 			
 			for(final UserProfile currentSampleUserProfile: sampleUserProfiles){
-				RSystem.getInstance().addUserProfile(currentSampleUserProfile);
+				ConferenceSystem.getInstance().addUserProfile(currentSampleUserProfile);
 			}
 
 			
