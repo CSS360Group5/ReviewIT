@@ -1,10 +1,6 @@
-package model.conference;
+package model;
 
 import java.util.ArrayList;
-
-import model.IllegalOperationException;
-import model.Paper;
-import model.UserProfile;
 
 /**
  * A class containing all the functionality any User has related to a Conference.
