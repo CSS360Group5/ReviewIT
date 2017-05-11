@@ -82,4 +82,12 @@ public class UserUtilities {
             myConferenceData.getPaperAuthorshipMap().get(currentAuthor).add(thePaper);
         }
     }
+
+    public void removePaper(
+            final UserProfile theUserProfile,
+            final Paper thePaper
+            ) throws IllegalOperationException {
+        // TODO Auto-generated method stub
+        
+    }
 }

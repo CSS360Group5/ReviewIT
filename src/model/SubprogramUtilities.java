@@ -18,7 +18,7 @@ public class SubprogramUtilities {
     public SubprogramUtilities(final ConferenceData theConferenceData){
     	myConferenceData = theConferenceData;
     }
-    
+
     /**
      * Assigns a paper to a reviewer.
      * Also adds theReviewerProfile to the Reviewers for this Conference. 
@@ -32,21 +32,34 @@ public class SubprogramUtilities {
      * @author Dimitar Kumanov
      */
     public void assignReviewer(
-    		final UserProfile theReviewerProfile,
-    		Paper thePaper
-    		) throws IllegalOperationException {
-    	
-    	if(!myConferenceData.isReviewerInAssignmentLimit(theReviewerProfile) ||
-    			myConferenceData.isPaperAuthoredByReviewer(theReviewerProfile.getName(), thePaper)) {
-    		throw new IllegalOperationException("Cannot assign reviewer to paper");
-    	}
-    	
-    	if(!myConferenceData.getReviewerAssignmentMap().containsKey(theReviewerProfile)){
-    		myConferenceData.getReviewerAssignmentMap().put(theReviewerProfile, new ArrayList<>());
-    	}
-    	
-    	myConferenceData.addUserToRole(theReviewerProfile, Conference.REVIEW_ROLE);
-    	
-    	myConferenceData.getReviewerAssignmentMap().get(theReviewerProfile).add(thePaper);
+            final UserProfile theReviewerProfile,
+            Paper thePaper
+            ) throws IllegalOperationException {
+        
+        if(!myConferenceData.isReviewerInAssignmentLimit(theReviewerProfile) ||
+                myConferenceData.isPaperAuthoredByReviewer(theReviewerProfile.getName(), thePaper)) {
+            throw new IllegalOperationException("Cannot assign reviewer to paper");
+        }
+        
+        if(!myConferenceData.getReviewerAssignmentMap().containsKey(theReviewerProfile)){
+            myConferenceData.getReviewerAssignmentMap().put(theReviewerProfile, new ArrayList<>());
+        }
+        
+        myConferenceData.addUserToRole(theReviewerProfile, Conference.REVIEW_ROLE);
+        
+        myConferenceData.getReviewerAssignmentMap().get(theReviewerProfile).add(thePaper);
+    }
+    
+    /**
+     * Submits a recommendation for thePaper.
+     * @param theReviewerProfile the user submitting the recommendation
+     * @param thePaper the paper to recommend for.
+     * @throws IllegalOperationException if there aren't three reviews on the paper yet.
+     */
+    public void recommend(
+            final UserProfile theSubProgramProfile,
+            Paper thePaper
+            ) throws IllegalOperationException {
+        
     }
 }

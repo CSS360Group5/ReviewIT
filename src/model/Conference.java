@@ -33,6 +33,7 @@ public class Conference implements Serializable{
     private final transient UserUtilities myUserRole;
     private final transient SubprogramUtilities mySubprogramRole;
     private final transient DirectorUtilities myDirectorRole;
+    private final transient ReviewerUtilities myReviewerRole;
     
     private Conference(
     		final String theConferenceName,
@@ -50,6 +51,7 @@ public class Conference implements Serializable{
         myUserRole = new UserUtilities(myInfo);
         mySubprogramRole = new SubprogramUtilities(myInfo);
         myDirectorRole = new DirectorUtilities(myInfo);
+        myReviewerRole = new ReviewerUtilities(myInfo);
     }
     
     /**
@@ -107,5 +109,12 @@ public class Conference implements Serializable{
      */
     public DirectorUtilities getDirectorRole(){
     	return myDirectorRole;
+    }
+
+    /**
+     * @return the myReviewerRole
+     */
+    public ReviewerUtilities getReviewerRole() {
+        return myReviewerRole;
     }
 }

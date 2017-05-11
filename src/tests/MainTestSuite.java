@@ -8,6 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * is to gather all of the unit tests that are contained in separate classes and create 
  * the ability to run them all at once.
  * @author Harlan Stewart
+ * @author Zachary Chandler
  * @version 1.0
  *
  */
@@ -18,7 +19,10 @@ import org.junit.runners.Suite.SuiteClasses;
 	ReviewerIsAuthorTests.class,
 	ReviewerMaxPaperLimitTests.class,
 	ConferenceModelTests.class,
-	GetAuthorsTest.class})
+	GetAuthorsTest.class,
+	AuthorRemovePaperTests.class,
+	ReccomendationTests.class,
+	ReviewerDeadlineAssignTests.class})
 
 public class MainTestSuite {
 
