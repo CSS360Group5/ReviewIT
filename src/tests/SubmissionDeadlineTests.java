@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
  * @author Kevin Ravana
  * @version 04/30/2017
  */
-public class Rule1a {
+public class SubmissionDeadlineTests {
 
     /**
      * Conference Object containing method to be tested.
@@ -94,24 +94,24 @@ public class Rule1a {
     }
 
     @Test
-    public void testHourEarlySubmission() throws IllegalOperationException {
+    public void testHourEarlySubmission_IsSubmited() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, hourEarlyPaper);
         assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile).size() == 1);
     }
 
     @Test
-    public void testSecondEarlySubmission() throws IllegalOperationException {
+    public void testSecondEarlySubmission_IsSubmited() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, secondEarlyPaper);
         assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile).size() == 1);
     }
 
     @Test (expected = IllegalOperationException.class)
-    public void testHourLateSubmission() throws IllegalOperationException {
+    public void testHourLateSubmission_ThrowsException() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, hourLatePaper);
     }
 
     @Test (expected = IllegalOperationException.class)
-    public void testSecondLateSubmission() throws IllegalOperationException {
+    public void testSecondLateSubmission_ThrowsException() throws IllegalOperationException {
         testCon.getUserRole().addPaper(userProfile, secondLatePaper);
     }
 }

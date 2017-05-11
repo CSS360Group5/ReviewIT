@@ -21,7 +21,7 @@ import model.UserProfile;
  * @author Dimitar Kumanov
  * @version 4/29/2017
  */
-public class Rule2a {
+public class ReviewerIsAuthorTests {
 
 	private Conference aConference;
 	private UserProfile aUserProfile;
@@ -56,17 +56,17 @@ public class Rule2a {
 	
 
 	@Test(expected = IllegalOperationException.class)
-	public void assignAuthoredPaperForReview() throws IllegalOperationException{
+	public void assignAuthoredPaperForReview_ThrowsException() throws IllegalOperationException{
 		aConference.getSubprogramRole().assignReviewer(aUserProfile, anAuthoredPaper);
 	}
 	
 	@Test(expected = IllegalOperationException.class)
-	public void assignCoauthoredPaperForReview() throws IllegalOperationException{
+	public void assignCoauthoredPaperForReview_ThrowsException() throws IllegalOperationException{
 		aConference.getSubprogramRole().assignReviewer(aUserProfile, aCoauthoredPaper);
 	}
 	
 	@Test
-	public void assignNotAuthoredPaperForReview() throws IllegalOperationException{
+	public void assignNotAuthoredPaperForReview_IsAssigned() throws IllegalOperationException{
 		aConference.getSubprogramRole().assignReviewer(aUserProfile, aNotAuthoredPaper);
 		assertEquals(aConference.getInfo().getPapersAssignedToReviewer(
 				aUserProfile).get(0),

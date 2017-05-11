@@ -2,6 +2,7 @@ package tests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
 /**
  * This is the main test suite for the ReviewIt application. The purpose of this class
  * is to gather all of the unit tests that are contained in separate classes and create 
@@ -12,11 +13,12 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-	Rule1a.class,
-	Rule1b.class,
-	Rule2a.class,
-	Rule2b.class,
-	ConferenceModelTests.class})
+	SubmissionDeadlineTests.class,
+	PaperSubmissionLimitTests.class,
+	ReviewerIsAuthorTests.class,
+	ReviewerMaxPaperLimitTests.class,
+	ConferenceModelTests.class,
+	GetAuthorsTest.class})
 
 public class MainTestSuite {
 

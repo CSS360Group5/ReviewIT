@@ -21,7 +21,7 @@ import model.UserProfile;
  * @version 4/30/2017
  * 
  */
-public class Test_getPapersAuthoredBy {
+public class GetAuthorsTest {
 
 	private Conference new_conference;
 	private Paper new_paper;
@@ -33,8 +33,7 @@ public class Test_getPapersAuthoredBy {
 		/*
 		* Create a new conference
 		*/
-		@SuppressWarnings("deprecation")
-		Date deadline = new Date(117, 6, 1, 23, 59, 59);
+		Date deadline = new Date(1496386799000L);//2017/6/1 23:59:59
 		int Author_Paper_Submission_Limit = 5;
 		int Reviewer_Paper_Assignment_Limit = 8;
 		new_conference = Conference.createConference("Test Conference", deadline, 
@@ -69,7 +68,7 @@ public class Test_getPapersAuthoredBy {
 	}
 	
 	@Test
-	public void test_getPapersAuthoredBy() {
+	public void getPapersByAuthor_AnAuthor_ListContainsNewestPaper() {
 		/*
 		* Test the getPapersAuthoredBy() method fully to check that addPaper() worked correctly.
 		*/

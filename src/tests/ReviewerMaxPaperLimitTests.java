@@ -28,7 +28,7 @@ import org.junit.Test;
  * @author Danielle Lambion
  * 
  */
-public class Rule2b {
+public class ReviewerMaxPaperLimitTests {
 	
 	/**
 	 * conference for testing.
@@ -124,7 +124,7 @@ public class Rule2b {
 
 	}  
     @Test
-    public void test3PapersAssigned() throws IllegalOperationException {
+    public void assignedThreePapers_IsAssignedAll() throws IllegalOperationException {
     	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Guy");
     	for(int i = 0; i < 3; i++) {
     		testCon.getSubprogramRole().assignReviewer(
@@ -136,7 +136,7 @@ public class Rule2b {
     }
 
     @Test
-    public void testExactLimit() throws IllegalOperationException {
+    public void assignedEightPapers_IsAssignedAll() throws IllegalOperationException {
     	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Jane");
     	for(int i = 0; i < 8; i++) {
     		testCon.getSubprogramRole().assignReviewer(
@@ -148,7 +148,7 @@ public class Rule2b {
     }
 
     @Test(expected = IllegalOperationException.class)
-    public void testOverLimit() throws IllegalOperationException {
+    public void assignedNinePapers_ThrowsException() throws IllegalOperationException {
     	UserProfile aUserProfile = new UserProfile(reviewerID, "Reviewer Dylan");
     	for(int i = 0; i < 9; i++) {
     		testCon.getSubprogramRole().assignReviewer(

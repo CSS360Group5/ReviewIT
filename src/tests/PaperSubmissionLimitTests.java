@@ -22,7 +22,7 @@ import model.UserProfile;
  * @author Harlan Stewart
  * @version 1.5
  */
-public class Rule1b {
+public class PaperSubmissionLimitTests {
 	/* Conference object used for creating mock conference for tests.*/
 	private Conference testCon;
 	
@@ -97,7 +97,7 @@ public class Rule1b {
 	 * @throws IllegalOperationException
 	 */
 	@Test
-	public void paperSubmitUnderLimitCheck()throws IllegalOperationException {
+	public void paperSubmitUnderLimitCheck_IsSubmitted()throws IllegalOperationException {
 		for(int i = 0; i < SUBMISSION_UNDER_LIMIT_VAL; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
@@ -111,7 +111,7 @@ public class Rule1b {
 	 * @throws IllegalOperationException
 	 */
 	@Test
-	public void paperSubmitExactLimitCheck()throws IllegalOperationException {
+	public void paperSubmitExactLimitCheck_IsSubmitted()throws IllegalOperationException {
 		for(int i = 0; i < SUBMISSION_LIMIT; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
@@ -125,7 +125,7 @@ public class Rule1b {
 	 * @throws IllegalOperationException
 	 */
 	@Test (expected = IllegalOperationException.class)
-	public void paperSubmitOverLimitCheck() throws IllegalOperationException {
+	public void paperSubmitOverLimitCheck_IsNotSubmitted() throws IllegalOperationException {
 		for(int i = 0; i < TEST_PAPER_LIST.size(); i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}

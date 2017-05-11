@@ -107,7 +107,7 @@ public class ConferenceModelTests {
 	 * @throws IllegalOperationException 
 	 */
 	@Test
-	public void getPapersAuthoredByUserTest() throws IllegalOperationException {		
+	public void getPapersAuthoredByUser_MaximumPapers_GetAll() throws IllegalOperationException {		
 		UserUtilities testUserUtil = TEST_CON.getUserRole();
 		for(int i = 0; i < TEST_PAPER_LIST.size();i++) {
 			testUserUtil.addPaper(TEST_USER_PROFILE_AUTHOR, TEST_PAPER_LIST.get(i));
@@ -124,7 +124,7 @@ public class ConferenceModelTests {
 	 * @throws IllegalOperationException
 	 */
 	@Test
-	public void setUserRoleToReviewerTest() throws IllegalOperationException {
+	public void setUserRoleToReviewer_ValidUser_IsAssigned() throws IllegalOperationException {
 		TEST_CON.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, testPaper1);
 		assertTrue(TEST_CON.getInfo().isUserReviewer(TEST_USER_PROFILE_REVIEWER));
 	}
@@ -135,7 +135,7 @@ public class ConferenceModelTests {
 	 * @throws IllegalOperationException 
 	 */
 	@Test
-	public void getPapersAssignedToReviewerTest() throws IllegalOperationException {
+	public void getPapersAssignedToReviewer_ValidReviewer_AllPapersReturned() throws IllegalOperationException {
 		for(int i = 0; i < TEST_PAPER_LIST.size();i++) {
 			TEST_CON.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, TEST_PAPER_LIST.get(i));
 		}
@@ -148,7 +148,7 @@ public class ConferenceModelTests {
 	 * @throws IllegalOperationException
 	 */
 	@Test(expected = IllegalOperationException.class)
-	public void assignAuthorAsReviewerForTheirPaperTest() throws IllegalOperationException {
+	public void assignAuthorAsReviewer_ReviewerIsAuthorOfPaper_ThrowsException() throws IllegalOperationException {
 		TEST_CON.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_AUTHOR, testPaper1);
 	}
 	
@@ -158,7 +158,7 @@ public class ConferenceModelTests {
 	 * @throws IllegalOperationException
 	 */
 	@Test
-	public void setUserRoleToAuthorTest()throws IllegalOperationException {
+	public void setUserRoleToAuthor_ValidUser_IsAssigned()throws IllegalOperationException {
 		TEST_CON.getUserRole().addPaper(TEST_USER_PROFILE_AUTHOR, testPaper1);
 		assertTrue(TEST_CON.getInfo().isUserAuthor(TEST_USER_PROFILE_AUTHOR));
 	}
