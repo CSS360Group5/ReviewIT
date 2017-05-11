@@ -83,11 +83,50 @@ public class UserUtilities {
         }
     }
 
-    public void removePaper(
-            final UserProfile theUserProfile,
-            final Paper thePaper
-            ) throws IllegalOperationException {
+    /**
+     * Removes a paper from the conference that it was submitted to.
+     * Will not remove a paper from a conference if that paper has any reviews.
+     * @param theUserProfile the user whose paper is to be removed from the conference
+     * @param thePaper the paper to be removed from the conference
+     * @throws IllegalOperationException
+     * @author Ian Jury
+     */
+    public void removePaper(final UserProfile theUserProfile, final Paper thePaper) throws IllegalOperationException {
         // TODO Auto-generated method stub
         
+    	
+    	//Remove paper from submission map:
+        removePaperFromSubmissionMap(theUserProfile, thePaper);
+
+    	//Remove paper to author map:
+    	removePaperFromAuthorshipMap(thePaper);
     }
+    
+    /**
+     * 
+     * @param theUserProfile
+     * @param thePaper
+     */
+    private void removePaperFromSubmissionMap(final UserProfile theUserProfile, final Paper thePaper) {
+    	//if submission map has user profile, remove
+    	if(myConferenceData.getPaperSubmissionMap().containsKey(theUserProfile)){
+    		myConferenceData.getPaperSubmissionMap().get(theUserProfile).remove(thePaper);
+    	}
+    	
+    }
+    
+    /**
+     * 
+     * @param thePaper
+     */
+    private void removePaperFromAuthorshipMap(final Paper thePaper) {
+    	for(final String currentAuthor: thePaper.getAuthors()){
+            if(myConferenceData.getPaperAuthorshipMap().containsKey(currentAuthor)){
+            	myConferenceData.getPaperAuthorshipMap().get(currentAuthor).remove(thePaper);
+            }
+            
+        }
+    	
+    }
+
 }
