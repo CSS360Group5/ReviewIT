@@ -2,6 +2,10 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A class containing all the functionality a Subprogram Chair has related to a Conference.
@@ -31,6 +35,7 @@ public class SubprogramUtilities {
      * 
      * @author Danielle Lambion
      * @author Dimitar Kumanov
+     * @author Dmitriy Bliznyuk
      */
     public void assignReviewer(
             final UserProfile theReviewerProfile,
@@ -67,6 +72,25 @@ public class SubprogramUtilities {
             final UserProfile theSubProgramProfile,
             Paper thePaper
             ) throws IllegalOperationException {
+    	
+    	Map reviewerMap = myConferenceData.getReviewerAssignmentMap();
+    	
+    	int numberOfReviewers = 0;
+    	
+//    	Iterator iter = (Iterator) reviewerMap.keySet().iterator();
+//    	while(iter.hasNext()) {
+//    	    Map.Entry entry = (Map.Entry) iter.next();
+//    	    
+//    	    List<Paper> paperList = entry.getValue();	    
+//    	    System.out.println(entry.getKey() + " - " + entry.getValue());
+//    	}
+    	
+//    	for(final Entry<UserProfile, List<Paper>> currentUserPaperEntry: reviewerMap.entrySet()) {
+//    		List<Paper> paperList = new ArrayList<>();
+//			paperList.addAll(currentUserPaperEntry.getValue());
+//		}
+    	
+    	//A manuscript recommendation cannot be submitted unless there exists a minimum of three reviews for this manuscript.
         
     }
 }
