@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A class containing all the functionality a Subprogram Chair has related to a Conference.
@@ -39,6 +40,12 @@ public class SubprogramUtilities {
         if(!myConferenceData.isReviewerInAssignmentLimit(theReviewerProfile) ||
                 myConferenceData.isPaperAuthoredByReviewer(theReviewerProfile.getName(), thePaper)) {
             throw new IllegalOperationException("Cannot assign reviewer to paper");
+        }
+        
+        // A Reviewer cannot be assigned until after the author submission deadline.
+        Date assignReviewerDate = new Date();
+        if(!assignReviewerDate.after(myConferenceData.getSubmissionDate())) {
+        	throw new IllegalOperationException("Reviewer cannot be assigned before author submission deadline.");
         }
         
         if(!myConferenceData.getReviewerAssignmentMap().containsKey(theReviewerProfile)){
