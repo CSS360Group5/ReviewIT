@@ -72,23 +72,7 @@ public class SubprogramUtilities {
             final UserProfile theSubProgramProfile,
             Paper thePaper
             ) throws IllegalOperationException {
-    	
-    	Map reviewerMap = myConferenceData.getReviewerAssignmentMap();
-    	
-    	int numberOfReviewers = 0;
-    	
-//    	Iterator iter = (Iterator) reviewerMap.keySet().iterator();
-//    	while(iter.hasNext()) {
-//    	    Map.Entry entry = (Map.Entry) iter.next();
-//    	    
-//    	    List<Paper> paperList = entry.getValue();	    
-//    	    System.out.println(entry.getKey() + " - " + entry.getValue());
-//    	}
-    	
-//    	for(final Entry<UserProfile, List<Paper>> currentUserPaperEntry: reviewerMap.entrySet()) {
-//    		List<Paper> paperList = new ArrayList<>();
-//			paperList.addAll(currentUserPaperEntry.getValue());
-//		}
+   
     	
     	//A manuscript recommendation cannot be submitted unless there exists a minimum of three reviews for this manuscript.
         
