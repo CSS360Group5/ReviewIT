@@ -92,20 +92,24 @@ public class UserUtilities {
      * @author Ian Jury
      */
     public void removePaper(final UserProfile theUserProfile, final Paper thePaper) throws IllegalOperationException {
-        // TODO Auto-generated method stub
-        
-    	
-    	//Remove paper from submission map:
-        removePaperFromSubmissionMap(theUserProfile, thePaper);
-
-    	//Remove paper to author map:
-    	removePaperFromAuthorshipMap(thePaper);
+    	//if a reviewer has been assigned, then we can't do anything
+        if (myConferenceData.getReviewerAssignmentMap().containsValue(thePaper)) {
+        	throw new IllegalOperationException("Paper cannot be removed because "
+        										+ "at least one reviewer has been assigned to it");
+        	
+        } else { //otherwise, remove the paper
+        	//Remove paper from submission map:
+            removePaperFromSubmissionMap(theUserProfile, thePaper);
+        	//Remove paper to author map:
+        	removePaperFromAuthorshipMap(thePaper);    	
+        }	
     }
     
     /**
-     * 
-     * @param theUserProfile
-     * @param thePaper
+     * Removes a paper from ConferenceData's paperSubmissionMap
+     * @param theUserProfile the profile information of the user
+     * @param thePaper the paper to be removed from submission map
+     * @author Ian Jury
      */
     private void removePaperFromSubmissionMap(final UserProfile theUserProfile, final Paper thePaper) {
     	//if submission map has user profile, remove
@@ -116,17 +120,15 @@ public class UserUtilities {
     }
     
     /**
-     * 
-     * @param thePaper
+     * Removes the paper to ConferenceData's paperAuthorshipMap.
+     * @param thePaper the paper to be removed from the authorship map
+     * @author Ian Jury
      */
     private void removePaperFromAuthorshipMap(final Paper thePaper) {
     	for(final String currentAuthor: thePaper.getAuthors()){
             if(myConferenceData.getPaperAuthorshipMap().containsKey(currentAuthor)){
             	myConferenceData.getPaperAuthorshipMap().get(currentAuthor).remove(thePaper);
-            }
-            
-        }
-    	
+            }           
+        }  	
     }
-
 }
