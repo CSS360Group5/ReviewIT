@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -22,6 +21,7 @@ public class ReccomendationTests {
 
     Conference pastDeadlineConference;
     private Paper testPaper1;
+    private static final File f = new File("fake file");
 
     /* Mock user profile used to represent an author submitting papers to a conference.*/
     private static final UserProfile AUTHOR_PROFILE1 = new UserProfile("UID1", "Some Name1");
@@ -51,33 +51,33 @@ public class ReccomendationTests {
 
     /**
      * Should throw exception, because no recommendations have been given.
-     * @throws IllegalOperationException
+     * @throws IllegalArgumentException
      */
-    @Test (expected = IllegalOperationException.class)
-    public void giveReview_WithoutReviews_ThrowsException() throws IllegalOperationException {
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1);
+    @Test (expected = IllegalArgumentException.class)
+    public void giveReview_WithoutReviews_ThrowsException() throws IllegalArgumentException {
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f);
     }
     
     /**
      * Should throw exception, because only two recommendations have been given.
-     * @throws IllegalOperationException
+     * @throws IllegalArgumentException
      */
-    @Test (expected = IllegalOperationException.class)
-    public void giveReview_WithTwoReviews_ThrowsException() throws IllegalOperationException {
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, "review1");
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, "review2");
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1);
+    @Test (expected = IllegalArgumentException.class)
+    public void giveReview_WithTwoReviews_ThrowsException() throws IllegalArgumentException {
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, f);
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, f);
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f);
     }
 
     /**
      * Should not throw an exception because we have enough recommendations.
-     * @throws IllegalOperationException
+     * @throws IllegalArgumentException
      */
     @Test
-    public void giveReview_WithThreeReviews_NoException() throws IllegalOperationException {
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, "review1");
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, "review2");
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE3, testPaper1, "review3");
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1);
+    public void giveReview_WithThreeReviews_NoException() throws IllegalArgumentException {
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, f);
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, f);
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE3, testPaper1, f);
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f);
     }
 }

@@ -3,6 +3,7 @@ package model;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 /**
@@ -22,8 +23,10 @@ public class Paper implements Serializable{
 	private final File myPaperFile;
 	private Date mySubmissionDate;
 	private final List<String> myAuthors;
+	private final List<File> myReviews;
 	private final String myTitle;
 	private final UserProfile mySubmitter;
+	private File myRecommendation;
 	
 	/**
 	 * Private; see createPaper()
@@ -41,6 +44,7 @@ public class Paper implements Serializable{
 		myAuthors = Objects.requireNonNull(theAuthors);
 		myTitle = Objects.requireNonNull(thePaperTitle);
 		mySubmitter = Objects.requireNonNull(theSubmitterUserProfile);
+		myReviews = new LinkedList<File>();
 		if(thePaperTitle.isEmpty())
 			throw new IllegalArgumentException();
 	}
@@ -111,6 +115,15 @@ public class Paper implements Serializable{
 	public List<String> getAuthors(){
 		return myAuthors;
 	}
+	
+	public List<File> getReviewers() {
+		return myReviews;
+	}
+	
+	public void addReviewer(String reviewer) {
+		
+		
+	}
 
 	/**
 	 * Changes the submission Date of this paper to the newSubDate provided.
@@ -118,6 +131,31 @@ public class Paper implements Serializable{
 	 */
 	public void setSubmissionDate(final Date newSubDate) {
 		mySubmissionDate = newSubDate;
+	}
+
+	/**
+	 * @return the myRecommendation
+	 */
+	public File getMyRecommendation() {
+		return myRecommendation;
+	}
+
+	/**
+	 * @param recommendation the myRecommendation to set
+	 */
+	public void setMyRecommendation(File recommendation) {
+		if(myReviews.size() < 3) {
+			throw new IllegalArgumentException();
+		}
+		
+		this.myRecommendation = recommendation;
+		
+	}
+	
+	
+	public void addReview(File review) {
+		Objects.requireNonNull(review);
+		myReviews.add(review);
 	}
 }
 

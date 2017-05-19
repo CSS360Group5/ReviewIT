@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -44,19 +43,19 @@ public class AuthorRemovePaperTests {
 
     /**
      * Should not throw an exception, because no reviewer has been set.
-     * @throws IllegalOperationException
+     * @throws IllegalArgumentException
      */
     @Test 
-    public void removePaper_WithoutReviewer_NoExceptions() throws IllegalOperationException {
+    public void removePaper_WithoutReviewer_NoExceptions() throws IllegalArgumentException {
         pastDeadlineConference.getUserRole().removePaper(AUTHOR_PROFILE1, testPaper1);
     }
     
     /**
      * Should not throw an exception, because no reviewer has been set.
-     * @throws IllegalOperationException
+     * @throws IllegalArgumentException
      */
-    @Test (expected = IllegalOperationException.class)
-    public void removePaper_WithReviewer_ThrowsExceptions() throws IllegalOperationException {
+    @Test (expected = IllegalArgumentException.class)
+    public void removePaper_WithReviewer_ThrowsExceptions() throws IllegalArgumentException {
         pastDeadlineConference.getSubprogramRole().assignReviewer(REVIEWER_PROFILE1, testPaper1);
         pastDeadlineConference.getUserRole().removePaper(AUTHOR_PROFILE1, testPaper1);
     }

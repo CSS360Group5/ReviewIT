@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 /**
@@ -94,10 +93,10 @@ public class PaperSubmissionLimitTests {
 	/**
 	 * This test method will add 3 test papers to the test user's submission map
 	 * to ensure that they were added without any issues.
-	 * @throws IllegalOperationException
+	 * @throws IllegalArgumentException
 	 */
 	@Test
-	public void paperSubmitUnderLimitCheck_IsSubmitted()throws IllegalOperationException {
+	public void paperSubmitUnderLimitCheck_IsSubmitted()throws IllegalArgumentException {
 		for(int i = 0; i < SUBMISSION_UNDER_LIMIT_VAL; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
@@ -108,10 +107,10 @@ public class PaperSubmissionLimitTests {
 	 * This test method will add 5 test papers to the test user's submission map
 	 * to ensure that an author can submit the number of papers equal to the submission
 	 * limit set by the conference.
-	 * @throws IllegalOperationException
+	 * @throws IllegalArgumentException
 	 */
 	@Test
-	public void paperSubmitExactLimitCheck_IsSubmitted()throws IllegalOperationException {
+	public void paperSubmitExactLimitCheck_IsSubmitted()throws IllegalArgumentException {
 		for(int i = 0; i < SUBMISSION_LIMIT; i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
@@ -122,10 +121,10 @@ public class PaperSubmissionLimitTests {
 	 * This test method attempts to add all 6 of the test papers to ensure
 	 * that an author is not allowed to submit more than the allowed amount
 	 * of papers and also to ensure that the correct ErrorException is thrown.
-	 * @throws IllegalOperationException
+	 * @throws IllegalArgumentException
 	 */
-	@Test (expected = IllegalOperationException.class)
-	public void paperSubmitOverLimitCheck_IsNotSubmitted() throws IllegalOperationException {
+	@Test (expected = IllegalArgumentException.class)
+	public void paperSubmitOverLimitCheck_IsNotSubmitted() throws IllegalArgumentException {
 		for(int i = 0; i < TEST_PAPER_LIST.size(); i++) {
 			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}

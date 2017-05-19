@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 import model.UserUtilities;
@@ -54,7 +53,7 @@ public class ConferenceModelTests {
 	
 	/*String constants for date format and test date.*/
 	private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
-	private static final String TEST_DATE = "4017/04/30 23:59:59";
+	private static final String TEST_DATE = "4017/07/30 23:59:59";
 	
 	
 	/*ArrayList used to store mock papers.*/
@@ -74,10 +73,10 @@ public class ConferenceModelTests {
 	/**
 	 * Setup method that helps setup the mock conference environment and test objects.
 	 * @throws ParseException
-	 * @throws IllegalOperationException 
+	 * @throws IllegalArgumentException 
 	 */
 	@Before
-	public void setUp() throws ParseException, IllegalOperationException {       
+	public void setUp() throws ParseException, IllegalArgumentException {       
         deadline = FORMAT.parse(TEST_DATE);
         
 		TEST_CON = Conference.createConference(TEST_CON_NAME, deadline, SUBMISSION_LIMIT,ASSIGNMENT_LIMIT);
@@ -91,12 +90,12 @@ public class ConferenceModelTests {
 				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
 		testPaper5 = Paper.createPaper(new File(""), 
 				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
+		
 		TEST_PAPER_LIST.add(testPaper1);
 		TEST_PAPER_LIST.add(testPaper2);
 		TEST_PAPER_LIST.add(testPaper3);
 		TEST_PAPER_LIST.add(testPaper4);
 		TEST_PAPER_LIST.add(testPaper5);
-		
 	}
 	
 	
@@ -104,10 +103,10 @@ public class ConferenceModelTests {
 	/**
 	 * This method is used to test the getPapersAuthoredByUser() method which returns
 	 * a list of the papers that a user has submitted to a conference.
-	 * @throws IllegalOperationException 
+	 * @throws IllegalArgumentException 
 	 */
 	@Test
-	public void getPapersAuthoredByUser_MaximumPapers_GetAll() throws IllegalOperationException {		
+	public void getPapersAuthoredByUser_MaximumPapers_GetAll() throws IllegalArgumentException {		
 		UserUtilities testUserUtil = TEST_CON.getUserRole();
 		for(int i = 0; i < TEST_PAPER_LIST.size();i++) {
 			testUserUtil.addPaper(TEST_USER_PROFILE_AUTHOR, TEST_PAPER_LIST.get(i));
@@ -121,10 +120,11 @@ public class ConferenceModelTests {
 	/**
 	 * This method will test whether the system correctly assigns a user to be the
 	 * reviewer for a paper.
-	 * @throws IllegalOperationException
+	 * @throws IllegalArgumentException
 	 */
 	@Test
-	public void setUserRoleToReviewer_ValidUser_IsAssigned() throws IllegalOperationException {
+	public void setUserRoleToReviewer_ValidUser_IsAssigned() throws IllegalArgumentException {
+		deadline.setTime(0L);
 		TEST_CON.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, testPaper1);
 		assertTrue(TEST_CON.getInfo().isUserReviewer(TEST_USER_PROFILE_REVIEWER));
 	}
@@ -132,10 +132,11 @@ public class ConferenceModelTests {
 	/**
 	 * This method will test to make sure the system allows a reviewer to be assigned multiple
 	 * papers and they are contained in list specific to the reviewer.
-	 * @throws IllegalOperationException 
+	 * @throws IllegalArgumentException 
 	 */
 	@Test
-	public void getPapersAssignedToReviewer_ValidReviewer_AllPapersReturned() throws IllegalOperationException {
+	public void getPapersAssignedToReviewer_ValidReviewer_AllPapersReturned() throws IllegalArgumentException {
+		deadline.setTime(0L);
 		for(int i = 0; i < TEST_PAPER_LIST.size();i++) {
 			TEST_CON.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, TEST_PAPER_LIST.get(i));
 		}
@@ -145,20 +146,20 @@ public class ConferenceModelTests {
 	/**
 	 * This method is used to test the case where the system attempts to assign a user
 	 * as a reviewer to a paper in which the user is also the author.
-	 * @throws IllegalOperationException
+	 * @throws IllegalArgumentException
 	 */
-	@Test(expected = IllegalOperationException.class)
-	public void assignAuthorAsReviewer_ReviewerIsAuthorOfPaper_ThrowsException() throws IllegalOperationException {
+	@Test(expected = IllegalArgumentException.class)
+	public void assignAuthorAsReviewer_ReviewerIsAuthorOfPaper_ThrowsException() throws IllegalArgumentException {
 		TEST_CON.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_AUTHOR, testPaper1);
 	}
 	
 	/**
 	 * This method is used to test whether the system correctly assigns the author role to
 	 * a user after they have submitted a paper to the conference.
-	 * @throws IllegalOperationException
+	 * @throws IllegalArgumentException
 	 */
 	@Test
-	public void setUserRoleToAuthor_ValidUser_IsAssigned()throws IllegalOperationException {
+	public void setUserRoleToAuthor_ValidUser_IsAssigned()throws IllegalArgumentException {
 		TEST_CON.getUserRole().addPaper(TEST_USER_PROFILE_AUTHOR, testPaper1);
 		assertTrue(TEST_CON.getInfo().isUserAuthor(TEST_USER_PROFILE_AUTHOR));
 	}

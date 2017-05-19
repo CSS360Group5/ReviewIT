@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -62,7 +61,7 @@ public class GetAuthorsTest {
 		*/
 		try {
 			new_conference.getUserRole().addPaper(the_Submitter_UserProfile, new_paper);
-		} catch (IllegalOperationException e) {
+		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 	}

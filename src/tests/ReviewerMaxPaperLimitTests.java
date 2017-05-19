@@ -6,7 +6,6 @@
 package tests;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -63,7 +62,7 @@ public class ReviewerMaxPaperLimitTests {
         
 
         testCon = Conference.createConference(conName,
-                new Date(),
+                new Date(0L),
                 subLimit,
                 assLimit);
         
@@ -124,7 +123,7 @@ public class ReviewerMaxPaperLimitTests {
 
 	}  
     @Test
-    public void assignedThreePapers_IsAssignedAll() throws IllegalOperationException {
+    public void assignedThreePapers_IsAssignedAll() throws IllegalArgumentException {
     	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Guy");
     	for(int i = 0; i < 3; i++) {
     		testCon.getSubprogramRole().assignReviewer(
@@ -136,7 +135,7 @@ public class ReviewerMaxPaperLimitTests {
     }
 
     @Test
-    public void assignedEightPapers_IsAssignedAll() throws IllegalOperationException {
+    public void assignedEightPapers_IsAssignedAll() throws IllegalArgumentException {
     	UserProfile aReviewerProfile = new UserProfile(reviewerID, "Reviewer Jane");
     	for(int i = 0; i < 8; i++) {
     		testCon.getSubprogramRole().assignReviewer(
@@ -147,8 +146,8 @@ public class ReviewerMaxPaperLimitTests {
         assertTrue(testCon.getInfo().getPapersAssignedToReviewer(aReviewerProfile).size() == 8);
     }
 
-    @Test(expected = IllegalOperationException.class)
-    public void assignedNinePapers_ThrowsException() throws IllegalOperationException {
+    @Test(expected = IllegalArgumentException.class)
+    public void assignedNinePapers_ThrowsException() throws IllegalArgumentException {
     	UserProfile aUserProfile = new UserProfile(reviewerID, "Reviewer Dylan");
     	for(int i = 0; i < 9; i++) {
     		testCon.getSubprogramRole().assignReviewer(

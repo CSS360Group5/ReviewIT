@@ -1,7 +1,6 @@
 package tests;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -94,24 +93,24 @@ public class SubmissionDeadlineTests {
     }
 
     @Test
-    public void testHourEarlySubmission_IsSubmited() throws IllegalOperationException {
+    public void testHourEarlySubmission_IsSubmited() throws IllegalArgumentException {
         testCon.getUserRole().addPaper(userProfile, hourEarlyPaper);
         assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile).size() == 1);
     }
 
     @Test
-    public void testSecondEarlySubmission_IsSubmited() throws IllegalOperationException {
+    public void testSecondEarlySubmission_IsSubmited() throws IllegalArgumentException {
         testCon.getUserRole().addPaper(userProfile, secondEarlyPaper);
         assertTrue(testCon.getInfo().getPapersSubmittedBy(userProfile).size() == 1);
     }
 
-    @Test (expected = IllegalOperationException.class)
-    public void testHourLateSubmission_ThrowsException() throws IllegalOperationException {
+    @Test (expected = IllegalArgumentException.class)
+    public void testHourLateSubmission_ThrowsException() throws IllegalArgumentException {
         testCon.getUserRole().addPaper(userProfile, hourLatePaper);
     }
 
-    @Test (expected = IllegalOperationException.class)
-    public void testSecondLateSubmission_ThrowsException() throws IllegalOperationException {
+    @Test (expected = IllegalArgumentException.class)
+    public void testSecondLateSubmission_ThrowsException() throws IllegalArgumentException {
         testCon.getUserRole().addPaper(userProfile, secondLatePaper);
     }
 }

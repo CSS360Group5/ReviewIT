@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A class containing all the functionality any User has related to a Conference.
@@ -25,19 +27,19 @@ public class UserUtilities {
 	 * AND isPaperInSubmissionDeadline()
 	 * @param theUserProfile The UserProfile of the user submitting the paper.
 	 * @param thePaper The paper being submitted.
-	 * @throws IllegalOperationException If the precondition is violated.
+	 * @throws IllegalArgumentException If the precondition is violated.
 	 * @author Kevin Ravana
 	 * @author Dimitar Kumanov
 	 */
     public void addPaper(
     		final UserProfile theUserProfile,
     		final Paper thePaper
-    		) throws IllegalOperationException {
+    		) throws IllegalArgumentException {
     	if(!myConferenceData.isPaperInAuthorSubmissionLimit(thePaper)){
-    		throw new IllegalOperationException("Paper exceeds paper submission limit.");
+    		throw new IllegalArgumentException("Paper exceeds paper submission limit.");
     	}
     	else if(!myConferenceData.isPaperInSubmissionDeadline(thePaper)){
-    		throw new IllegalOperationException("Paper exceeds submission deadline.");
+    		throw new IllegalArgumentException("Paper exceeds submission deadline.");
     	}
     	//Add paper to submission map:
         addPaperToSubmissionMap(theUserProfile, thePaper);
@@ -88,15 +90,25 @@ public class UserUtilities {
      * Will not remove a paper from a conference if that paper has any reviews.
      * @param theUserProfile the user whose paper is to be removed from the conference
      * @param thePaper the paper to be removed from the conference
-     * @throws IllegalOperationException
+     * @throws IllegalArgumentException
      * @author Ian Jury
      */
-    public void removePaper(final UserProfile theUserProfile, final Paper thePaper) throws IllegalOperationException {
+    public void removePaper(final UserProfile theUserProfile, final Paper thePaper) throws IllegalArgumentException {
     	//if a reviewer has been assigned, then we can't do anything
-        if (myConferenceData.getReviewerAssignmentMap().containsValue(thePaper)) {
-        	throw new IllegalOperationException("Paper cannot be removed because "
+    	
+    	boolean foundPaper = false;
+    	Map<UserProfile, List<Paper>> reviewerMap = myConferenceData.getReviewerAssignmentMap();
+    	
+    	for (UserProfile p : reviewerMap.keySet()) {
+    		if (reviewerMap.get(p).contains(thePaper)) {
+    			foundPaper = true;
+    			break;
+    		}
+    	}
+    	
+        if (foundPaper) {
+        	throw new IllegalArgumentException("Paper cannot be removed because "
         										+ "at least one reviewer has been assigned to it");
-        	
         } else { //otherwise, remove the paper
         	//Remove paper from submission map:
             removePaperFromSubmissionMap(theUserProfile, thePaper);

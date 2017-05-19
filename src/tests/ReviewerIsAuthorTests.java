@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -34,7 +33,7 @@ public class ReviewerIsAuthorTests {
 	public void setUp(){
 		aUserProfile = new UserProfile("reviewer@uw.edu", "John Reviewer Doe");
 		aConference = Conference.createConference("Sample Conference",
-													new Date(),
+													new Date(0L),
 													5,
 													8);
 		anAuthoredPaper = Paper.createPaper(new File(""),
@@ -55,18 +54,18 @@ public class ReviewerIsAuthorTests {
 	}
 	
 
-	@Test(expected = IllegalOperationException.class)
-	public void assignAuthoredPaperForReview_ThrowsException() throws IllegalOperationException{
+	@Test(expected = IllegalArgumentException.class)
+	public void assignAuthoredPaperForReview_ThrowsException() throws IllegalArgumentException{
 		aConference.getSubprogramRole().assignReviewer(aUserProfile, anAuthoredPaper);
 	}
 	
-	@Test(expected = IllegalOperationException.class)
-	public void assignCoauthoredPaperForReview_ThrowsException() throws IllegalOperationException{
+	@Test(expected = IllegalArgumentException.class)
+	public void assignCoauthoredPaperForReview_ThrowsException() throws IllegalArgumentException{
 		aConference.getSubprogramRole().assignReviewer(aUserProfile, aCoauthoredPaper);
 	}
 	
 	@Test
-	public void assignNotAuthoredPaperForReview_IsAssigned() throws IllegalOperationException{
+	public void assignNotAuthoredPaperForReview_IsAssigned() throws IllegalArgumentException{
 		aConference.getSubprogramRole().assignReviewer(aUserProfile, aNotAuthoredPaper);
 		assertEquals(aConference.getInfo().getPapersAssignedToReviewer(
 				aUserProfile).get(0),

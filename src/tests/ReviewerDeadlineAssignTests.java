@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
-import model.IllegalOperationException;
 import model.Paper;
 import model.UserProfile;
 
@@ -72,8 +71,8 @@ public class ReviewerDeadlineAssignTests {
         paper2.setSubmissionDate(yearLaterHourEarly);
     }
 
-    @Test (expected = IllegalOperationException.class)
-    public void testEarlyAssignement_ThrowsException() throws IllegalOperationException {
+    @Test (expected = IllegalArgumentException.class)
+    public void testEarlyAssignement_ThrowsException() throws IllegalArgumentException {
         UserProfile aReviewerProfile = new UserProfile("Reviewer Joe", "Reviewer Guy");
         beforeDeadlineConference.getSubprogramRole().assignReviewer(
                 aReviewerProfile, 
@@ -82,7 +81,7 @@ public class ReviewerDeadlineAssignTests {
     }
 
     @Test
-    public void testHourLateSubmission_IsAssigned() throws IllegalOperationException {
+    public void testHourLateSubmission_IsAssigned() throws IllegalArgumentException {
         UserProfile aReviewerProfile = new UserProfile("Reviewer Joe", "Reviewer Guy");
         afterDeadlineConference.getSubprogramRole().assignReviewer(
                 aReviewerProfile, 
