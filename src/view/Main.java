@@ -13,9 +13,9 @@ public class Main {
     
     public static void main(String[] args) {
         intializeSystem();
-        Runtime.getRuntime().addShutdownHook(new Thread(Main::saveSystem));
-        
         initializeWindow();
+        
+        Runtime.getRuntime().addShutdownHook(new Thread(Main::saveSystem));
     }
     
     private static void intializeSystem() {
@@ -28,13 +28,14 @@ public class Main {
     
     private static void initializeWindow() {
         JFrame frame = new JFrame("MSEE Conferences");
-        frame.setMinimumSize(WINDOW_SIZE);
-        frame.setMaximumSize(WINDOW_SIZE);
+        frame.setSize(WINDOW_SIZE);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         
         UserContext context = new UserContext();
         
         PanelChanger cards = new PanelChanger();
+        cards.addCard(new LoginScreen(cards, context));
         cards.addCard(new ConferenceSelection(cards, context));
         cards.addCard(new DashBoard(cards, context));
         cards.addCard(new SubmitPaper(cards, context));
@@ -42,7 +43,7 @@ public class Main {
         cards.addCard(new AssignReviewer(cards, context));
         cards.addCard(new SubmitRecomendation(cards, context));
         
-        cards.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
+        cards.changeTo(LoginScreen.PANEL_LOOKUP_NAME);
         
         frame.getContentPane().add(cards.getJPanel(), BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
