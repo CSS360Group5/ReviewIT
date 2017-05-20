@@ -59,7 +59,7 @@ public class ConferenceSystem {
 	 */
 	public void deserializeData() {
 		/*
-		 * TO DO: Code for deserializing Data, aka loading up our
+		 * TODO: Code for deserializing Data, aka loading up our
 		 * Conference/UserProfile objects should happen here
 		 */
 		if((new File("./UserMap.ser")).exists() && (new File("./ConferenceMap.ser")).exists()){
@@ -79,17 +79,15 @@ public class ConferenceSystem {
 					myUserMap = new HashMap<>(newUserMap);
 					myConferenceMap = new HashMap<>(newConfMap);
 				}
-				oisUser.close();
-				fisUser.close();
-				oisCon.close();
-				fisCon.close();
-			} catch (IOException e) {
-//				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-//				e.printStackTrace();
-			}finally{
 				
+				oisUser.close(); fisUser.close();
+				oisCon.close(); fisCon.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
+			
 //			System.out.print("Deserialization successful.");
 		}
 	}
@@ -101,7 +99,7 @@ public class ConferenceSystem {
 	 */
 	public void serializeModel() {
 		/*
-		 * TO DO: Code for serializing Data, aka saving up our
+		 * TODO: Code for serializing Data, aka saving up our
 		 * Conference/UserProfile objects should happen here
 		 */
 		try {
@@ -122,7 +120,7 @@ public class ConferenceSystem {
 			fosCon.flush();
 			fosCon.close();
 		} catch (IOException e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 //		System.out.print("Serialization successful.");
 	}
