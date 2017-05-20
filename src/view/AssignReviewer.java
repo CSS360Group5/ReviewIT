@@ -8,12 +8,12 @@ public class AssignReviewer extends PanelCard {
     /** SVUID */
     private static final long serialVersionUID = 5949259200759242048L;
 
-    public AssignReviewer(PanelChanger p) {
-        super(p);
+    public AssignReviewer(PanelChanger p, UserContext context) {
+        super(p, context);
     }
 
     @Override
-    public void initializePanel() {
+    public void updatePanel() {
         // TODO Auto-generated method stub
 
     }

@@ -8,12 +8,12 @@ public class SubmitPaper extends PanelCard {
     /** SVUID */
     private static final long serialVersionUID = 8305415430621852696L;
 
-    public SubmitPaper(PanelChanger p) {
-        super(p);
+    public SubmitPaper(PanelChanger p, UserContext context) {
+        super(p, context);
     }
 
     @Override
-    public void initializePanel() {
+    public void updatePanel() {
         // TODO Auto-generated method stub
 
     }

@@ -8,12 +8,12 @@ public class RemovePaper extends PanelCard {
     /** SVUID */
     private static final long serialVersionUID = 3199779118935711601L;
 
-    public RemovePaper(PanelChanger p) {
-        super(p);
+    public RemovePaper(PanelChanger p, UserContext context) {
+        super(p, context);
     }
 
     @Override
-    public void initializePanel() {
+    public void updatePanel() {
         // TODO Auto-generated method stub
 
     }

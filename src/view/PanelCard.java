@@ -15,20 +15,24 @@ public abstract class PanelCard extends JPanel {
     
     /** The panel changer for this card. */
     protected final PanelChanger panelChanger;
+
+    /** The context of the panel. */
+    protected final UserContext context;
     
     /**
      * Create a new card for the given panel changer.
      * @param p the panel changer.
      */
-    public PanelCard(PanelChanger p) {
-        panelChanger = p;
-        initializePanel();
+    public PanelCard(PanelChanger p, UserContext context) {
+        this.panelChanger = p;
+        this.context = context;
     }
     
     /**
-     * This method will be called by the super constructor to initialize the panel.
+     * Load the panel. Load the panel with up to date values. This method gets called right before the panel is shown.
+     * This is not an initialize method, and the items in the panel will still be there when this method is called.
      */
-    public abstract void initializePanel();
+    protected abstract void updatePanel();
     
     /**
      * @return the name of the panel for the panel changer.

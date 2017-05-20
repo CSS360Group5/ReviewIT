@@ -10,12 +10,12 @@ public class DashBoard extends PanelCard {
     /** SVUID */
     private static final long serialVersionUID = 8350355413908915713L;
     
-    public DashBoard(PanelChanger p) {
-        super(p);
+    public DashBoard(PanelChanger p, UserContext context) {
+        super(p, context);
     }
 
     @Override
-    public void initializePanel() {
+    public void updatePanel() {
         JLabel text = new JLabel(PANEL_LOOKUP_NAME);
         text.setHorizontalAlignment(JLabel.CENTER);
         this.add(text);

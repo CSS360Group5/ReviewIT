@@ -22,7 +22,11 @@ import java.util.Map;
  */
 public class ConferenceSystem {
 	
-	/**
+	private static final String CONFERENCE_MAP_SER = "./data/ConferenceMap.ser";
+
+    private static final String USER_MAP_SER = "./data/UserMap.ser";
+
+    /**
 	 * My only Object instance. This is what is returned from getInstance().
 	 */
 	private static ConferenceSystem myInstance;
@@ -62,11 +66,11 @@ public class ConferenceSystem {
 		 * TODO: Code for deserializing Data, aka loading up our
 		 * Conference/UserProfile objects should happen here
 		 */
-		if((new File("./UserMap.ser")).exists() && (new File("./ConferenceMap.ser")).exists()){
+		if((new File(USER_MAP_SER)).exists() && (new File(CONFERENCE_MAP_SER)).exists()){
 			try {
-				FileInputStream fisUser = new FileInputStream("./UserMap.ser");
+				FileInputStream fisUser = new FileInputStream(USER_MAP_SER);
 				ObjectInputStream oisUser = new ObjectInputStream(fisUser);
-				FileInputStream fisCon = new FileInputStream("./ConferenceMap.ser");
+				FileInputStream fisCon = new FileInputStream(CONFERENCE_MAP_SER);
 				ObjectInputStream oisCon = new ObjectInputStream(fisCon);
 				
 				@SuppressWarnings("unchecked")
@@ -103,9 +107,9 @@ public class ConferenceSystem {
 		 * Conference/UserProfile objects should happen here
 		 */
 		try {
-			FileOutputStream fosUser = new FileOutputStream("./UserMap.ser");
+			FileOutputStream fosUser = new FileOutputStream(USER_MAP_SER);
 			ObjectOutputStream oosUser = new ObjectOutputStream(fosUser);
-			FileOutputStream fosCon = new FileOutputStream("./ConferenceMap.ser");
+			FileOutputStream fosCon = new FileOutputStream(CONFERENCE_MAP_SER);
 			ObjectOutputStream oosCon = new ObjectOutputStream(fosCon);
 
 			oosUser.writeObject(myUserMap);

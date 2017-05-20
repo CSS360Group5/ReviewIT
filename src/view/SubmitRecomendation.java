@@ -8,12 +8,12 @@ public class SubmitRecomendation extends PanelCard {
     /** SVUID */
     private static final long serialVersionUID = 3548345257787147831L;
 
-    public SubmitRecomendation(PanelChanger p) {
-        super(p);
+    public SubmitRecomendation(PanelChanger p, UserContext context) {
+        super(p, context);
     }
 
     @Override
-    public void initializePanel() {
+    public void updatePanel() {
         // TODO Auto-generated method stub
 
     }

@@ -117,4 +117,9 @@ public class Conference implements Serializable{
     public ReviewerUtilities getReviewerRole() {
         return myReviewerRole;
     }
+    
+    @Override
+    public String toString() {
+        return myInfo.getName();
+    }
 }
