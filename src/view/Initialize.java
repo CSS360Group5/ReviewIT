@@ -51,9 +51,6 @@ public class Initialize {
         
         sys.addConference(Conference.createConference("International Conference on Nuclear Engineering (ICONE 26)",
                 new Date(), 5, 8));
-        //TODO Fix depreciation later? I needed a conference in the future to test submitPaper -ian
-        sys.addConference(Conference.createConference("National Conference on Information System Management (NCISM 2017",
-                new Date(2017, 12, 12), 5, 8));
         
         sys.serializeModel();
     }
