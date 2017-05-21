@@ -12,7 +12,6 @@ import model.UserProfile;
 
 public class Initialize {
 
-    @SuppressWarnings("deprecation")
 	public static void main(String[] args) {
         
         ConferenceSystem sys = ConferenceSystem.getInstance();
