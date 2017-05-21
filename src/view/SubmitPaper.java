@@ -14,7 +14,7 @@ public class SubmitPaper extends PanelCard {
 
     @Override
     public void updatePanel() {
-        // TODO Auto-generated method stub
+    	this.removeAll();
 
     }
 
