@@ -25,6 +25,11 @@ import model.Conference;
 import model.Paper;
 import model.UserProfile;
 
+/**
+ * A class to display options to a user based on their role.
+ *
+ * @author Zachary Chandler
+ */
 public class DashBoard extends PanelCard {
 
     /** The name to lookup this panel in a panel changer. */
@@ -66,16 +71,25 @@ public class DashBoard extends PanelCard {
         }
     }
 
+    /**
+     * Check if the subprogram chair panel will be shown for the given user at a given conference.
+     */
     public static boolean shouldShowSubProgramChairPane(UserProfile user, Conference c) {
         List<Paper> assignedPapers = c.getInfo().getPapersAssignedToSubProgramChair(user);
         return assignedPapers != null && !assignedPapers.isEmpty();
     }
-    
+
+    /**
+     * Check if the author chair panel will be shown for the given user at a given conference.
+     */
     public static boolean shouldShowAuthorPane(UserProfile user, Conference c) {
         List<Paper> submittedPapers = c.getInfo().getPapersSubmittedBy(user);
         return !submittedPapers.isEmpty() || c.getInfo().getSubmissionDate().after(new Date());
     }
     
+    /**
+     * Get the subprogram chair panel.
+     */
     private JPanel getSubChairPanel(List<Paper> actualPapers) {
         int width = Main.WINDOW_SIZE.width - (PADDING * 2);
         
@@ -132,6 +146,9 @@ public class DashBoard extends PanelCard {
         return result;
     }
 
+    /**
+     * Get the author panel.
+     */
     private JPanel getAuthorPanel(List<Paper> actualPapers) {
         int width = Main.WINDOW_SIZE.width - (PADDING * 2);
 
