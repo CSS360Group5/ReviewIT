@@ -19,6 +19,11 @@ import javax.swing.event.ListSelectionListener;
 import model.Conference;
 import model.ConferenceSystem;
 
+/**
+ * A conference selection screen.
+ *
+ * @author Zachary Chandler
+ */
 public class ConferenceSelection extends PanelCard {
 
     /** The name to lookup this panel in a panel changer. */
@@ -53,7 +58,6 @@ public class ConferenceSelection extends PanelCard {
                               new CompoundBorder(new LineBorder(Color.BLACK),
                                                  new EmptyBorder(PADDING, PADDING, PADDING, PADDING))));
         
-        
         JButton selectButton = new JButton("Select");
         selectButton.setAlignmentX(CENTER_ALIGNMENT);
         selectButton.setEnabled(false);
@@ -73,7 +77,10 @@ public class ConferenceSelection extends PanelCard {
         conferences.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent arg0) {
-                selectButton.setEnabled(true);
+                Conference c = conferences.getSelectedValue();
+                
+                selectButton.setEnabled(DashBoard.shouldShowAuthorPane(context.getUser(), c)
+                        || DashBoard.shouldShowSubProgramChairPane(context.getUser(), c));
             }
         });
         

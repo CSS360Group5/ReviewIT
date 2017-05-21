@@ -116,7 +116,7 @@ public class Paper implements Serializable{
 		return myAuthors;
 	}
 	
-	public List<File> getReviewers() {
+	public List<File> getReviews() {
 		return myReviews;
 	}
 	
@@ -152,10 +152,25 @@ public class Paper implements Serializable{
 		
 	}
 	
-	
 	public void addReview(File review) {
 		Objects.requireNonNull(review);
 		myReviews.add(review);
+	}
+	
+	@Override
+	public String toString() {
+	    StringBuilder result = new StringBuilder();
+	    result.append(myTitle);
+        result.append(", by ");
+        
+        for (String s : myAuthors) {
+            result.append(s);
+            result.append(", ");
+        }
+        
+        result.append(mySubmissionDate.toString());
+	    
+	    return result.toString();
 	}
 }
 

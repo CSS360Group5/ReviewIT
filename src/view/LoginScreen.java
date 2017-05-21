@@ -44,7 +44,6 @@ public class LoginScreen extends PanelCard {
         
         JTextField input = new JTextField(10);
         input.setAlignmentX(CENTER_ALIGNMENT);
-        ;
         
         JPanel field = new JPanel();
         field.setAlignmentX(CENTER_ALIGNMENT);

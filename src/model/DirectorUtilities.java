@@ -15,11 +15,18 @@ public class DirectorUtilities {
     public DirectorUtilities(final ConferenceData theConferenceData){
     	myConferenceInfo = theConferenceData;
     }
+
+    public void addUserRole(
+            final UserProfile theUserProfile,
+            final String theUserRole
+            ){
+        myConferenceInfo.addUserToRole(theUserProfile, theUserRole);
+    }
     
-	public void addUserRole(
-			final UserProfile theUserProfile,
-			final String theUserRole
-			){
-		myConferenceInfo.addUserToRole(theUserProfile, theUserRole);
-	}
+    public void assignPaperToSubProgramChair(
+            final UserProfile theUserProfile,
+            final Paper p
+            ){
+        myConferenceInfo.assignSubprogramchairToPaper(theUserProfile, p);
+    }
 }

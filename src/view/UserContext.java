@@ -1,13 +1,15 @@
 package view;
 
 import model.Conference;
+import model.Paper;
 import model.UserProfile;
 
 public class UserContext {
 
     private Conference currentConference;
     private UserProfile user;
-
+    private Paper paper;
+    
     /**
      * @return the currentConference
      */
@@ -34,6 +36,20 @@ public class UserContext {
      */
     public void setUser(UserProfile user) {
         this.user = user;
+    }
+
+    /**
+     * @return the paper
+     */
+    public Paper getPaper() {
+        return paper;
+    }
+
+    /**
+     * @param paper the paper to set
+     */
+    public void setPaper(Paper paper) {
+        this.paper = paper;
     }
 
     

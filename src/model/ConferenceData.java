@@ -2,10 +2,13 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 
 /**
@@ -330,4 +333,57 @@ public class ConferenceData implements ConferenceInfo, Serializable{
 		return paperList;
 	}
 
+	/**
+	 * Get the papers assigned to a subprogram chair or null if the user isn't a subprogramchair.
+	 * @return an unmodifiable list of papers assigned to a subprogramchair.
+	 */
+    @Override
+    public List<Paper> getPapersAssignedToSubProgramChair(UserProfile theSubProgramChair) {
+        List<Paper> result = mySubprogramAssignmentMap.get(theSubProgramChair);
+        
+        if (result != null) {
+            result = Collections.unmodifiableList(result);
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Assigns a paper to a subprogram chair, if the user isn't a subprogram chair they are assigned the role. 
+     * 
+     * @param theSubProgramChair the user to assign the paper to.
+     * @param p the paper to assign.
+     * @throws NullPointerException if theSubProgramChair or p is null.
+     */
+    public void assignSubprogramchairToPaper(UserProfile theSubProgramChair, Paper p) {
+        Objects.requireNonNull(p);
+        Objects.requireNonNull(theSubProgramChair);
+        
+        List<Paper> papers = mySubprogramAssignmentMap.get(theSubProgramChair);
+        if (papers == null) {
+            papers = new LinkedList<>();
+            addUserToRole(theSubProgramChair, Conference.PROGRAM_ROLE);
+            mySubprogramAssignmentMap.put(theSubProgramChair, papers);
+        }
+        
+        if (!papers.contains(p)) {
+            papers.add(p);
+        }
+    }
+
+    
+    public List<UserProfile> getReviewersForPaper(Paper p) {
+        List<UserProfile> result = new LinkedList<UserProfile>();
+        
+        
+        for (UserProfile reviewer : this.myReviewerAssignmentMap.keySet()) {
+            
+            if (myReviewerAssignmentMap.get(reviewer).contains(p)) {
+                result.add(reviewer);
+            }
+        }
+        
+        
+        return result;
+    }
 }

@@ -80,8 +80,8 @@ public class Conference implements Serializable{
      * {@link ConferenceData}
      * @return a ConferenceInfo Object containing all useful Conference information.
      */
-    public ConferenceInfo getInfo(){
-    	return ((ConferenceInfo) myInfo);
+    public ConferenceData getInfo(){
+    	return myInfo;
     }
     
     /**
@@ -120,6 +120,18 @@ public class Conference implements Serializable{
     
     @Override
     public String toString() {
-        return myInfo.getName();
+        StringBuilder result = new StringBuilder();
+        result.append(myInfo.getName());
+        result.append(" (");
+        
+        if (myInfo.isSubmissionOpen(new Date())) {
+            result.append(myInfo.getSubmissionDate());
+        } else {
+            result.append("CLOSED");
+        }
+        
+        result.append(')');
+        
+        return  result.toString();
     }
 }
