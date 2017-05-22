@@ -34,25 +34,29 @@ public class SubmitPaper extends PanelCard {
     
     /** File chooser where start page is set to current directory */
     private final JFileChooser fileChooser = new JFileChooser(".");
+    /** */
+    private JPanel infoPanel = new JPanel();
+    /** */
+    private JPanel selectionPanel = new JPanel();
+    
+    /** Dimension used to format text entry fields. */
+    private Dimension preferredDimension = new Dimension(500, 20);
+    
+    /** Title of the paper to be submitted */
+    private String currentPaperTitle = "No title has been entered.";
+    
+    /** Authors of paper to be submitted.*/
+    private List<String> authorsOfPaper = new ArrayList<>();
     
     /** */
     private String currentFilePath = "No file has been selected.";
     
-    private JPanel infoPanel = new JPanel();
-    
-    private JPanel selectionPanel = new JPanel();
-    
-    private Dimension preferredDimension = new Dimension(500, 20);
-    
     /** */
-    private String currentPaperTitle = "No title has been entered.";
-    
     private JTextField paperTitleTextField = new JTextField("Enter the paper's title here...");
-    
+    /** */
     private JTextField authorsTextField = new JTextField("Enter single author name");
-    
-    private List<String> authorsOfPaper = new ArrayList<>();
-    
+
+    /** */
     private boolean initialSignIn;
     
     public SubmitPaper(PanelChanger p, UserContext context) {
@@ -85,12 +89,18 @@ public class SubmitPaper extends PanelCard {
          
          
     }
-    
+    /**
+     * Adds the currently signed in user to the paper being constructed.
+     */
     private void addCurrentUserAsAuthor() {
     	initialSignIn = false;
     	authorsOfPaper.add(context.getUser().getName());
     }
 
+    /**
+     * Panel that allows user to either submit paper or exit current frame.
+     * @return
+     */
     private Component getConfirmationPanel() {
     	JPanel confirmationPanel = new JPanel();
     	
@@ -101,6 +111,7 @@ public class SubmitPaper extends PanelCard {
         submitButton.setEnabled(false);
         
         cancelButton.addActionListener(new CancelAction());
+        submitButton.addActionListener(new submitAction());
         
     	confirmationPanel.add(cancelButton);
         confirmationPanel.add(submitButton);
@@ -135,7 +146,7 @@ public class SubmitPaper extends PanelCard {
     }
     
     /**
-     * 
+     * Adds all of the necessary elements to the panel that takes user input for paper submission.
      * @return
      */
     private JPanel getSelectionPanel() {
@@ -152,14 +163,11 @@ public class SubmitPaper extends PanelCard {
             fileChooser.setFileFilter(fileTypeFilter);
         fileChooserButton.addActionListener(new SelectFileAction());
         
-        //text field
-        
+        //text field       
         paperTitleTextField.setMaximumSize(preferredDimension);
         JButton paperTitleEnterButton = new JButton("Confirm current title");
         paperTitleEnterButton.addActionListener(new titleEnterAction());
         
-        
-
         JButton paperAuthorEnterButton = new JButton("Add author to list");
         paperAuthorEnterButton.addActionListener(new authorEnterAction());
         authorsTextField.setMaximumSize(preferredDimension);
@@ -175,6 +183,17 @@ public class SubmitPaper extends PanelCard {
         selectionPanel.add(authorsTextField);
         selectionPanel.add(paperAuthorEnterButton);
     	return selectionPanel;
+    }
+    
+    /**
+     * Resets all all of the information about the paper being constructed to submit.
+     * Normally called when a user cancels or submits a paper.
+     */
+    private void resetPaperInformation() {
+    	currentPaperTitle = "No title has been entered.";
+    	currentFilePath = "No file has been selected.";
+    	authorsOfPaper.clear();
+    	initialSignIn = true; 
     }
     
     /**
@@ -197,9 +216,7 @@ public class SubmitPaper extends PanelCard {
 			//this is super weird-- need to change
         	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
         	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
-			
-		}
-    	
+		} 	
     }
     
     /**
@@ -214,17 +231,13 @@ public class SubmitPaper extends PanelCard {
 			currentPaperTitle = paperTitleTextField.getText();
 			//this is super weird-- need to change
         	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
-        	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
-			
+        	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);			
 		}
-    	
     }
-    
-    
-    
+       
     /**
      * 
-     * @author ijj
+     * @author Ian Jury
      *
      */
     private class SelectFileAction implements ActionListener {
@@ -247,15 +260,29 @@ public class SubmitPaper extends PanelCard {
 		}
     	
     }
-    
+    /**
+     * Action for cancel button to change panel to previous.
+     * @author Ian Jury
+     *
+     */
     private class CancelAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			resetPaperInformation();
+			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);			
+		}   	
+    }
+    
+    /**
+     * 
+     */
+    private class submitAction implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+			// TODO Auto-generated method stub
 			
 		}
     	
     }
-
 }
