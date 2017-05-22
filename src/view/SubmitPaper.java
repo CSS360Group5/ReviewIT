@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import model.Paper;
 /**
  * 
  * @author Ian Jury
@@ -35,15 +38,14 @@ public class SubmitPaper extends PanelCard {
     private final JFileChooser fileChooser = new JFileChooser(".");
     
     private JPanel centerPanel = new JPanel();
+
     /** */
-    private JPanel infoPanel = new JPanel();
-    
     private JPanel filePanel = new JPanel();
-    
+    /** */
     private JPanel titlePanel = new JPanel();
-    
+    /** */
     private JPanel authorPanel = new JPanel();
-    
+    /** */
     private JPanel authorDisplayPanel = new JPanel();
       
     /** Dimension used to format text entry fields. */
@@ -57,9 +59,12 @@ public class SubmitPaper extends PanelCard {
     
     /** */
     private JTextField paperTitleTextField = new JTextField();
+    
     /** */
-    private JTextField authorsTextField = new JTextField("Enter single author name");
-
+    private JTextField authorToAdd = new JTextField();
+    
+    File fileOfPaper = new File("Placeholder");
+    
     /** */
     private boolean initialSignIn;
     
@@ -72,11 +77,6 @@ public class SubmitPaper extends PanelCard {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         //centerPanel.setAlignmentX(LEFT_ALIGNMENT);
         initialSignIn = true; //because object is instantiated before user is signed in.
-    }
-    
-	@Override
-    public String getNameOfPanel() {
-        return PANEL_LOOKUP_NAME;
     }
 
     @Override
@@ -130,12 +130,14 @@ public class SubmitPaper extends PanelCard {
 	}
 	
     private JPanel getAuthorPanel() {
+    	
+    	authorToAdd.setPreferredSize(new Dimension(200, 20));
         JButton paperAuthorEnterButton = new JButton("Add author to paper");
         paperAuthorEnterButton.addActionListener(new authorEnterAction());
-        
-                 
-        authorPanel.add(paperAuthorEnterButton);
-        
+        //JList<UserProfile> listOfAuthorsOfConference = new JList
+              
+        authorPanel.add(authorToAdd);
+        authorPanel.add(paperAuthorEnterButton); 
         
 		return authorPanel;
 	}
@@ -147,14 +149,6 @@ public class SubmitPaper extends PanelCard {
     		authorDisplayPanel.add(new JLabel(authorName));
     	}
     	return authorDisplayPanel;
-    }
-
-	/**
-     * Adds the currently signed in user to the paper being constructed.
-     */
-    private void addCurrentUserAsAuthor() {
-    	initialSignIn = false;
-    	authorsOfPaper.add(context.getUser().getName());
     }
 
     /**
@@ -177,6 +171,14 @@ public class SubmitPaper extends PanelCard {
         confirmationPanel.add(submitButton);
 		return confirmationPanel;
 	}
+
+	/**
+     * Adds the currently signed in user to the paper being constructed.
+     */
+    private void addCurrentUserAsAuthor() {
+    	initialSignIn = false;
+    	authorsOfPaper.add(context.getUser().getName());
+    }
             
     /**
      * Resets all all of the information about the paper being constructed to submit.
@@ -196,6 +198,13 @@ public class SubmitPaper extends PanelCard {
         JOptionPane.showMessageDialog(this, theMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
+	@Override
+    public String getNameOfPanel() {
+        return PANEL_LOOKUP_NAME;
+    }
+    
+    //private classes for actions
+    
     /**
      * Action listener for adding the author in associated text field to list of authors for paper submission.
      * @author Ian Jury
@@ -204,14 +213,14 @@ public class SubmitPaper extends PanelCard {
     private class authorEnterAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//authorsOfPaper.add(authorsTextField.getText());
+			authorsOfPaper.add(authorToAdd.getText());
+			authorToAdd.setText("");
+
 			//this is super weird-- need to change
         	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
         	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
 		} 	
     }
-    
-
        
     /**
      * 
@@ -224,9 +233,8 @@ public class SubmitPaper extends PanelCard {
 		public void actionPerformed(ActionEvent e) {
 			final int returnVal = fileChooser.showOpenDialog(null);
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	        	File fileOfPaper = fileChooser.getSelectedFile();
+	        	fileOfPaper = fileChooser.getSelectedFile();
 	        	currentFilePath = fileOfPaper.getAbsolutePath();
-	        	infoPanel.repaint();
 	        	//this is super weird-- need to change
 	        	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
 	        	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
@@ -259,6 +267,13 @@ public class SubmitPaper extends PanelCard {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			//submit paper
+			String titleOfPaper = paperTitleTextField.getText();
+			
+			Paper paperToSubmit = 
+				Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser());
+			
+			//context
+			
 			resetPaperInformation();
 			
 		}
