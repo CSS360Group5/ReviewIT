@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -162,7 +161,7 @@ public class SubmitPaper extends PanelCard {
         JButton cancelButton = new JButton("Cancel");
         
         //set to see if paper is valid later
-        submitButton.setEnabled(false);
+        //submitButton.setEnabled(false);
         
         cancelButton.addActionListener(new CancelAction());
         submitButton.addActionListener(new submitAction());
@@ -186,6 +185,7 @@ public class SubmitPaper extends PanelCard {
      */
     private void resetPaperInformation() {
     	currentFilePath = "No file has been selected.";
+    	paperTitleTextField.setText("");
     	authorsOfPaper.clear();
     	initialSignIn = true; 
     }
@@ -196,6 +196,9 @@ public class SubmitPaper extends PanelCard {
      */
     private void displayErrorMessage(final String theMessage) {
         JOptionPane.showMessageDialog(this, theMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    private void displaySuccessMessage(final String theMessage) {
+        JOptionPane.showMessageDialog(this, theMessage, "Success", JOptionPane.DEFAULT_OPTION);
     }
     
 	@Override
@@ -265,18 +268,22 @@ public class SubmitPaper extends PanelCard {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
 			//submit paper
 			String titleOfPaper = paperTitleTextField.getText();
+			try {
+				Paper paperToSubmit = 
+						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser());
+				//submits paper to conference
+				context.getCurrentConference().getUserRole().addPaper(context.getUser(), paperToSubmit);
+				displaySuccessMessage("Paper has been submitted to \"" 
+						+ context.getCurrentConference().getInfo().getName() + "\".");
+				resetPaperInformation();	
+				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+			} catch (IllegalArgumentException ex) {
+				displayErrorMessage("Paper could not be submitted due to invalid input");
+			}
 			
-			Paper paperToSubmit = 
-				Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser());
 			
-			//context
-			
-			resetPaperInformation();
-			
-		}
-    	
+		}	
     }
 }
