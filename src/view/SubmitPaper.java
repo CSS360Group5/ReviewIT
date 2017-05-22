@@ -39,6 +39,8 @@ public class SubmitPaper extends PanelCard {
     /** */
     private JPanel selectionPanel = new JPanel();
     
+    private JPanel buttonPanel = new JPanel();
+    
     /** Dimension used to format text entry fields. */
     private Dimension preferredDimension = new Dimension(500, 20);
     
@@ -75,6 +77,7 @@ public class SubmitPaper extends PanelCard {
     	this.removeAll();
     	infoPanel.removeAll();
     	selectionPanel.removeAll();
+    	buttonPanel.removeAll();
     	
     	 Objects.requireNonNull(context.getCurrentConference());
          Objects.requireNonNull(context.getUser());
@@ -84,7 +87,8 @@ public class SubmitPaper extends PanelCard {
          }
 
          this.add(getInfoPanel(), BorderLayout.WEST);
-         this.add(getSelectionPanel(), BorderLayout.EAST);
+         this.add(getButtonPanel(), BorderLayout.EAST);
+         this.add(getSelectionPanel(), BorderLayout.CENTER);
          this.add(getConfirmationPanel(), BorderLayout.SOUTH);
          
          
@@ -118,6 +122,7 @@ public class SubmitPaper extends PanelCard {
 		return confirmationPanel;
 	}
     
+    
     /**
      * Displays the info for the current state of the paper. Changes as paper is being 'built' before submission.
      * @return
@@ -133,7 +138,7 @@ public class SubmitPaper extends PanelCard {
     	JLabel paperAuthorsLabel = new JLabel("Current authors: ");
     	
     	infoPanel.add(title);
-    	infoPanel.add(spacing);
+    	//infoPanel.add(spacing);
     	infoPanel.add(paperFilePath);
     	infoPanel.add(paperTitleLabel);
     	infoPanel.add(paperAuthorsLabel);
@@ -144,6 +149,20 @@ public class SubmitPaper extends PanelCard {
     	}
     	return infoPanel;
     }
+    
+    private JPanel getButtonPanel() {
+    	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+    	JButton paperTitleEnterButton = new JButton("Confirm current title");
+        paperTitleEnterButton.addActionListener(new titleEnterAction());
+        
+        JButton paperAuthorEnterButton = new JButton("Add author to list");
+        paperAuthorEnterButton.addActionListener(new authorEnterAction());
+        
+        buttonPanel.add(paperTitleEnterButton);
+        buttonPanel.add(paperAuthorEnterButton);
+    	return buttonPanel;
+    }
+    
     
     /**
      * Adds all of the necessary elements to the panel that takes user input for paper submission.
@@ -173,15 +192,10 @@ public class SubmitPaper extends PanelCard {
         authorsTextField.setMaximumSize(preferredDimension);
         
         selectionPanel.add(title);
-        selectionPanel.add(spacing);
-        selectionPanel.add(fileChooserButton);
-        
-        selectionPanel.add(paperTitleTextField);
-        selectionPanel.add(paperTitleEnterButton);
-        selectionPanel.add(spacing);
-        
+        selectionPanel.add(fileChooserButton);       
+        selectionPanel.add(paperTitleTextField);        
         selectionPanel.add(authorsTextField);
-        selectionPanel.add(paperAuthorEnterButton);
+
     	return selectionPanel;
     }
     
