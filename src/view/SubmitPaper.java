@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +33,13 @@ public class SubmitPaper extends PanelCard {
     /** */
     private String currentFilePath = "No file has been selected.";
     
+    JPanel infoPanel = new JPanel();
+    
+    private Dimension preferredDimension = new Dimension(500, 20);
+    
     /** */
     private String currentPaperTitle = "No title has been entered.";
+    
     public SubmitPaper(PanelChanger p, UserContext context) {
         super(p, context);
         this.setLayout(new BorderLayout());
@@ -42,6 +48,7 @@ public class SubmitPaper extends PanelCard {
     @Override
     public void updatePanel() {
     	this.removeAll();
+    	infoPanel.removeAll();
     	
     	 Objects.requireNonNull(context.getCurrentConference());
          Objects.requireNonNull(context.getUser());
@@ -84,6 +91,9 @@ public class SubmitPaper extends PanelCard {
 			final int returnVal = fileChooser.showOpenDialog(null);
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	        	File fileOfPaper = fileChooser.getSelectedFile();
+	        	currentFilePath = fileOfPaper.getAbsolutePath();
+	        	infoPanel.repaint();
+	        	repaint();
 	                      
 	        } else if (returnVal == JFileChooser.ERROR_OPTION) { 
 	            displayErrorMessage("There was an error loading the selected file!");
@@ -108,9 +118,17 @@ public class SubmitPaper extends PanelCard {
     }
     
     private JPanel getInfoPanel() {
-    	JPanel infoPanel = new JPanel();
+    	//JPanel infoPanel = new JPanel();
+    	infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+    	
     	JLabel title = new JLabel("Current paper information: ");
+    	JLabel spacing = new JLabel(" ");
+    	JLabel paperFilePath = new JLabel("Current file path: " + currentFilePath);
+    	
+    	
     	infoPanel.add(title);
+    	infoPanel.add(spacing);
+    	infoPanel.add(paperFilePath);
     	return infoPanel;
     }
     
@@ -118,6 +136,9 @@ public class SubmitPaper extends PanelCard {
     	JPanel selectionPanel = new JPanel();
     	JLabel title = new JLabel("Enter information about paper here");
     	selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.Y_AXIS));
+    	JLabel spacing = new JLabel(" ");
+    	
+    	
     	 //file chooser
         JButton fileChooserButton = new JButton("Select file to upload...");
         final FileNameExtensionFilter fileTypeFilter = new FileNameExtensionFilter(
@@ -127,11 +148,17 @@ public class SubmitPaper extends PanelCard {
         
         //text field
         JTextField paperTitleTextField = new JTextField("Enter the paper's title here...");
-
+        paperTitleTextField.setMaximumSize(preferredDimension);
+        
+        
+        JTextField authorsTextField = new JTextField("Enter authors (change this...)");
+        authorsTextField.setMaximumSize(preferredDimension);
         
         selectionPanel.add(title);
+        selectionPanel.add(spacing);
         selectionPanel.add(fileChooserButton);
         selectionPanel.add(paperTitleTextField);
+        selectionPanel.add(authorsTextField);
     	return selectionPanel;
     }
 

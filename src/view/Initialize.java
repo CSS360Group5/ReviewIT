@@ -41,7 +41,7 @@ public class Initialize {
 
     private static Conference getAnotherConference(Date now) {
         return Conference.createConference("ASME/BATH FPMC Symposium on Fluid Power and Motion", 
-                new Date(now.getTime() + 100L), 5, 8);
+                new Date(now.getTime() + 400L), 5, 8);
     }
 
 
