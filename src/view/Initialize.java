@@ -26,7 +26,7 @@ public class Initialize {
         
         UserProfile zachac = sys.getUserProfile("zachac");
         Conference c = Conference.createConference("ASME/BATH FPMC Symposium on Fluid Power and Motion", 
-                new Date(now.getTime() + 100L), 5, 8);
+                new Date(now.getTime() + 400L), 5, 8);
         sys.addConference(c);
         
         List<String> authors = new LinkedList<String>();
