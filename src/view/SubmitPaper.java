@@ -3,7 +3,6 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -132,13 +131,11 @@ public class SubmitPaper extends PanelCard {
     	infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
     	
     	JLabel title = new JLabel("Current paper information: ");
-    	JLabel spacing = new JLabel(" ");
     	JLabel paperFilePath = new JLabel("Current file path: " + currentFilePath);
     	JLabel paperTitleLabel = new JLabel("Current title: " + currentPaperTitle);
     	JLabel paperAuthorsLabel = new JLabel("Current authors: ");
     	
     	infoPanel.add(title);
-    	//infoPanel.add(spacing);
     	infoPanel.add(paperFilePath);
     	infoPanel.add(paperTitleLabel);
     	infoPanel.add(paperAuthorsLabel);
@@ -154,6 +151,7 @@ public class SubmitPaper extends PanelCard {
     	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
     	JButton paperTitleEnterButton = new JButton("Confirm current title");
         paperTitleEnterButton.addActionListener(new titleEnterAction());
+        paperTitleEnterButton.setToolTipText("Makes the title text box the title of the paper" );
         
         JButton paperAuthorEnterButton = new JButton("Add author to list");
         paperAuthorEnterButton.addActionListener(new authorEnterAction());
@@ -171,9 +169,7 @@ public class SubmitPaper extends PanelCard {
     private JPanel getSelectionPanel() {
     	//JPanel selectionPanel = new JPanel();
     	JLabel title = new JLabel("Enter information about paper here");
-    	selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.Y_AXIS));
-    	JLabel spacing = new JLabel(" ");
-    	
+    	selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.Y_AXIS));  	
     	
     	 //file chooser
         JButton fileChooserButton = new JButton("Select file to upload...");
