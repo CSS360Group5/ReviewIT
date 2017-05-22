@@ -7,7 +7,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.swing.BoxLayout;
@@ -48,9 +49,16 @@ public class SubmitPaper extends PanelCard {
     
     private JTextField paperTitleTextField = new JTextField("Enter the paper's title here...");
     
+    private JTextField authorsTextField = new JTextField("Enter single author name");
+    
+    private List<String> authorsOfPaper = new ArrayList<>();
+    
+    private boolean initialSignIn;
+    
     public SubmitPaper(PanelChanger p, UserContext context) {
         super(p, context);
         this.setLayout(new BorderLayout());
+        initialSignIn = true; //because object is instantiated before user is signed in.
     }
     
 	@Override
@@ -66,13 +74,21 @@ public class SubmitPaper extends PanelCard {
     	
     	 Objects.requireNonNull(context.getCurrentConference());
          Objects.requireNonNull(context.getUser());
+         //adds the current user as an author of the paper, unless it has already been done.
+         if (initialSignIn) {
+        	 addCurrentUserAsAuthor();
+         }
 
-         
          this.add(getInfoPanel(), BorderLayout.WEST);
          this.add(getSelectionPanel(), BorderLayout.EAST);
          this.add(getConfirmationPanel(), BorderLayout.SOUTH);
          
          
+    }
+    
+    private void addCurrentUserAsAuthor() {
+    	initialSignIn = false;
+    	authorsOfPaper.add(context.getUser().getName());
     }
 
     private Component getConfirmationPanel() {
@@ -92,7 +108,7 @@ public class SubmitPaper extends PanelCard {
 	}
     
     /**
-     * 
+     * Displays the info for the current state of the paper. Changes as paper is being 'built' before submission.
      * @return
      */
     private JPanel getInfoPanel() {
@@ -105,12 +121,16 @@ public class SubmitPaper extends PanelCard {
     	JLabel paperTitleLabel = new JLabel("Current title: " + currentPaperTitle);
     	JLabel paperAuthorsLabel = new JLabel("Current authors: ");
     	
-    	
     	infoPanel.add(title);
     	infoPanel.add(spacing);
     	infoPanel.add(paperFilePath);
     	infoPanel.add(paperTitleLabel);
     	infoPanel.add(paperAuthorsLabel);
+    	
+    	//prints out authors of paper
+    	for (String authorName : authorsOfPaper) {
+    		infoPanel.add(new JLabel(authorName));
+    	}
     	return infoPanel;
     }
     
@@ -139,8 +159,9 @@ public class SubmitPaper extends PanelCard {
         paperTitleEnterButton.addActionListener(new titleEnterAction());
         
         
-        JTextField authorsTextField = new JTextField("Enter authors (change this...)");
+
         JButton paperAuthorEnterButton = new JButton("Add author to list");
+        paperAuthorEnterButton.addActionListener(new authorEnterAction());
         authorsTextField.setMaximumSize(preferredDimension);
         
         selectionPanel.add(title);
@@ -164,6 +185,28 @@ public class SubmitPaper extends PanelCard {
         JOptionPane.showMessageDialog(this, theMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
+    /**
+     * Action listener for adding the author in associated text field to list of authors for paper submission.
+     * @author Ian Jury
+     *
+     */
+    private class authorEnterAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			authorsOfPaper.add(authorsTextField.getText());
+			//this is super weird-- need to change
+        	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
+        	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
+			
+		}
+    	
+    }
+    
+    /**
+     * Action to make the author name in the associated text box the name of the paper to submit.
+     * @author Ian Jury
+     *
+     */
     private class titleEnterAction implements ActionListener {
 
 		@Override
