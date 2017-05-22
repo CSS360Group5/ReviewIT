@@ -41,7 +41,7 @@ public class Initialize {
 
     private static Conference getAnotherConference(Date now) {
         return Conference.createConference("ASME/BATH FPMC Symposium on Fluid Power and Motion", 
-                new Date(now.getTime() + 400L), 5, 8);
+                new Date(now.getTime() + 9000L), 5, 8);
     }
 
 
@@ -53,7 +53,7 @@ public class Initialize {
 
     private static Conference getConferenceWithOpenDeadline(Date now) {
         return Conference.createConference("Internal Combustion Engine Fall Technical Conference",
-                new Date(now.getTime() + 10000000L), 5, 8);
+                new Date(now.getTime() + 10000000000L), 5, 8);
     }
 
 

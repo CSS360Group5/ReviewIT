@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -17,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 /**
  * 
@@ -33,18 +33,21 @@ public class SubmitPaper extends PanelCard {
     
     /** File chooser where start page is set to current directory */
     private final JFileChooser fileChooser = new JFileChooser(".");
+    
+    private JPanel centerPanel = new JPanel();
     /** */
     private JPanel infoPanel = new JPanel();
-    /** */
-    private JPanel selectionPanel = new JPanel();
     
-    private JPanel buttonPanel = new JPanel();
+    private JPanel filePanel = new JPanel();
     
+    private JPanel titlePanel = new JPanel();
+    
+    private JPanel authorPanel = new JPanel();
+    
+    private JPanel authorDisplayPanel = new JPanel();
+      
     /** Dimension used to format text entry fields. */
-    private Dimension preferredDimension = new Dimension(500, 20);
-    
-    /** Title of the paper to be submitted */
-    private String currentPaperTitle = "No title has been entered.";
+    private Dimension preferredDimension = new Dimension(400, 20);
     
     /** Authors of paper to be submitted.*/
     private List<String> authorsOfPaper = new ArrayList<>();
@@ -53,7 +56,7 @@ public class SubmitPaper extends PanelCard {
     private String currentFilePath = "No file has been selected.";
     
     /** */
-    private JTextField paperTitleTextField = new JTextField("Enter the paper's title here...");
+    private JTextField paperTitleTextField = new JTextField();
     /** */
     private JTextField authorsTextField = new JTextField("Enter single author name");
 
@@ -62,7 +65,12 @@ public class SubmitPaper extends PanelCard {
     
     public SubmitPaper(PanelChanger p, UserContext context) {
         super(p, context);
-        this.setLayout(new BorderLayout());
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBorder(new EmptyBorder(Main.WINDOW_SIZE.height / 4 , 0 , Main.WINDOW_SIZE.height / 2, 0));
+
+        this.setAlignmentX(CENTER_ALIGNMENT);
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        //centerPanel.setAlignmentX(LEFT_ALIGNMENT);
         initialSignIn = true; //because object is instantiated before user is signed in.
     }
     
@@ -74,25 +82,74 @@ public class SubmitPaper extends PanelCard {
     @Override
     public void updatePanel() {
     	this.removeAll();
-    	infoPanel.removeAll();
-    	selectionPanel.removeAll();
-    	buttonPanel.removeAll();
+    	centerPanel.removeAll();
+    	filePanel.removeAll();
+    	titlePanel.removeAll();
+    	authorPanel.removeAll();
+    	authorDisplayPanel.removeAll();
     	
     	 Objects.requireNonNull(context.getCurrentConference());
          Objects.requireNonNull(context.getUser());
+         
          //adds the current user as an author of the paper, unless it has already been done.
          if (initialSignIn) {
         	 addCurrentUserAsAuthor();
          }
-
-         this.add(getInfoPanel(), BorderLayout.WEST);
-         this.add(getButtonPanel(), BorderLayout.EAST);
-         this.add(getSelectionPanel(), BorderLayout.CENTER);
-         this.add(getConfirmationPanel(), BorderLayout.SOUTH);
-         
-         
+        
+         centerPanel.add(getFilePanel());
+         centerPanel.add(getTitlePanel());
+         centerPanel.add(getAuthorPanel());
+         centerPanel.add(getAuthorDisplayPanel());
+         centerPanel.add(getConfirmationPanel());
+               
+         this.add(centerPanel);    
     }
-    /**
+    
+	private JPanel getFilePanel() {
+		titlePanel.setAlignmentY(LEFT_ALIGNMENT);
+		JLabel info = new JLabel("Current file selected: " + currentFilePath);
+		JButton fileChooserButton = new JButton("Select file to upload...");
+        final FileNameExtensionFilter fileTypeFilter = new FileNameExtensionFilter(
+                "docx, doc, and pdf", "docx", "doc", "pdf");
+            fileChooser.setFileFilter(fileTypeFilter);
+        fileChooserButton.addActionListener(new SelectFileAction());
+		
+		filePanel.add(info);
+		filePanel.add(fileChooserButton);
+		return filePanel;
+	}
+	
+	private JPanel getTitlePanel() {
+		titlePanel.setAlignmentY(LEFT_ALIGNMENT);
+		JLabel paperTitleLabel = new JLabel("Title: ");
+        paperTitleTextField.setPreferredSize(preferredDimension);
+		
+		titlePanel.add(paperTitleLabel);
+		titlePanel.add(paperTitleTextField);
+		return titlePanel;
+	}
+	
+    private JPanel getAuthorPanel() {
+        JButton paperAuthorEnterButton = new JButton("Add author to paper");
+        paperAuthorEnterButton.addActionListener(new authorEnterAction());
+        
+                 
+        authorPanel.add(paperAuthorEnterButton);
+        
+        
+		return authorPanel;
+	}
+    
+    private JPanel getAuthorDisplayPanel() {
+    	JLabel paperAuthorsLabel = new JLabel("Current authors: ");
+    	authorDisplayPanel.add(paperAuthorsLabel);
+    	for (String authorName : authorsOfPaper) {
+    		authorDisplayPanel.add(new JLabel(authorName));
+    	}
+    	return authorDisplayPanel;
+    }
+
+	/**
      * Adds the currently signed in user to the paper being constructed.
      */
     private void addCurrentUserAsAuthor() {
@@ -120,87 +177,12 @@ public class SubmitPaper extends PanelCard {
         confirmationPanel.add(submitButton);
 		return confirmationPanel;
 	}
-    
-    
-    /**
-     * Displays the info for the current state of the paper. Changes as paper is being 'built' before submission.
-     * @return
-     */
-    private JPanel getInfoPanel() {
-    	//JPanel infoPanel = new JPanel();
-    	infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-    	
-    	JLabel title = new JLabel("Current paper information: ");
-    	JLabel paperFilePath = new JLabel("Current file path: " + currentFilePath);
-    	JLabel paperTitleLabel = new JLabel("Current title: " + currentPaperTitle);
-    	JLabel paperAuthorsLabel = new JLabel("Current authors: ");
-    	
-    	infoPanel.add(title);
-    	infoPanel.add(paperFilePath);
-    	infoPanel.add(paperTitleLabel);
-    	infoPanel.add(paperAuthorsLabel);
-    	
-    	//prints out authors of paper
-    	for (String authorName : authorsOfPaper) {
-    		infoPanel.add(new JLabel(authorName));
-    	}
-    	return infoPanel;
-    }
-    
-    private JPanel getButtonPanel() {
-    	buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-    	JButton paperTitleEnterButton = new JButton("Confirm current title");
-        paperTitleEnterButton.addActionListener(new titleEnterAction());
-        paperTitleEnterButton.setToolTipText("Makes the title text box the title of the paper" );
-        
-        JButton paperAuthorEnterButton = new JButton("Add author to list");
-        paperAuthorEnterButton.addActionListener(new authorEnterAction());
-        
-        buttonPanel.add(paperTitleEnterButton);
-        buttonPanel.add(paperAuthorEnterButton);
-    	return buttonPanel;
-    }
-    
-    
-    /**
-     * Adds all of the necessary elements to the panel that takes user input for paper submission.
-     * @return
-     */
-    private JPanel getSelectionPanel() {
-    	//JPanel selectionPanel = new JPanel();
-    	JLabel title = new JLabel("Enter information about paper here");
-    	selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.Y_AXIS));  	
-    	
-    	 //file chooser
-        JButton fileChooserButton = new JButton("Select file to upload...");
-        final FileNameExtensionFilter fileTypeFilter = new FileNameExtensionFilter(
-                "docx, doc, and pdf", "docx", "doc", "pdf");
-            fileChooser.setFileFilter(fileTypeFilter);
-        fileChooserButton.addActionListener(new SelectFileAction());
-        
-        //text field       
-        paperTitleTextField.setMaximumSize(preferredDimension);
-        JButton paperTitleEnterButton = new JButton("Confirm current title");
-        paperTitleEnterButton.addActionListener(new titleEnterAction());
-        
-        JButton paperAuthorEnterButton = new JButton("Add author to list");
-        paperAuthorEnterButton.addActionListener(new authorEnterAction());
-        authorsTextField.setMaximumSize(preferredDimension);
-        
-        selectionPanel.add(title);
-        selectionPanel.add(fileChooserButton);       
-        selectionPanel.add(paperTitleTextField);        
-        selectionPanel.add(authorsTextField);
-
-    	return selectionPanel;
-    }
-    
+            
     /**
      * Resets all all of the information about the paper being constructed to submit.
      * Normally called when a user cancels or submits a paper.
      */
     private void resetPaperInformation() {
-    	currentPaperTitle = "No title has been entered.";
     	currentFilePath = "No file has been selected.";
     	authorsOfPaper.clear();
     	initialSignIn = true; 
@@ -222,28 +204,14 @@ public class SubmitPaper extends PanelCard {
     private class authorEnterAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			authorsOfPaper.add(authorsTextField.getText());
+			//authorsOfPaper.add(authorsTextField.getText());
 			//this is super weird-- need to change
         	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
         	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
 		} 	
     }
     
-    /**
-     * Action to make the author name in the associated text box the name of the paper to submit.
-     * @author Ian Jury
-     *
-     */
-    private class titleEnterAction implements ActionListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			currentPaperTitle = paperTitleTextField.getText();
-			//this is super weird-- need to change
-        	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
-        	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);			
-		}
-    }
        
     /**
      * 
@@ -265,11 +233,10 @@ public class SubmitPaper extends PanelCard {
 	                      
 	        } else if (returnVal == JFileChooser.ERROR_OPTION) { 
 	            displayErrorMessage("There was an error loading the selected file!");
-	        }  
-			
-		}
-    	
+	        }  			
+		}  	
     }
+    
     /**
      * Action for cancel button to change panel to previous.
      * @author Ian Jury
@@ -291,6 +258,8 @@ public class SubmitPaper extends PanelCard {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
+			//submit paper
+			resetPaperInformation();
 			
 		}
     	
