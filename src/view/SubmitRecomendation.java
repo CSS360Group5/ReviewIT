@@ -34,7 +34,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class SubmitRecomendation extends PanelCard {
 
-    /** The name to lookup this panel in a panel changer. */
+    /** The name to lookup this mainPanel in a mainPanel changer. */
     public static final String PANEL_LOOKUP_NAME = "SUBMIT_RECOMENDATION";
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
@@ -90,49 +90,49 @@ public class SubmitRecomendation extends PanelCard {
     @Override
     public void updatePanel() {
     	this.removeAll();
-    	JPanel panel = new JPanel();
-		add(panel);
-		panel.setLayout(new BorderLayout(0, 0));
+    	JPanel mainPanel = new JPanel();
+		add(mainPanel);
+		mainPanel.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_1 = new JPanel();
-		panel.add(panel_1, BorderLayout.NORTH);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		JPanel namePanel = new JPanel();
+		mainPanel.add(namePanel, BorderLayout.NORTH);
+		namePanel.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblSubProgramChair = new JLabel("Sub Program Chair:");
-		panel_1.add(lblSubProgramChair);
+		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:");
+		namePanel.add(SubProgramChairlabel);
 		
-		JLabel lblPaper = new JLabel("Paper:");
-		panel_1.add(lblPaper, BorderLayout.SOUTH);
+		JLabel labelPaper = new JLabel("Paper:");
+		namePanel.add(labelPaper, BorderLayout.SOUTH);
 		
-		JPanel panel_2 = new JPanel();
-		panel.add(panel_2, BorderLayout.WEST);
+		JPanel placeHolder = new JPanel();
+		mainPanel.add(placeHolder, BorderLayout.WEST);
 		
-		JPanel panel_4 = new JPanel();
-		panel.add(panel_4, BorderLayout.CENTER);
-		panel_4.setLayout(new BorderLayout(0, 0));
+		JPanel gridPanel = new JPanel();
+		mainPanel.add(gridPanel, BorderLayout.CENTER);
+		gridPanel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_5 = new JPanel();
-		panel_4.add(panel_5, BorderLayout.NORTH);
+		gridPanel.add(panel_5, BorderLayout.NORTH);
 		
-		JLabel lblUploadARecommendation = new JLabel("Upload a recommendation File for the Paper and select your recommendation.");
-		lblUploadARecommendation.setAlignmentY(LEFT_ALIGNMENT);
-		panel_5.add(lblUploadARecommendation);
+		JLabel instructionsLabel = new JLabel("Upload a recommendation File for the Paper and select your recommendation.");
+		instructionsLabel.setAlignmentY(LEFT_ALIGNMENT);
+		panel_5.add(instructionsLabel);
 		
-		JPanel panel_6 = new JPanel();
-		panel_4.add(panel_6, BorderLayout.CENTER);
-		GridBagLayout gbl_panel_6 = new GridBagLayout();
-		gbl_panel_6.columnWidths = new int[]{0, 0, 0, 0};
-		gbl_panel_6.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_6.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_6.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		panel_6.setLayout(gbl_panel_6);
+		JPanel gridLocation = new JPanel();
+		gridPanel.add(gridLocation, BorderLayout.CENTER);
+		GridBagLayout theGridColandRows = new GridBagLayout();
+		theGridColandRows.columnWidths = new int[]{0, 0, 0, 0};
+		theGridColandRows.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		theGridColandRows.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		theGridColandRows.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridLocation.setLayout(theGridColandRows);
 		
-		JLabel lblFile = new JLabel("File:");
-		GridBagConstraints gbc_lblFile = new GridBagConstraints();
-		gbc_lblFile.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFile.gridx = 0;
-		gbc_lblFile.gridy = 0;
-		panel_6.add(lblFile, gbc_lblFile);
+		JLabel fileLabel = new JLabel("File:");
+		GridBagConstraints fileLabelLocation = new GridBagConstraints();
+		fileLabelLocation.insets = new Insets(0, 0, 5, 5);
+		fileLabelLocation.gridx = 0;
+		fileLabelLocation.gridy = 0;
+		gridLocation.add(fileLabel, fileLabelLocation);
 		
 		JButton btnChooseFile = new JButton("Choose File");
 		GridBagConstraints gbc_btnChooseFile = new GridBagConstraints();
@@ -141,63 +141,63 @@ public class SubmitRecomendation extends PanelCard {
 		gbc_btnChooseFile.gridx = 1;
 		gbc_btnChooseFile.gridy = 0;
 		btnChooseFile.addActionListener(new SelectFileAction());
-		panel_6.add(btnChooseFile, gbc_btnChooseFile);
+		gridLocation.add(btnChooseFile, gbc_btnChooseFile);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
-		gbc_lblNewLabel.gridx = 2;
-		gbc_lblNewLabel.gridy = 0;
-		panel_6.add(lblNewLabel, gbc_lblNewLabel);
+		JLabel fileNameLabel = new JLabel("New label");
+		GridBagConstraints fileNameLabelLocation = new GridBagConstraints();
+		fileNameLabelLocation.insets = new Insets(0, 0, 5, 0);
+		fileNameLabelLocation.gridx = 2;
+		fileNameLabelLocation.gridy = 0;
+		gridLocation.add(fileNameLabel, fileNameLabelLocation);
 		
-		JRadioButton rdbtnRecommend = new JRadioButton("Recommend");
-		buttonGroup.add(rdbtnRecommend);
-		GridBagConstraints gbc_rdbtnRecommend = new GridBagConstraints();
-		gbc_rdbtnRecommend.anchor = GridBagConstraints.WEST;
-		gbc_rdbtnRecommend.insets = new Insets(0, 0, 5, 5);
-		gbc_rdbtnRecommend.gridx = 1;
-		gbc_rdbtnRecommend.gridy = 1;
-		panel_6.add(rdbtnRecommend, gbc_rdbtnRecommend);
+		JRadioButton recommendRadioButton= new JRadioButton("Recommend");
+		buttonGroup.add(recommendRadioButton);
+		GridBagConstraints recommendRadioButtonLocation= new GridBagConstraints();
+		recommendRadioButtonLocation.anchor = GridBagConstraints.WEST;
+		recommendRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
+		recommendRadioButtonLocation.gridx = 1;
+		recommendRadioButtonLocation.gridy = 1;
+		gridLocation.add(recommendRadioButton, recommendRadioButtonLocation);
 		
-		JRadioButton rdbtnDontRecommend = new JRadioButton("Don't Recommend");
-		buttonGroup.add(rdbtnDontRecommend);
-		GridBagConstraints gbc_rdbtnDontRecommend = new GridBagConstraints();
-		gbc_rdbtnDontRecommend.anchor = GridBagConstraints.WEST;
-		gbc_rdbtnDontRecommend.insets = new Insets(0, 0, 5, 5);
-		gbc_rdbtnDontRecommend.gridx = 1;
-		gbc_rdbtnDontRecommend.gridy = 2;
-		panel_6.add(rdbtnDontRecommend, gbc_rdbtnDontRecommend);
+		JRadioButton denyRadioButton = new JRadioButton("Don't Recommend");
+		buttonGroup.add(denyRadioButton);
+		GridBagConstraints denyRadioButtonLocation = new GridBagConstraints();
+		denyRadioButtonLocation.anchor = GridBagConstraints.WEST;
+		denyRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
+		denyRadioButtonLocation.gridx = 1;
+		denyRadioButtonLocation.gridy = 2;
+		gridLocation.add(denyRadioButton, denyRadioButtonLocation);
 		
-		JRadioButton rdbtnUnsure = new JRadioButton("Unsure");
-		buttonGroup.add(rdbtnUnsure);
-		GridBagConstraints gbc_rdbtnUnsure = new GridBagConstraints();
-		gbc_rdbtnUnsure.insets = new Insets(0, 0, 5, 5);
-		gbc_rdbtnUnsure.anchor = GridBagConstraints.WEST;
-		gbc_rdbtnUnsure.gridx = 1;
-		gbc_rdbtnUnsure.gridy = 3;
-		panel_6.add(rdbtnUnsure, gbc_rdbtnUnsure);
+		JRadioButton unsureRadioButton = new JRadioButton("Unsure");
+		buttonGroup.add(unsureRadioButton);
+		GridBagConstraints unsureRadioButtonLocation = new GridBagConstraints();
+		unsureRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
+		unsureRadioButtonLocation.anchor = GridBagConstraints.WEST;
+		unsureRadioButtonLocation.gridx = 1;
+		unsureRadioButtonLocation.gridy = 3;
+		gridLocation.add(unsureRadioButton, unsureRadioButtonLocation);
 		
 		JButton btnSeeReviews = new JButton("See Reviews");
-		GridBagConstraints gbc_btnSeeReviews = new GridBagConstraints();
-		gbc_btnSeeReviews.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSeeReviews.anchor = GridBagConstraints.WEST;
-		gbc_btnSeeReviews.gridx = 1;
-		gbc_btnSeeReviews.gridy = 4;
-		panel_6.add(btnSeeReviews, gbc_btnSeeReviews);
+		GridBagConstraints seeReviewsButtonLocation = new GridBagConstraints();
+		seeReviewsButtonLocation.insets = new Insets(0, 0, 5, 5);
+		seeReviewsButtonLocation.anchor = GridBagConstraints.WEST;
+		seeReviewsButtonLocation.gridx = 1;
+		seeReviewsButtonLocation.gridy = 4;
+		gridLocation.add(btnSeeReviews, seeReviewsButtonLocation);
 		
-		JButton btnCancel = new JButton("Cancel");
-		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
-		gbc_btnCancel.insets = new Insets(0, 0, 0, 5);
-		gbc_btnCancel.gridx = 0;
-		gbc_btnCancel.gridy = 5;
-		panel_6.add(btnCancel, gbc_btnCancel);
+		JButton cancelButton = new JButton("Cancel");
+		GridBagConstraints cancelButtonLocation = new GridBagConstraints();
+		cancelButtonLocation.insets = new Insets(0, 0, 0, 5);
+		cancelButtonLocation.gridx = 0;
+		cancelButtonLocation.gridy = 5;
+		gridLocation.add(cancelButton, cancelButtonLocation);
 		
-		JButton btnSubmitRecommendation = new JButton("Submit Recommendation");
-		GridBagConstraints gbc_btnSubmitRecommendation = new GridBagConstraints();
-		gbc_btnSubmitRecommendation.insets = new Insets(0, 0, 0, 5);
-		gbc_btnSubmitRecommendation.gridx = 1;
-		gbc_btnSubmitRecommendation.gridy = 5;
-		panel_6.add(btnSubmitRecommendation, gbc_btnSubmitRecommendation);
+		JButton submitRecommendationButton = new JButton("Submit Recommendation");
+		GridBagConstraints submitRecommendationButtonLocation = new GridBagConstraints();
+		submitRecommendationButtonLocation.insets = new Insets(0, 0, 0, 5);
+		submitRecommendationButtonLocation.gridx = 1;
+		submitRecommendationButtonLocation.gridy = 5;
+		gridLocation.add(submitRecommendationButton, submitRecommendationButtonLocation);
     }
     
 	private JPanel getFilePanel() {
@@ -240,7 +240,7 @@ public class SubmitRecomendation extends PanelCard {
     }
     
     /**
-     * Action for cancel button to change panel to previous.
+     * Action for cancel button to change mainPanel to previous.
      * @author Ian Jury
      *
      */
