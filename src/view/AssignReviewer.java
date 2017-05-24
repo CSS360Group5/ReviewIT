@@ -4,7 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -26,6 +29,8 @@ public class AssignReviewer extends PanelCard {
     public static final String PANEL_LOOKUP_NAME = "ASSIGN_REVIEWER";
     
     private JPanel mainPanel = new JPanel();
+    
+    private JList<String> reviewerJList;
 
     /** SVUID */
     private static final long serialVersionUID = 5949259200759242048L;
@@ -38,33 +43,63 @@ public class AssignReviewer extends PanelCard {
         this.setAlignmentX(CENTER_ALIGNMENT);
         
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setPreferredSize(new Dimension(400, 600));
     }
 
     @Override
     public void updatePanel() {
     	this.removeAll();
     	
-    	JLabel test = new JLabel("Select Reviewer(s)");
-    	mainPanel.add(test);
-    	mainPanel.add(getReviewerList());
+    	JLabel selectReviewersLabel = new JLabel("Select Reviewer(s)");
+    	JLabel currentReviewersLabel = new JLabel("Current Reviewer(s)");
+    	
+    	mainPanel.add(selectReviewersLabel);
+    	mainPanel.add(getAvailableReviewersList());
     	mainPanel.add(getButtonPanel());
+    	
+    	mainPanel.add(currentReviewersLabel);
+    	mainPanel.add(getCurrentReviewers());
     	
     	this.add(mainPanel);
     }
     
-    private JList<String> getReviewerList() {
+    private JList<String> getAvailableReviewersList() {
 
     	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();	
-    	String[] nameArray = new String[reviewerList.size()];
+    	List<UserProfile> currentReviewers = context.getCurrentConference().getInfo().getReviewers(); 	
+    	List<String> authors = context.getPaper().getAuthors(); // removing reviewers if they are an author
     	
+    	//getting rid of reviewers if they are an author
+    	Iterator<UserProfile> refineByAuthor = reviewerList.iterator();
+    	while(refineByAuthor.hasNext()) {
+    		UserProfile nextReviewer = refineByAuthor.next();
+    		for(String author : authors) {
+    			if (nextReviewer.getName().equals(author)) {
+    				refineByAuthor.remove();
+    				break;
+    			}
+    		}
+    	}	
+    	
+    	//getting rid of reviewers if they are already reviewing the paper
+    	Iterator<UserProfile> refineByCurrentReviewer = reviewerList.iterator();
+    	while(refineByCurrentReviewer.hasNext()) {
+    		UserProfile nextReviewer = refineByCurrentReviewer.next();
+    		for(UserProfile currentReviewer : currentReviewers) {
+    			if (currentReviewer.getName().equals(nextReviewer.getName())) {
+    				refineByCurrentReviewer.remove();
+    				break;
+    			}
+    		}
+    	}
+    	
+    	String[] nameArray = new String[reviewerList.size()];	
     	for(int i = 0; i < reviewerList.size(); i++) {
+    		//nameArray[i] = "" + (i+1) + ". " + reviewerList.get(i).getName();
     		nameArray[i] = reviewerList.get(i).getName();
     	}
     	
-    	JList<String> reviewerJList = new JList<String>(nameArray);
-    	
-    	String[] data = {"one", "two", "three", "four"};
-    	//JList<String> reviewerJList = new JList<String>(data);
+    	reviewerJList = new JList<String>(nameArray);
     	
     	//Dimension panelSize = Main.WINDOW_SIZE;
     	
@@ -77,16 +112,21 @@ public class AssignReviewer extends PanelCard {
     	return reviewerJList;
     }
     
-    private JPanel getCurrentReviewers() {
+    private JList<String> getCurrentReviewers() {
     	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
     	
-    	return new JPanel();
-    }
-    
-    private JPanel getCurrentReviews() {
-    	List<File> reviewList = context.getPaper().getReviews();
+    	String[] nameArray = new String[reviewerList.size()]; // getting the name of reviewers to display
+    	for(int i = 0; i < reviewerList.size(); i++) {
+    		//nameArray[i] = "" + (i+1) + ". " + reviewerList.get(i).getName();
+    		nameArray[i] = reviewerList.get(i).getName();
+    	}
     	
-    	return new JPanel();
+    	JList<String> currentReviewers = new JList<String>(nameArray);
+    	currentReviewers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 20 / 2), 
+                new CompoundBorder(new LineBorder(Color.BLACK),
+                                   new EmptyBorder(20, 20, 20, 20))));
+    	
+    	return currentReviewers;
     }
     
     private JPanel getButtonPanel() {
@@ -94,6 +134,24 @@ public class AssignReviewer extends PanelCard {
     	
         JButton assignButton = new JButton("Assign Reviewer");
         JButton cancelButton = new JButton("Cancel");
+        
+        assignButton.addActionListener(new ActionListener() {
+        	
+        	@Override
+            public void actionPerformed(ActionEvent arg) {	
+        		context.getPaper().addReviewer(reviewerJList.getSelectedValue());
+        	}
+        	
+        });
+        
+        cancelButton.addActionListener(new ActionListener() {
+        	
+        	@Override
+            public void actionPerformed(ActionEvent arg) {	
+        		panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+        	}
+        	
+        });
         
     	buttonPanel.add(cancelButton);
         buttonPanel.add(assignButton);
