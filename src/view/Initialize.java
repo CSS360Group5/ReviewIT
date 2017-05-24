@@ -20,7 +20,7 @@ public class Initialize {
         UserProfile zachac = sys.getUserProfile("zachac");
         UserProfile briang5 = sys.getUserProfile("briang5");
         UserProfile kvn96 = sys.getUserProfile("kvn96");
-//        UserProfile ianjury = sys.getUserProfile("ianjury");
+        UserProfile ianjury = sys.getUserProfile("ianjury");
 //        UserProfile dimabliz = sys.getUserProfile("ianjury");
         
 
@@ -31,6 +31,8 @@ public class Initialize {
         Conference withPapers = getAnotherConference(now);
         
         addSimplePaper(sys, withPapers, zachac, kvn96, briang5);
+        
+        addPaperLimit(sys, openDeadline, ianjury);
 
         sys.addConference(openDeadline);
         sys.addConference(closedDeadline);
@@ -72,6 +74,26 @@ public class Initialize {
         withPapers.getDirectorRole().assignPaperToSubProgramChair(subchair, simplePaper);
         withPapers.getInfo().getSubmissionDate().setTime(now.getTime() - 1);
         withPapers.getSubprogramRole().assignReviewer(reviewer, simplePaper);
+    }
+    
+    private static void addPaperLimit(ConferenceSystem sys, Conference theConference, UserProfile author) {
+    	List<String> authors = new LinkedList<String>();
+    	authors.add("Ian Jury"); 
+    	
+    	theConference.getUserRole().addPaper(author, 
+    			Paper.createPaper(new File(""), authors, "Plant Systems, Structures, Components and Materials", author));
+    	
+    	theConference.getUserRole().addPaper(author, 
+    			Paper.createPaper(new File(""), authors, "Advanced and Next Generation Reactors, Fusion Technology", author));
+    	
+    	theConference.getUserRole().addPaper(author, 
+    			Paper.createPaper(new File(""), authors, "Nuclear Safety, Security and Cyber Security", author));
+    	
+    	theConference.getUserRole().addPaper(author, 
+    			Paper.createPaper(new File(""), authors, "Thermal-Hydraulics", author));
+    	
+    	theConference.getUserRole().addPaper(author, 
+    			Paper.createPaper(new File(""), authors, "Mitigation Strategies for Beyond Design Basis Events", author));
     }
 
 	
