@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -19,16 +20,25 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import model.Conference;
 import model.UserProfile;
+
+//A Reviewer can be assigned to review a maximum of 8 manuscripts for any conference.
+//A Reviewer cannot be assigned until after the author submission deadline. --probably should be done on before panel
 
 public class AssignReviewer extends PanelCard {
     
     /** The name to lookup this panel in a panel changer. */
     public static final String PANEL_LOOKUP_NAME = "ASSIGN_REVIEWER";
     
-    private JPanel mainPanel = new JPanel();
+    private static final int PADDING = 20;
+    
+    public static final int MAX_REVIEWS = 8;
+    
+    private JButton assignButton;
     
     private JList<String> reviewerJList;
 
@@ -39,11 +49,7 @@ public class AssignReviewer extends PanelCard {
         super(p, context);
         
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(Main.WINDOW_SIZE.height / 4 , 0 , Main.WINDOW_SIZE.height / 2, 0));
-        this.setAlignmentX(CENTER_ALIGNMENT);
-        
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setPreferredSize(new Dimension(400, 600));
+        this.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
     }
 
     @Override
@@ -53,14 +59,12 @@ public class AssignReviewer extends PanelCard {
     	JLabel selectReviewersLabel = new JLabel("Select Reviewer(s)");
     	JLabel currentReviewersLabel = new JLabel("Current Reviewer(s)");
     	
-    	mainPanel.add(selectReviewersLabel);
-    	mainPanel.add(getAvailableReviewersList());
-    	mainPanel.add(getButtonPanel());
+       	this.add(currentReviewersLabel);
+    	this.add(getCurrentReviewers());
     	
-    	mainPanel.add(currentReviewersLabel);
-    	mainPanel.add(getCurrentReviewers());
-    	
-    	this.add(mainPanel);
+    	this.add(selectReviewersLabel);
+    	this.add(getAvailableReviewersList());
+    	this.add(getButtonPanel());
     }
     
     private JList<String> getAvailableReviewersList() {
@@ -81,17 +85,22 @@ public class AssignReviewer extends PanelCard {
     		}
     	}	
     	
+    	//gotta filter by max reviews allowed
+    	//context.getCurrentConference().getInfo().getPapersAssignedToReviewer(UserProfile)
+    	
+    	
+    	
     	//getting rid of reviewers if they are already reviewing the paper
-    	Iterator<UserProfile> refineByCurrentReviewer = reviewerList.iterator();
-    	while(refineByCurrentReviewer.hasNext()) {
-    		UserProfile nextReviewer = refineByCurrentReviewer.next();
-    		for(UserProfile currentReviewer : currentReviewers) {
-    			if (currentReviewer.getName().equals(nextReviewer.getName())) {
-    				refineByCurrentReviewer.remove();
-    				break;
-    			}
-    		}
-    	}
+//    	Iterator<UserProfile> refineByCurrentReviewer = reviewerList.iterator();
+//    	while(refineByCurrentReviewer.hasNext()) {
+//    		UserProfile nextReviewer = refineByCurrentReviewer.next();
+//    		for(UserProfile currentReviewer : currentReviewers) {
+//    			if (currentReviewer.getName().equals(nextReviewer.getName())) {
+//    				refineByCurrentReviewer.remove();
+//    				break;
+//    			}
+//    		}
+//    	}
     	
     	String[] nameArray = new String[reviewerList.size()];	
     	for(int i = 0; i < reviewerList.size(); i++) {
@@ -101,13 +110,29 @@ public class AssignReviewer extends PanelCard {
     	
     	reviewerJList = new JList<String>(nameArray);
     	
-    	//Dimension panelSize = Main.WINDOW_SIZE;
-    	
+    	Dimension panelSize = Main.WINDOW_SIZE;
     	reviewerJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    	reviewerJList.setPreferredSize(new Dimension(200, 400));
+   
+    	reviewerJList.setPreferredSize(new Dimension(300, 200));
+    	reviewerJList.setMinimumSize(new Dimension(200, 200));
     	reviewerJList.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 20 / 2), 
                               new CompoundBorder(new LineBorder(Color.BLACK),
                                                  new EmptyBorder(20, 20, 20, 20))));
+    	
+    	
+    	reviewerJList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent arg0) {
+                String name = reviewerJList.getSelectedValue();
+                
+                if (name != null && !name.equals("")) {
+                	assignButton.setEnabled(true);
+                } else {
+                	assignButton.setEnabled(false);
+                }
+            }
+        });
+    	
     	
     	return reviewerJList;
     }
@@ -122,9 +147,10 @@ public class AssignReviewer extends PanelCard {
     	}
     	
     	JList<String> currentReviewers = new JList<String>(nameArray);
-    	currentReviewers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 20 / 2), 
-                new CompoundBorder(new LineBorder(Color.BLACK),
-                                   new EmptyBorder(20, 20, 20, 20))));
+    	//currentReviewers.setAlignmentX(LEFT_ALIGNMENT);
+    	currentReviewers.setPreferredSize(new Dimension(400, 200));
+    	currentReviewers.setMinimumSize(new Dimension(300, 200));
+    	currentReviewers.setBackground(Color.YELLOW);
     	
     	return currentReviewers;
     }
@@ -132,7 +158,8 @@ public class AssignReviewer extends PanelCard {
     private JPanel getButtonPanel() {
     	JPanel buttonPanel = new JPanel();
     	
-        JButton assignButton = new JButton("Assign Reviewer");
+        assignButton = new JButton("Assign Reviewer");
+        assignButton.setEnabled(false);
         JButton cancelButton = new JButton("Cancel");
         
         assignButton.addActionListener(new ActionListener() {
