@@ -1,6 +1,7 @@
 package model;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -9,8 +10,12 @@ import java.util.Date;
  * @author Dimitar Kumanov
  * @version 5/2/2017
  */
-public class SubprogramUtilities {
+public class SubprogramUtilities implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3482896211225435402L;
 	private final ConferenceData myConferenceData;
     
 	/**

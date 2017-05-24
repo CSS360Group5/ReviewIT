@@ -30,10 +30,10 @@ public class Conference implements Serializable{
 	 * A ConferenceData Object containing all the Data associated with this Conference.
 	 */
     private final ConferenceData myInfo;
-    private final transient UserUtilities myUserRole;
-    private final transient SubprogramUtilities mySubprogramRole;
-    private final transient DirectorUtilities myDirectorRole;
-    private final transient ReviewerUtilities myReviewerRole;
+    private final UserUtilities myUserRole;
+    private final SubprogramUtilities mySubprogramRole;
+    private final DirectorUtilities myDirectorRole;
+    private final ReviewerUtilities myReviewerRole;
     
     private Conference(
     		final String theConferenceName,

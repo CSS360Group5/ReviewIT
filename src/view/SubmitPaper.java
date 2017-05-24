@@ -19,7 +19,9 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import model.Conference;
 import model.Paper;
+import model.UserUtilities;
 /**
  * 
  * @author Ian Jury
@@ -94,6 +96,7 @@ public class SubmitPaper extends PanelCard {
          if (initialSignIn) {
         	 addCurrentUserAsAuthor();
          }
+         
         
          centerPanel.add(getFilePanel());
          centerPanel.add(getTitlePanel());
