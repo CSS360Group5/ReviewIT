@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -175,6 +177,13 @@ public class DashBoard extends PanelCard {
         submitPaperButton.setAlignmentY(TOP_ALIGNMENT);
         submitPaperButton.addActionListener(new SubmitPaperAction());
         submitPaperButton.setEnabled(context.getCurrentConference().getInfo().isSubmissionOpen(new Date()));
+        
+        //added by Ian to prevent author from being able to press button to submit >limit of papers 
+        //to a conference. Follows heuristic of not allowing user to enter information.
+        List<String> authors = new LinkedList<>();
+        authors.add(context.getUser().getName());
+        Paper thePaper = Paper.createPaper(new File(""), authors, "Test title", context.getUser());
+        submitPaperButton.setEnabled(context.getCurrentConference().getInfo().isPaperInAuthorSubmissionLimit(thePaper));
         
         JButton removePaperButton = new JButton("Remove Paper");
         removePaperButton.setAlignmentY(TOP_ALIGNMENT);
