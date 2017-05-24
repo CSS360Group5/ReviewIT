@@ -19,13 +19,11 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import model.Conference;
 import model.Paper;
-import model.UserUtilities;
 /**
- * 
+ * GUI screen that allows a logged in user to submit a paper to the current selected conference.
  * @author Ian Jury
- *
+ * @version 5/24/2017
  */
 public class SubmitPaper extends PanelCard {
 
@@ -38,15 +36,19 @@ public class SubmitPaper extends PanelCard {
     /** File chooser where start page is set to current directory */
     private final JFileChooser fileChooser = new JFileChooser(".");
     
+    /** Panel for all other panels to be placed for layout purposes*/
     private JPanel centerPanel = new JPanel();
 
-    /** */
+    /** Panel for file selection */
     private JPanel filePanel = new JPanel();
-    /** */
+    
+    /** Panel for title information input */
     private JPanel titlePanel = new JPanel();
-    /** */
+    
+    /** Panel for the addition of authors */
     private JPanel authorPanel = new JPanel();
-    /** */
+    
+    /** Panel to display current authors inputed by user*/
     private JPanel authorDisplayPanel = new JPanel();
       
     /** Dimension used to format text entry fields. */
@@ -55,28 +57,34 @@ public class SubmitPaper extends PanelCard {
     /** Authors of paper to be submitted.*/
     private List<String> authorsOfPaper = new ArrayList<>();
     
-    /** */
+    /** File path to display to user */
     private String currentFilePath = "No file has been selected.";
     
-    /** */
+    /** Text field for user to enter title of paper. */
     private JTextField paperTitleTextField = new JTextField();
     
-    /** */
+    /** Text field for user to enter author names */
     private JTextField authorToAdd = new JTextField();
     
+    /** File object of paper to submit. */
     File fileOfPaper = new File("Placeholder");
     
-    /** */
+    /** Boolean check to see if user has been signed in */
     private boolean initialSignIn;
     
+    /**
+     * 
+     * @param p
+     * @param context
+     */
     public SubmitPaper(PanelChanger p, UserContext context) {
         super(p, context);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(Main.WINDOW_SIZE.height / 4 , 0 , Main.WINDOW_SIZE.height / 2, 0));
+        this.setBorder(new EmptyBorder(Main.WINDOW_SIZE.height / 5 , 0 , Main.WINDOW_SIZE.height / 4, 0));
 
         this.setAlignmentX(CENTER_ALIGNMENT);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        //centerPanel.setAlignmentX(LEFT_ALIGNMENT);
+        centerPanel.setAlignmentX(CENTER_ALIGNMENT);
         initialSignIn = true; //because object is instantiated before user is signed in.
     }
 
@@ -97,16 +105,23 @@ public class SubmitPaper extends PanelCard {
         	 addCurrentUserAsAuthor();
          }
          
-        
          centerPanel.add(getFilePanel());
          centerPanel.add(getTitlePanel());
          centerPanel.add(getAuthorPanel());
          centerPanel.add(getAuthorDisplayPanel());
          centerPanel.add(getConfirmationPanel());
+         
+         filePanel.setAlignmentX(RIGHT_ALIGNMENT);
+         titlePanel.setAlignmentX(RIGHT_ALIGNMENT);
+         authorPanel.setAlignmentX(RIGHT_ALIGNMENT);
+         authorDisplayPanel.setAlignmentX(RIGHT_ALIGNMENT);        
                
          this.add(centerPanel);    
     }
-    
+    /**
+     * Fills the file panel with relevant content.
+     * @return filled file panel
+     */
 	private JPanel getFilePanel() {
 		titlePanel.setAlignmentY(LEFT_ALIGNMENT);
 		JLabel info = new JLabel("Current file selected: " + currentFilePath);
@@ -120,7 +135,10 @@ public class SubmitPaper extends PanelCard {
 		filePanel.add(fileChooserButton);
 		return filePanel;
 	}
-	
+	/**
+	 * Fills the title panel with the relevant content.
+	 * @return the filled title panel
+	 */
 	private JPanel getTitlePanel() {
 		titlePanel.setAlignmentY(LEFT_ALIGNMENT);
 		JLabel paperTitleLabel = new JLabel("Title: ");
@@ -130,7 +148,10 @@ public class SubmitPaper extends PanelCard {
 		titlePanel.add(paperTitleTextField);
 		return titlePanel;
 	}
-	
+	/**
+	 * Fills the author panel with the relevant content.
+	 * @return the filled author panel
+	 */
     private JPanel getAuthorPanel() {
     	
     	authorToAdd.setPreferredSize(new Dimension(200, 20));
@@ -143,7 +164,10 @@ public class SubmitPaper extends PanelCard {
         
 		return authorPanel;
 	}
-    
+    /**
+     * Fills the author display panel with the relevant content.
+     * @return the filled author display panel
+     */
     private JPanel getAuthorDisplayPanel() {
     	JLabel paperAuthorsLabel = new JLabel("Current authors: ");
     	authorDisplayPanel.add(paperAuthorsLabel);
@@ -159,13 +183,10 @@ public class SubmitPaper extends PanelCard {
      */
     private Component getConfirmationPanel() {
     	JPanel confirmationPanel = new JPanel();
-    	
+    	confirmationPanel.setAlignmentX(RIGHT_ALIGNMENT);
         JButton submitButton = new JButton("Submit");
         JButton cancelButton = new JButton("Cancel");
-        
-        //set to see if paper is valid later
-        //submitButton.setEnabled(false);
-        
+                
         cancelButton.addActionListener(new CancelAction());
         submitButton.addActionListener(new submitAction());
         
@@ -200,6 +221,11 @@ public class SubmitPaper extends PanelCard {
     private void displayErrorMessage(final String theMessage) {
         JOptionPane.showMessageDialog(this, theMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
+    
+    /**
+     * Message that displays if a paper has been successfully submitted to a conference.
+     * @param theMessage to be displayed
+     */
     private void displaySuccessMessage(final String theMessage) {
         JOptionPane.showMessageDialog(this, theMessage, "Success", JOptionPane.DEFAULT_OPTION);
     }
@@ -214,7 +240,7 @@ public class SubmitPaper extends PanelCard {
     /**
      * Action listener for adding the author in associated text field to list of authors for paper submission.
      * @author Ian Jury
-     *
+     * @version 5/24/2017
      */
     private class authorEnterAction implements ActionListener {
 		@Override
@@ -231,7 +257,7 @@ public class SubmitPaper extends PanelCard {
     /**
      * 
      * @author Ian Jury
-     *
+     * @version 5/24/2017
      */
     private class SelectFileAction implements ActionListener {
 
@@ -254,7 +280,7 @@ public class SubmitPaper extends PanelCard {
     /**
      * Action for cancel button to change panel to previous.
      * @author Ian Jury
-     *
+     * @version 5/24/2017
      */
     private class CancelAction implements ActionListener {
 		@Override
@@ -266,6 +292,8 @@ public class SubmitPaper extends PanelCard {
     
     /**
      * 
+     * @author Ian Jury
+     * @version 5/24/2017     
      */
     private class submitAction implements ActionListener {
 
@@ -285,8 +313,6 @@ public class SubmitPaper extends PanelCard {
 			} catch (IllegalArgumentException ex) {
 				displayErrorMessage("Paper could not be submitted due to invalid input");
 			}
-			
-			
 		}	
     }
 }
