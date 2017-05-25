@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -83,6 +84,7 @@ public class AssignReviewer extends PanelCard {
     	//borderPanel.setBackground(Color.YELLOW);
     	
     	this.add(getInfoPanel());
+    	this.add(borderPanel);
     	this.add(topPanel);
     	this.add(borderPanel);
     	this.add(bottomPanel);
@@ -90,6 +92,30 @@ public class AssignReviewer extends PanelCard {
     
     private JPanel getInfoPanel() {
     	JPanel infoPanel = new JPanel(new BorderLayout());
+    	JPanel insidePanel = new JPanel(new BorderLayout());
+    	String paperName = context.getPaper().getTitle();
+    	List<String> authors = context.getPaper().getAuthors();
+    	
+    	StringBuilder authorBuffer = new StringBuilder(authors.get(0));
+    	if (authors.size() > 1) {	
+	    	for(int i = 1; i < authors.size(); i++) {
+	    		authorBuffer.append(", " + authors.get(i));
+	    	}
+    	}		
+    	
+    	infoPanel.setBorder(new CompoundBorder(new EmptyBorder(0, 100, 0, 100), BorderFactory.createTitledBorder(" Paper Information")));
+    	insidePanel.setBorder(new EmptyBorder(PADDING/2, PADDING, PADDING/2, PADDING));
+    	
+    	JLabel titleLabel = new JLabel("Title: " + paperName);
+    	JLabel authorsLabel; 
+    	if (authors.size() > 1) {
+    		authorsLabel = new JLabel("Authors: " + authorBuffer.toString());
+    	} else {
+    		authorsLabel = new JLabel("Author: " + authors.get(0));
+    	}
+    	insidePanel.add(titleLabel, BorderLayout.NORTH);
+    	insidePanel.add(authorsLabel, BorderLayout.CENTER);
+    	infoPanel.add(insidePanel);
     	
     	return infoPanel;
     }
