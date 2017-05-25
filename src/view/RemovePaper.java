@@ -1,5 +1,8 @@
 package view;
 
+import javax.swing.JButton;
+import javax.swing.JList;
+
 public class RemovePaper extends PanelCard {
     
     /** The name to lookup this panel in a panel changer. */

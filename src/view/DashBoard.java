@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.CompoundBorder;
@@ -36,7 +37,7 @@ public class DashBoard extends PanelCard {
 
     /** The name to lookup this panel in a panel changer. */
     public static final String PANEL_LOOKUP_NAME = "DASHBOARD";
-
+    
     /** SVUID */
     private static final long serialVersionUID = 8350355413908915713L;
 
@@ -284,7 +285,14 @@ public class DashBoard extends PanelCard {
                 throw new IllegalStateException();
             }
             
-            panelChanger.changeTo(RemovePaper.PANEL_LOOKUP_NAME);
+            // opens a confirmation dialog box with yes/no/cancel
+            int result = JOptionPane.showConfirmDialog(null, 
+            		"Are you sure you want to remove this paper?");
+            if (result == JOptionPane.YES_OPTION) {
+            	context.getCurrentConference().getUserRole().removePaper(context.getUser(), papers.getSelectedValue());
+				JOptionPane.showMessageDialog(null, "Paper has been successfully removed.");
+				
+            }
         }
     }
 }
