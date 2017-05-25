@@ -124,11 +124,18 @@ public class DashBoard extends PanelCard {
         submitRecomendationButton.setAlignmentY(TOP_ALIGNMENT);
         submitRecomendationButton.addActionListener(new RecomendPaperAction(assignedPapers));
         submitRecomendationButton.setEnabled(false);
+        //Added this button to go back to conferenc selection.
+        //The exception handling needs to be changed in order to allow this.
+        JButton goToConferences = new JButton("Go Back");
+        goToConferences.setAlignmentY(TOP_ALIGNMENT);
+        goToConferences.setEnabled(true);
+        goToConferences.addActionListener(new cancelAction());
         assignedPapers.addListSelectionListener(new ListSelectionListener() {
 
             @Override
             public void valueChanged(ListSelectionEvent arg0) {
-                submitRecomendationButton.setEnabled(assignedPapers.getSelectedValue().getReviews().size() > 2);
+            	//Buisness Constraint
+                submitRecomendationButton.setEnabled(true);
                 assignReviewerButton.setEnabled(!context.getCurrentConference().getInfo().isSubmissionOpen(new Date()));
             }
         });
@@ -139,6 +146,7 @@ public class DashBoard extends PanelCard {
         buttonsPanel.add(assignReviewerButton);
         buttonsPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonsPanel.add(submitRecomendationButton);
+        buttonsPanel.add(goToConferences);
         
         result.add(assignedLabel);
         result.add(assignedPapersPanel);
@@ -190,6 +198,12 @@ public class DashBoard extends PanelCard {
         removePaperButton.setAlignmentY(TOP_ALIGNMENT);
         removePaperButton.addActionListener(new RemovePaperAction(submitedPapers));
         removePaperButton.setEnabled(false);
+        
+        JButton goToConferencesButton = new JButton("Go Back");
+        goToConferencesButton.setAlignmentY(TOP_ALIGNMENT);
+        goToConferencesButton.setEnabled(true);
+        goToConferencesButton.addActionListener(new cancelAction());
+        
         submitedPapers.addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -206,6 +220,7 @@ public class DashBoard extends PanelCard {
         buttonsPanel.add(removePaperButton);
         buttonsPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonsPanel.add(submitPaperButton);
+        buttonsPanel.add(goToConferencesButton);
         
         result.add(submittedLabel);
         result.add(submittedPapersPanel);
@@ -294,5 +309,11 @@ public class DashBoard extends PanelCard {
 				
             }
         }
+    }
+    private class cancelAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);			
+		}   	
     }
 }
