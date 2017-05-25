@@ -125,7 +125,7 @@ public class DashBoard extends PanelCard {
         submitRecomendationButton.addActionListener(new RecomendPaperAction(assignedPapers));
         submitRecomendationButton.setEnabled(false);
         //Added this button to go back to conferenc selection.
-        //The exception handling needs to be changed in order to allow this.
+        //Needs spacing and will change if we implement a logo with a hyperlink
         JButton goToConferences = new JButton("Go Back");
         goToConferences.setAlignmentY(TOP_ALIGNMENT);
         goToConferences.setEnabled(true);
@@ -199,6 +199,8 @@ public class DashBoard extends PanelCard {
         removePaperButton.addActionListener(new RemovePaperAction(submitedPapers));
         removePaperButton.setEnabled(false);
         
+        //Added this button to go back to conferenc selection.
+        //Needs spacing and will change if we implement a logo with a hyperlink
         JButton goToConferencesButton = new JButton("Go Back");
         goToConferencesButton.setAlignmentY(TOP_ALIGNMENT);
         goToConferencesButton.setEnabled(true);

@@ -198,7 +198,7 @@ public class SubmitRecomendation extends PanelCard {
 			//submit paper
 			//theRadioButtonRecommendationSelection = buttonGroup.getSelection().getActionCommand();
 			//Debug print statement
-			System.out.println(theRadioButtonRecommendationSelection);
+			//System.out.println(theRadioButtonRecommendationSelection);
 
 			try {
 				context.getPaper().setRecommendationShort(theRadioButtonRecommendationSelection);
@@ -249,6 +249,8 @@ public class SubmitRecomendation extends PanelCard {
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	        	File fileOfPaper = fileChooser.getSelectedFile();
 	        	currentFilePath = fileOfPaper.getAbsolutePath();
+	        	//The path stays when the user comes back
+	        	//If done by ian's way it messes with my radio buttons
 	        	fileNameLabel.setText(currentFilePath);
 	        	checkRequirementsRecommendationFile();          
 	        } else if (returnVal == JFileChooser.ERROR_OPTION) { 
