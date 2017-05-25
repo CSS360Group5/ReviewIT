@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -56,15 +57,41 @@ public class AssignReviewer extends PanelCard {
     public void updatePanel() {
     	this.removeAll();
     	
-    	JLabel selectReviewersLabel = new JLabel("Select Reviewer(s)");
-    	JLabel currentReviewersLabel = new JLabel("Current Reviewer(s)");
+    	JLabel selectReviewersLabel = new JLabel(" Assign Another Reviewer");
+    	JLabel currentReviewersLabel = new JLabel(" Current Reviewer(s)");
     	
-       	this.add(currentReviewersLabel);
-    	this.add(getCurrentReviewers());
+    	JPanel topPanel = new JPanel(new BorderLayout());
+    	topPanel.setBorder(new CompoundBorder(new EmptyBorder(0, 100, 0, 100), BorderFactory.createTitledBorder(" Current Reviewer(s)")));
+    	//topPanel.setBorder(new EmptyBorder(0, 80, 0, 80));
+    	JPanel topLabelPanel = new JPanel(new BorderLayout());
+    	topLabelPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
+    	//topLabelPanel.add(currentReviewersLabel, BorderLayout.WEST);
+    	topPanel.add(topLabelPanel, BorderLayout.PAGE_START);
+    	topPanel.add(getCurrentReviewers(), BorderLayout.CENTER);
+    	 	
+    	JPanel bottomPanel = new JPanel(new BorderLayout());
+    	//bottomPanel.setBorder(new EmptyBorder(0, 80, 0, 80));
+    	bottomPanel.setBorder(new CompoundBorder(new EmptyBorder(0, 100, 0, 100), BorderFactory.createTitledBorder(" Assign Another Reviewer")));
+    	JPanel bottomLabelPanel = new JPanel(new BorderLayout());
+    	bottomLabelPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
+    	//bottomLabelPanel.add(selectReviewersLabel);
+    	bottomPanel.add(bottomLabelPanel, BorderLayout.NORTH);
+    	bottomPanel.add(getAvailableReviewersList(), BorderLayout.CENTER);
+    	bottomPanel.add(getButtonPanel(), BorderLayout.SOUTH);
     	
-    	this.add(selectReviewersLabel);
-    	this.add(getAvailableReviewersList());
-    	this.add(getButtonPanel());
+    	JPanel borderPanel = new JPanel();
+    	//borderPanel.setBackground(Color.YELLOW);
+    	
+    	this.add(getInfoPanel());
+    	this.add(topPanel);
+    	this.add(borderPanel);
+    	this.add(bottomPanel);
+    }
+    
+    private JPanel getInfoPanel() {
+    	JPanel infoPanel = new JPanel(new BorderLayout());
+    	
+    	return infoPanel;
     }
     
     private JList<String> getAvailableReviewersList() {
@@ -113,8 +140,8 @@ public class AssignReviewer extends PanelCard {
     	Dimension panelSize = Main.WINDOW_SIZE;
     	reviewerJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
    
-    	reviewerJList.setPreferredSize(new Dimension(300, 200));
-    	reviewerJList.setMinimumSize(new Dimension(200, 200));
+    	reviewerJList.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
+    	reviewerJList.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
     	reviewerJList.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 20 / 2), 
                               new CompoundBorder(new LineBorder(Color.BLACK),
                                                  new EmptyBorder(20, 20, 20, 20))));
@@ -142,15 +169,17 @@ public class AssignReviewer extends PanelCard {
     	
     	String[] nameArray = new String[reviewerList.size()]; // getting the name of reviewers to display
     	for(int i = 0; i < reviewerList.size(); i++) {
-    		//nameArray[i] = "" + (i+1) + ". " + reviewerList.get(i).getName();
-    		nameArray[i] = reviewerList.get(i).getName();
+    		nameArray[i] = "" + (i+1) + ". " + reviewerList.get(i).getName();
+    		//nameArray[i] = reviewerList.get(i).getName();
     	}
     	
     	JList<String> currentReviewers = new JList<String>(nameArray);
-    	//currentReviewers.setAlignmentX(LEFT_ALIGNMENT);
-    	currentReviewers.setPreferredSize(new Dimension(400, 200));
-    	currentReviewers.setMinimumSize(new Dimension(300, 200));
-    	currentReviewers.setBackground(Color.YELLOW);
+    	Dimension panelSize = Main.WINDOW_SIZE;
+    	currentReviewers.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
+    	currentReviewers.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
+    	currentReviewers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 20 / 2), 
+                new CompoundBorder(new LineBorder(Color.BLACK),
+                                   new EmptyBorder(20, 20, 20, 20))));
     	
     	return currentReviewers;
     }
@@ -167,6 +196,7 @@ public class AssignReviewer extends PanelCard {
         	@Override
             public void actionPerformed(ActionEvent arg) {	
         		context.getPaper().addReviewer(reviewerJList.getSelectedValue());
+        		updatePanel();
         	}
         	
         });
