@@ -47,7 +47,9 @@ public class SubmitRecomendation extends PanelCard {
     private final JFileChooser fileChooser = new JFileChooser(".");
     private JButton submitRecommendationButton = new JButton("Submit Recommendation");
     private JLabel fileNameLabel;
+    private JLabel submissionLabel;
     /** */
+    private String submissionMessage = " No recommendation has been given ";
     private String currentFilePath = "No file has been selected.";
     private String theRadioButtonRecommendationSelection;
     private JTable table = new JTable();
@@ -81,8 +83,9 @@ public class SubmitRecomendation extends PanelCard {
 		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:  " + context.getUser().getName());
 		namePanel.add(SubProgramChairlabel);
 		
-		JLabel labelPaper = new JLabel("Paper:		"+ context.getPaper().getTitle());
-		namePanel.add(labelPaper, BorderLayout.SOUTH);
+		submissionLabel = new JLabel("Recommendation Status: "+ submissionMessage +
+				"for the manuscript " + context.getPaper().getTitle());
+		namePanel.add(submissionLabel, BorderLayout.SOUTH);
 		
 		JPanel placeHolder = new JPanel();
 		mainPanel.add(placeHolder, BorderLayout.WEST);
@@ -201,10 +204,20 @@ public class SubmitRecomendation extends PanelCard {
 			//System.out.println(theRadioButtonRecommendationSelection);
 
 			try {
+				System.out.println("Testing a submission");
+				submissionMessage = "Recommendation Status: File Submitted! You decided " +
+						theRadioButtonRecommendationSelection;
+				submissionLabel.setText(submissionMessage +
+				" for the manuscript " + context.getPaper().getTitle());
+				submitRecommendationButton.setEnabled(false);
+				//Changing the paper is currently not working.
 				context.getPaper().setRecommendationShort(theRadioButtonRecommendationSelection);
 				File theRecommendationFile = fileChooser.getSelectedFile();
-				context.getPaper().setMyRecommendation(theRecommendationFile);	
-				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+				context.getPaper().setMyRecommendation(theRecommendationFile);
+				//System.out.println(context.getPaper().getRecommendationShort());
+				//panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+	        	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
+	        	panelChanger.changeTo(SubmitRecomendation.PANEL_LOOKUP_NAME);
 			} catch (IllegalArgumentException ex) {
 				//displayErrorMessage("Paper could not be submitted due to invalid input");
 			}
