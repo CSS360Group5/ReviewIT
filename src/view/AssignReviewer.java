@@ -23,7 +23,6 @@ import javax.swing.event.ListSelectionListener;
 
 import model.UserProfile;
 
-//A Reviewer cannot be assigned until after the author submission deadline. --probably should be done on before panel
 
 /**
  * GUI class that creates the Panel where the user can assign a Reviewer to a Paper
@@ -37,12 +36,21 @@ public class AssignReviewer extends PanelCard {
     /** The name to lookup this panel in a panel changer. */
     public static final String PANEL_LOOKUP_NAME = "ASSIGN_REVIEWER";
     
+    /**
+     * Padding inside the panels.
+     */
     private static final int INSIDE_PADDING = 20;
     
+    /**
+     * Space between the panels and the side of the window.
+     */
     private static final int SIDE_PADDING = 100;
     
     private static final int BETWEEN_PADDING = 10;
     
+    /**
+     * Maximum number of reviews a reviewer is allowed to be assigned.
+     */
     public static final int MAX_REVIEWS = 8;
     
     private JButton assignButton;
@@ -52,6 +60,12 @@ public class AssignReviewer extends PanelCard {
     /** SVUID */
     private static final long serialVersionUID = 5949259200759242048L;
 
+    /**
+     * Constructor that creates the AssignReviewer Panel.
+     * 
+     * @param p PanelChanger that allows to switch between the different panels in the program
+     * @param context UserContext which contains information for this Panel
+     */
     public AssignReviewer(PanelChanger p, UserContext context) {
         super(p, context);
         
@@ -59,6 +73,13 @@ public class AssignReviewer extends PanelCard {
         this.setBorder(new EmptyBorder(INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING));
     }
 
+    /**
+     * Method to refresh the AssignReviewer Panel.
+     * 
+     * Postconditions:
+     * 	-Removes all components on in the JFrame and adds them back
+     * 	
+     */
     @Override
     public void updatePanel() {
     	this.removeAll();
@@ -73,6 +94,11 @@ public class AssignReviewer extends PanelCard {
     	this.add(getAvailableReviewersPanel());
     }
     
+    /**
+     * Method to receive a panel which contains all available Reviewers in the Conference.
+     * 
+     * @return JPanel which contains all available Reviewers.
+     */
     private JPanel getAvailableReviewersPanel() {
     	JPanel bottomPanel = new JPanel(new BorderLayout());
     	//bottomPanel.setBorder(new EmptyBorder(0, 80, 0, 80));
@@ -87,6 +113,11 @@ public class AssignReviewer extends PanelCard {
     	return bottomPanel;
     }
     
+    /**
+     * Method to receive a panel which contains all current Reviewers of the paper.
+     * 
+     * @return JPanel which contains all current Reviewers of the paper.
+     */
     private JPanel getCurrentReviewersPanel() {
     	JPanel topPanel = new JPanel(new BorderLayout());
     	topPanel.setBorder(new CompoundBorder(new EmptyBorder(0, SIDE_PADDING, 0, SIDE_PADDING), BorderFactory.createTitledBorder(" Current Reviewer(s)")));
@@ -100,6 +131,11 @@ public class AssignReviewer extends PanelCard {
     	return topPanel;
     }
     
+    /**
+     * Method to receive a panel which contains information about the paper.
+     * 
+     * @return JPanel which contains information about the paper.
+     */
     private JPanel getInfoPanel() {
     	JPanel infoPanel = new JPanel(new BorderLayout());
     	JPanel insidePanel = new JPanel(new BorderLayout());
@@ -130,6 +166,13 @@ public class AssignReviewer extends PanelCard {
     	return infoPanel;
     }
     
+    /**
+     * Method that refines the list of Reviewers, getting rid of Reviewers if they are
+     * one of the authors of the paper.
+     * 
+     * @param reviewerList List of UserProfiles of potential reviewers
+     * @return refined List of UserProfiles of reviewers
+     */
     private List<UserProfile> refineByAuthors(List<UserProfile> reviewerList) {
     	List<String> authors = context.getPaper().getAuthors(); // removing reviewers if they are an author
     	
@@ -148,6 +191,13 @@ public class AssignReviewer extends PanelCard {
     	return reviewerList;
     }
     
+    /**
+     * Method that refines the list of Reviewers, getting rid of Reviewers if they are
+     * already reviewing the paper.
+     * 
+     * @param reviewerList List of UserProfiles of potential reviewers
+     * @return refined List of UserProfiles of reviewers
+     */
     private List<UserProfile> refineByCurrentReviewers(List<UserProfile> reviewerList) {
     	List<UserProfile> currentReviewers = context.getCurrentConference().getInfo().getReviewers();
     	
@@ -165,6 +215,13 @@ public class AssignReviewer extends PanelCard {
     	return reviewerList;
     }
     
+    /**
+     * Method that refines the list of Reviewers, getting rid of Reviewers if they are
+     * already reviewing MAX_REVIEWS papers.
+     * 
+     * @param reviewerList List of UserProfiles of potential reviewers
+     * @return refined List of UserProfiles of reviewers
+     */
     private List<UserProfile> refineByMaxReviews(List<UserProfile> reviewerList) {
     	
     	Iterator<UserProfile> refineByMaxReviews = reviewerList.iterator();
@@ -177,6 +234,12 @@ public class AssignReviewer extends PanelCard {
     	return reviewerList;
     }
     
+    /**
+     * Method to receive a list component of all available Reviewers in the Conference 
+     * for the paper.
+     * 
+     * @return JList of Strings of all available Reviewers for the paper
+     */
     private JList<String> getAvailableReviewersList() {
 
     	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
@@ -221,6 +284,11 @@ public class AssignReviewer extends PanelCard {
     	return reviewerJList;
     }
     
+    /**
+     * Method to receive a list component of all current Reviewers of the paper.
+     * 
+     * @return JList of Strings of all available Reviewers of the paper
+     */
     
     private JList<String> getCurrentReviewers() {
     	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
@@ -243,6 +311,11 @@ public class AssignReviewer extends PanelCard {
     }
     
     
+    /**
+     * Method to receive a panel that contains the Assign Reviewer button and the Cancel button.
+     * 
+     * @return JPanel which contains Assign Reviewer button and Cancel button.
+     */
     private JPanel getButtonPanel() {
     	JPanel buttonPanel = new JPanel();
     	
