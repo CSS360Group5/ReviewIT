@@ -27,6 +27,7 @@ public class Paper implements Serializable{
 	private final String myTitle;
 	private final UserProfile mySubmitter;
 	private File myRecommendation;
+	private String myRecommendationShort;
 	
 	/**
 	 * Private; see createPaper()
@@ -45,6 +46,7 @@ public class Paper implements Serializable{
 		myTitle = Objects.requireNonNull(thePaperTitle);
 		mySubmitter = Objects.requireNonNull(theSubmitterUserProfile);
 		myReviews = new LinkedList<File>();
+		myRecommendationShort = new String();
 		if(thePaperTitle.isEmpty())
 			throw new IllegalArgumentException();
 	}
@@ -132,7 +134,17 @@ public class Paper implements Serializable{
 	public void setSubmissionDate(final Date newSubDate) {
 		mySubmissionDate = newSubDate;
 	}
-
+	//Added these for the reviews and dashboard display. (Kevin Nguyen)
+	/**
+	 * Sets the recommendation level of the paper.
+	 * From the radio buttons of the gui.
+	 */
+	public void setRecommendationShort(String theRecommendation) {
+		myRecommendationShort = theRecommendation;
+	}
+	public String getRecommendationShort() {
+		return myRecommendationShort;
+	}
 	/**
 	 * @return the myRecommendation
 	 */
