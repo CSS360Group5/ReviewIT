@@ -2,11 +2,9 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,25 +15,33 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import model.Conference;
 import model.UserProfile;
 
-//A Reviewer can be assigned to review a maximum of 8 manuscripts for any conference.
 //A Reviewer cannot be assigned until after the author submission deadline. --probably should be done on before panel
 
+/**
+ * GUI class that creates the Panel where the user can assign a Reviewer to a Paper
+ * 
+ * @version 05/25/2017
+ * @author Dmitriy Bliznyuk
+ *
+ */
 public class AssignReviewer extends PanelCard {
     
     /** The name to lookup this panel in a panel changer. */
     public static final String PANEL_LOOKUP_NAME = "ASSIGN_REVIEWER";
     
-    private static final int PADDING = 20;
+    private static final int INSIDE_PADDING = 20;
+    
+    private static final int SIDE_PADDING = 100;
+    
+    private static final int BETWEEN_PADDING = 10;
     
     public static final int MAX_REVIEWS = 8;
     
@@ -50,54 +56,81 @@ public class AssignReviewer extends PanelCard {
         super(p, context);
         
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
+        this.setBorder(new EmptyBorder(INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING));
     }
 
     @Override
     public void updatePanel() {
     	this.removeAll();
     	
-    	JLabel selectReviewersLabel = new JLabel(" Assign Another Reviewer");
-    	JLabel currentReviewersLabel = new JLabel(" Current Reviewer(s)");
+    	//JLabel selectReviewersLabel = new JLabel(" Assign Another Reviewer");
+    	//JLabel currentReviewersLabel = new JLabel(" Current Reviewer(s)");
     	
-    	JPanel topPanel = new JPanel(new BorderLayout());
-    	topPanel.setBorder(new CompoundBorder(new EmptyBorder(0, 100, 0, 100), BorderFactory.createTitledBorder(" Current Reviewer(s)")));
-    	//topPanel.setBorder(new EmptyBorder(0, 80, 0, 80));
-    	JPanel topLabelPanel = new JPanel(new BorderLayout());
-    	topLabelPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
-    	//topLabelPanel.add(currentReviewersLabel, BorderLayout.WEST);
-    	topPanel.add(topLabelPanel, BorderLayout.PAGE_START);
-    	topPanel.add(getCurrentReviewers(), BorderLayout.CENTER);
-    	 	
+    	this.add(getInfoPanel());
+    	this.add(new JPanel());  	//adding a border between panels
+    	this.add(getCurrentReviewersPanel());
+    	this.add(new JPanel());		//adding a border between panels
+    	this.add(getAvailableReviewersPanel());
+    }
+    
+    private JPanel getAvailableReviewersPanel() {
     	JPanel bottomPanel = new JPanel(new BorderLayout());
     	//bottomPanel.setBorder(new EmptyBorder(0, 80, 0, 80));
-    	bottomPanel.setBorder(new CompoundBorder(new EmptyBorder(0, 100, 0, 100), BorderFactory.createTitledBorder(" Assign Another Reviewer")));
+    	bottomPanel.setBorder(new CompoundBorder(new EmptyBorder(0, SIDE_PADDING, 0, SIDE_PADDING), BorderFactory.createTitledBorder(" Assign Another Reviewer")));
     	JPanel bottomLabelPanel = new JPanel(new BorderLayout());
-    	bottomLabelPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
+    	//bottomLabelPanel.setBorder(new EmptyBorder(0, BETWEEN_PADDING, 0, 0));
     	//bottomLabelPanel.add(selectReviewersLabel);
     	bottomPanel.add(bottomLabelPanel, BorderLayout.NORTH);
     	bottomPanel.add(getAvailableReviewersList(), BorderLayout.CENTER);
     	bottomPanel.add(getButtonPanel(), BorderLayout.SOUTH);
     	
-    	JPanel borderPanel = new JPanel();
-    	//borderPanel.setBackground(Color.YELLOW);
+    	return bottomPanel;
+    }
+    
+    private JPanel getCurrentReviewersPanel() {
+    	JPanel topPanel = new JPanel(new BorderLayout());
+    	topPanel.setBorder(new CompoundBorder(new EmptyBorder(0, SIDE_PADDING, 0, SIDE_PADDING), BorderFactory.createTitledBorder(" Current Reviewer(s)")));
+    	//topPanel.setBorder(new EmptyBorder(0, 80, 0, 80));
+    	JPanel topLabelPanel = new JPanel(new BorderLayout());
+    	//topLabelPanel.setBorder(new EmptyBorder(0, BETWEEN_PADDING, 0, 0));
+    	//topLabelPanel.add(currentReviewersLabel, BorderLayout.WEST);
+    	topPanel.add(topLabelPanel, BorderLayout.PAGE_START);
+    	topPanel.add(getCurrentReviewers(), BorderLayout.CENTER);
     	
-    	this.add(getInfoPanel());
-    	this.add(topPanel);
-    	this.add(borderPanel);
-    	this.add(bottomPanel);
+    	return topPanel;
     }
     
     private JPanel getInfoPanel() {
     	JPanel infoPanel = new JPanel(new BorderLayout());
+    	JPanel insidePanel = new JPanel(new BorderLayout());
+    	String paperName = context.getPaper().getTitle();
+    	List<String> authors = context.getPaper().getAuthors();
+    	
+    	StringBuilder authorBuffer = new StringBuilder(authors.get(0));
+    	if (authors.size() > 1) {	
+	    	for(int i = 1; i < authors.size(); i++) {
+	    		authorBuffer.append(", " + authors.get(i));
+	    	}
+    	}		
+    	
+    	infoPanel.setBorder(new CompoundBorder(new EmptyBorder(0, SIDE_PADDING, 0, SIDE_PADDING), BorderFactory.createTitledBorder(" Paper Information")));
+    	insidePanel.setBorder(new EmptyBorder(INSIDE_PADDING/2, INSIDE_PADDING, INSIDE_PADDING/2, INSIDE_PADDING));
+    	
+    	JLabel titleLabel = new JLabel("Title: " + paperName);
+    	JLabel authorsLabel; 
+    	if (authors.size() > 1) {
+    		authorsLabel = new JLabel("Authors: " + authorBuffer.toString());
+    	} else {
+    		authorsLabel = new JLabel("Author: " + authors.get(0));
+    	}
+    	insidePanel.add(titleLabel, BorderLayout.NORTH);
+    	insidePanel.add(authorsLabel, BorderLayout.CENTER);
+    	infoPanel.add(insidePanel);
     	
     	return infoPanel;
     }
     
-    private JList<String> getAvailableReviewersList() {
-
-    	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();	
-    	List<UserProfile> currentReviewers = context.getCurrentConference().getInfo().getReviewers(); 	
+    private List<UserProfile> refineByAuthors(List<UserProfile> reviewerList) {
     	List<String> authors = context.getPaper().getAuthors(); // removing reviewers if they are an author
     	
     	//getting rid of reviewers if they are an author
@@ -110,24 +143,48 @@ public class AssignReviewer extends PanelCard {
     				break;
     			}
     		}
-    	}	
+    	}
     	
-    	//gotta filter by max reviews allowed
-    	//context.getCurrentConference().getInfo().getPapersAssignedToReviewer(UserProfile)
+    	return reviewerList;
+    }
+    
+    private List<UserProfile> refineByCurrentReviewers(List<UserProfile> reviewerList) {
+    	List<UserProfile> currentReviewers = context.getCurrentConference().getInfo().getReviewers();
     	
+    	Iterator<UserProfile> refineByCurrentReviewer = reviewerList.iterator();
+    	while(refineByCurrentReviewer.hasNext()) {
+    		UserProfile nextReviewer = refineByCurrentReviewer.next();
+    		for(UserProfile currentReviewer : currentReviewers) {
+    			if (currentReviewer.getName().equals(nextReviewer.getName())) {
+    				refineByCurrentReviewer.remove();
+    				break;
+    			}
+    		}
+    	}
     	
+    	return reviewerList;
+    }
+    
+    private List<UserProfile> refineByMaxReviews(List<UserProfile> reviewerList) {
     	
-    	//getting rid of reviewers if they are already reviewing the paper
-//    	Iterator<UserProfile> refineByCurrentReviewer = reviewerList.iterator();
-//    	while(refineByCurrentReviewer.hasNext()) {
-//    		UserProfile nextReviewer = refineByCurrentReviewer.next();
-//    		for(UserProfile currentReviewer : currentReviewers) {
-//    			if (currentReviewer.getName().equals(nextReviewer.getName())) {
-//    				refineByCurrentReviewer.remove();
-//    				break;
-//    			}
-//    		}
-//    	}
+    	Iterator<UserProfile> refineByMaxReviews = reviewerList.iterator();
+    	while(refineByMaxReviews.hasNext()) {
+    		UserProfile nextReviewer = refineByMaxReviews.next();
+    		if(context.getCurrentConference().getInfo().getPapersAssignedToReviewer(nextReviewer).size() >= MAX_REVIEWS) {
+    			refineByMaxReviews.remove();
+    		}
+    	}
+    	return reviewerList;
+    }
+    
+    private JList<String> getAvailableReviewersList() {
+
+    	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
+    		
+    	reviewerList = refineByAuthors(reviewerList);
+    	//reviewerList = refineByCurrentReviewers(reviewerList);
+    	reviewerList = refineByMaxReviews(reviewerList);
+    	
     	
     	String[] nameArray = new String[reviewerList.size()];	
     	for(int i = 0; i < reviewerList.size(); i++) {
@@ -142,9 +199,9 @@ public class AssignReviewer extends PanelCard {
    
     	reviewerJList.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
     	reviewerJList.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
-    	reviewerJList.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 20 / 2), 
+    	reviewerJList.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), INSIDE_PADDING / 2), 
                               new CompoundBorder(new LineBorder(Color.BLACK),
-                                                 new EmptyBorder(20, 20, 20, 20))));
+                                                 new EmptyBorder(INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING))));
     	
     	
     	reviewerJList.addListSelectionListener(new ListSelectionListener() {
@@ -164,6 +221,7 @@ public class AssignReviewer extends PanelCard {
     	return reviewerJList;
     }
     
+    
     private JList<String> getCurrentReviewers() {
     	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
     	
@@ -177,12 +235,13 @@ public class AssignReviewer extends PanelCard {
     	Dimension panelSize = Main.WINDOW_SIZE;
     	currentReviewers.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
     	currentReviewers.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
-    	currentReviewers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 20 / 2), 
+    	currentReviewers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), INSIDE_PADDING / 2), 
                 new CompoundBorder(new LineBorder(Color.BLACK),
-                                   new EmptyBorder(20, 20, 20, 20))));
+                                   new EmptyBorder(INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING))));
     	
     	return currentReviewers;
     }
+    
     
     private JPanel getButtonPanel() {
     	JPanel buttonPanel = new JPanel();
@@ -215,6 +274,7 @@ public class AssignReviewer extends PanelCard {
 		return buttonPanel;
 	}
 
+    
     @Override
     public String getNameOfPanel() {
         return PANEL_LOOKUP_NAME;
