@@ -2,6 +2,7 @@ package model;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Paper implements Serializable{
 	private Date mySubmissionDate;
 	private final List<String> myAuthors;
 	private final List<File> myReviews;
+	private final List<String> myReviewers;
 	private final String myTitle;
 	private final UserProfile mySubmitter;
 	private File myRecommendation;
@@ -46,6 +48,7 @@ public class Paper implements Serializable{
 		myTitle = Objects.requireNonNull(thePaperTitle);
 		mySubmitter = Objects.requireNonNull(theSubmitterUserProfile);
 		myReviews = new LinkedList<File>();
+		myReviewers = new ArrayList<String>();
 		myRecommendationShort = new String();
 		if(thePaperTitle.isEmpty())
 			throw new IllegalArgumentException();
@@ -122,9 +125,13 @@ public class Paper implements Serializable{
 		return myReviews;
 	}
 	
+	// Still need to check all bus. rules
 	public void addReviewer(String reviewer) {
-		
-		
+		myReviewers.add(reviewer);
+	}
+	
+	public List<String> getReviewers() {
+		return myReviewers;
 	}
 
 	/**
