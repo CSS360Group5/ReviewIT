@@ -1,8 +1,8 @@
 package view;
 
+
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,9 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -23,8 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -43,35 +39,14 @@ public class SubmitRecomendation extends PanelCard {
     
     /** File chooser where start page is set to current directory */
     private final JFileChooser fileChooser = new JFileChooser(".");
-    
-    private JPanel centerPanel = new JPanel();
     /** */
     private JPanel infoPanel = new JPanel();
-    
-    private JPanel filePanel = new JPanel();
-    
-    private JPanel titlePanel = new JPanel();
-    
-    private JPanel authorPanel = new JPanel();
-    
-    private JPanel authorDisplayPanel = new JPanel();
-      
-    /** Dimension used to format text entry fields. */
-    private Dimension preferredDimension = new Dimension(400, 20);
-    
     /** Authors of paper to be submitted.*/
     private List<String> authorsOfPaper = new ArrayList<>();
     
     /** */
     private String currentFilePath = "No file has been selected.";
     private JTable table = new JTable();
-    /** */
-    private JTextField paperTitleTextField = new JTextField();
-    /** */
-    private JTextField authorsTextField = new JTextField("Enter single author name");
-
-    /** */
-    private boolean initialSignIn;
     
     public SubmitRecomendation(PanelChanger p, UserContext context) {
         super(p, context);
@@ -79,7 +54,6 @@ public class SubmitRecomendation extends PanelCard {
 		
 		table = new JTable();
 		add(table);
-		
     }
     
 	@Override
@@ -90,18 +64,19 @@ public class SubmitRecomendation extends PanelCard {
     @Override
     public void updatePanel() {
     	this.removeAll();
+    	this.removeAll();
     	JPanel mainPanel = new JPanel();
 		add(mainPanel);
-		mainPanel.setLayout(new BorderLayout(0, 0));
+		mainPanel.setLayout(new BorderLayout(Main.WINDOW_SIZE.height / 3 , Main.WINDOW_SIZE.height / 4));
 		
 		JPanel namePanel = new JPanel();
 		mainPanel.add(namePanel, BorderLayout.NORTH);
 		namePanel.setLayout(new BorderLayout(0, 0));
 		
-		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:");
+		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:  " + context.getUser().getName());
 		namePanel.add(SubProgramChairlabel);
 		
-		JLabel labelPaper = new JLabel("Paper:");
+		JLabel labelPaper = new JLabel("Paper:	"); //+ context.getPaper().getTitle());
 		namePanel.add(labelPaper, BorderLayout.SOUTH);
 		
 		JPanel placeHolder = new JPanel();
@@ -111,12 +86,13 @@ public class SubmitRecomendation extends PanelCard {
 		mainPanel.add(gridPanel, BorderLayout.CENTER);
 		gridPanel.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_5 = new JPanel();
-		gridPanel.add(panel_5, BorderLayout.NORTH);
+		JPanel instructionPanel = new JPanel();
+		gridPanel.add(instructionPanel, BorderLayout.NORTH);
+		instructionPanel.setLayout(new CardLayout(0, 0));
 		
-		JLabel instructionsLabel = new JLabel("Upload a recommendation File for the Paper and select your recommendation.");
-		instructionsLabel.setAlignmentY(LEFT_ALIGNMENT);
-		panel_5.add(instructionsLabel);
+		JLabel lblUploadARecommendation = new JLabel("Upload a recommendation File for the Paper and select your recommendation.");
+		lblUploadARecommendation.setAlignmentY(LEFT_ALIGNMENT);
+		instructionPanel.add(lblUploadARecommendation);
 		
 		JPanel gridLocation = new JPanel();
 		gridPanel.add(gridLocation, BorderLayout.CENTER);
@@ -132,6 +108,9 @@ public class SubmitRecomendation extends PanelCard {
 		fileLabelLocation.insets = new Insets(0, 0, 5, 5);
 		fileLabelLocation.gridx = 0;
 		fileLabelLocation.gridy = 0;
+        final FileNameExtensionFilter fileTypeFilter = new FileNameExtensionFilter(
+                "docx, doc, and pdf", "docx", "doc", "pdf");
+        fileChooser.setFileFilter(fileTypeFilter);
 		gridLocation.add(fileLabel, fileLabelLocation);
 		
 		JButton btnChooseFile = new JButton("Choose File");
@@ -143,9 +122,9 @@ public class SubmitRecomendation extends PanelCard {
 		btnChooseFile.addActionListener(new SelectFileAction());
 		gridLocation.add(btnChooseFile, gbc_btnChooseFile);
 		
-		JLabel fileNameLabel = new JLabel("New label");
+		JLabel fileNameLabel = new JLabel(currentFilePath);
 		GridBagConstraints fileNameLabelLocation = new GridBagConstraints();
-		fileNameLabelLocation.insets = new Insets(0, 0, 5, 0);
+		fileNameLabelLocation.insets = new Insets(0, 0, 3, 0);
 		fileNameLabelLocation.gridx = 2;
 		fileNameLabelLocation.gridy = 0;
 		gridLocation.add(fileNameLabel, fileNameLabelLocation);
@@ -190,6 +169,7 @@ public class SubmitRecomendation extends PanelCard {
 		cancelButtonLocation.insets = new Insets(0, 0, 0, 5);
 		cancelButtonLocation.gridx = 0;
 		cancelButtonLocation.gridy = 5;
+		cancelButton.addActionListener(new cancelAction());
 		gridLocation.add(cancelButton, cancelButtonLocation);
 		
 		JButton submitRecommendationButton = new JButton("Submit Recommendation");
@@ -197,25 +177,25 @@ public class SubmitRecomendation extends PanelCard {
 		submitRecommendationButtonLocation.insets = new Insets(0, 0, 0, 5);
 		submitRecommendationButtonLocation.gridx = 1;
 		submitRecommendationButtonLocation.gridy = 5;
-		gridLocation.add(submitRecommendationButton, submitRecommendationButtonLocation);
+		gridLocation.add(submitRecommendationButton, submitRecommendationButtonLocation); 
+    }  
+    /**
+     * Resets all all of the information about the paper being constructed to submit.
+     * Normally called when a user cancels or submits a paper.
+     */
+    private void resetPaperInformation() {
+    	currentFilePath = "No file has been selected.";
+    	authorsOfPaper.clear();
     }
     
-	private JPanel getFilePanel() {
-		titlePanel.setAlignmentY(LEFT_ALIGNMENT);
-		JLabel info = new JLabel("Current file selected: " + currentFilePath);
-		JButton fileChooserButton = new JButton("Select file to upload...");
-        final FileNameExtensionFilter fileTypeFilter = new FileNameExtensionFilter(
-                "docx, doc, and pdf", "docx", "doc", "pdf");
-            fileChooser.setFileFilter(fileTypeFilter);
-        fileChooserButton.addActionListener(new SelectFileAction());
-		
-		filePanel.add(info);
-		filePanel.add(fileChooserButton);
-		return filePanel;
-	}
-	
-
-           /**
+    /**
+     * Error message that displays if file selection process goes wrong.
+     * @param theMessage
+     */
+    private void displayErrorMessage(final String theMessage) {
+        JOptionPane.showMessageDialog(this, theMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    }    
+    /**
      * 
      * @author Ian Jury
      *
@@ -231,37 +211,24 @@ public class SubmitRecomendation extends PanelCard {
 	        	infoPanel.repaint();
 	        	//this is super weird-- need to change
 	        	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
-	        	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
+	        	panelChanger.changeTo(SubmitRecomendation.PANEL_LOOKUP_NAME);
 	                      
 	        } else if (returnVal == JFileChooser.ERROR_OPTION) { 
-	            //displayErrorMessage("There was an error loading the selected file!");
+	            displayErrorMessage("There was an error loading the selected file!");
 	        }  			
 		}  	
     }
     
     /**
-     * Action for cancel button to change mainPanel to previous.
+     * Action for cancel button to change panel to previous.
      * @author Ian Jury
      *
      */
-    private class CancelAction implements ActionListener {
+    private class cancelAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);			
+			resetPaperInformation();
+			panelChanger.changeTo(SubmitRecomendation.PANEL_LOOKUP_NAME);			
 		}   	
-    }
-    
-    /**
-     * 
-     */
-    private class submitAction implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			//submit paper
-			
-		}
-    	
     }
 }
