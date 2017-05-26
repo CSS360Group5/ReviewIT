@@ -92,8 +92,8 @@ public class Initialize {
     	theConference.getUserRole().addPaper(author, 
     			Paper.createPaper(new File(""), authors, "Thermal-Hydraulics", author));
     	
-    	theConference.getUserRole().addPaper(author, 
-    			Paper.createPaper(new File(""), authors, "Mitigation Strategies for Beyond Design Basis Events", author));
+//    	theConference.getUserRole().addPaper(author, 
+//    			Paper.createPaper(new File(""), authors, "Mitigation Strategies for Beyond Design Basis Events", author));
     }
 
 	

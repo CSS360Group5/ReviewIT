@@ -130,5 +130,21 @@ public class PaperSubmissionLimitTests {
 		}
 		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
 	}
+	@Test //(expected = IllegalArgumentException.class)
+	public void paperSubmittedRemovedAndAnotherSubmitted_IsSubmitted() throws IllegalArgumentException {
+		for(int i = 0; i < SUBMISSION_LIMIT; i++) {
+			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
+		}
+		//check if valid size
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
+		
+		//remove one of the submitted papers
+		testCon.getUserRole().removePaper(testUserProfile,  TEST_PAPER_LIST.get(0));
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT - 1);
+		
+		//add it back and check if size has increased
+		testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(0));
+		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
+	}
 
 }
