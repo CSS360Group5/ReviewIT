@@ -249,7 +249,7 @@ public class AssignReviewer extends PanelCard {
     	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
 
     	reviewerList = refineByAuthors(reviewerList);
-    	//reviewerList = refineByCurrentReviewers(reviewerList);
+    	reviewerList = refineByCurrentReviewers(reviewerList);
     	reviewerList = refineByMaxReviews(reviewerList);
 
 
