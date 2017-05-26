@@ -185,14 +185,14 @@ public class DashBoard extends PanelCard {
         JButton submitPaperButton = new JButton("Submit New Paper...");
         submitPaperButton.setAlignmentY(TOP_ALIGNMENT);
         submitPaperButton.addActionListener(new SubmitPaperAction());
-        submitPaperButton.setEnabled(context.getCurrentConference().getInfo().isSubmissionOpen(new Date()));
-        
+
         //added by Ian to prevent author from being able to press button to submit >limit of papers 
         //to a conference. Follows heuristic of not allowing user to enter information.
         List<String> authors = new LinkedList<>();
         authors.add(context.getUser().getName());
         Paper thePaper = Paper.createPaper(new File(""), authors, "Test title", context.getUser());
-        submitPaperButton.setEnabled(context.getCurrentConference().getInfo().isPaperInAuthorSubmissionLimit(thePaper));
+        submitPaperButton.setEnabled(context.getCurrentConference().getInfo().isSubmissionOpen(new Date())
+        		&& context.getCurrentConference().getInfo().isPaperInAuthorSubmissionLimit(thePaper));
         
         JButton removePaperButton = new JButton("Remove Paper");
         removePaperButton.setAlignmentY(TOP_ALIGNMENT);
@@ -308,6 +308,8 @@ public class DashBoard extends PanelCard {
             if (result == JOptionPane.YES_OPTION) {
             	context.getCurrentConference().getUserRole().removePaper(context.getUser(), papers.getSelectedValue());
 				JOptionPane.showMessageDialog(null, "Paper has been successfully removed.");
+				panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
+				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
 				
             }
         }

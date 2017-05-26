@@ -132,8 +132,7 @@ public class UserUtilities implements Serializable {
     	//if submission map has user profile, remove
     	if(myConferenceData.getPaperSubmissionMap().containsKey(theUserProfile)){
     		myConferenceData.getPaperSubmissionMap().get(theUserProfile).remove(thePaper);
-    	}
-    	
+    	}   	
     }
     
     /**

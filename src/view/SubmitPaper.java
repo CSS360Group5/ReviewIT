@@ -310,6 +310,7 @@ public class SubmitPaper extends PanelCard {
 						+ context.getCurrentConference().getInfo().getName() + "\".");
 				resetPaperInformation();	
 				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+				//System.out.println(context.getCurrentConference().getInfo().getPapersSubmittedBy(context.getUser()).size());
 			} catch (IllegalArgumentException ex) {
 				displayErrorMessage("Paper could not be submitted due to invalid input");
 			}

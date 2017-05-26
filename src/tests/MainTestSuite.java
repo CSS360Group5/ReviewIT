@@ -25,5 +25,4 @@ import org.junit.runners.Suite.SuiteClasses;
 	ReviewerDeadlineAssignTests.class})
 
 public class MainTestSuite {
-
 }
