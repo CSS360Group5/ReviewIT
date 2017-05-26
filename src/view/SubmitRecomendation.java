@@ -62,20 +62,37 @@ public class SubmitRecomendation extends PanelCard {
     	this.removeAll();
     	JPanel mainPanel = new JPanel();
 		add(mainPanel);
-		mainPanel.setLayout(new BorderLayout(Main.WINDOW_SIZE.height / 3 , Main.WINDOW_SIZE.height / 6));
+		mainPanel.setLayout(new BorderLayout(Main.WINDOW_SIZE.height / 6 , Main.WINDOW_SIZE.height / 6));
 		
 		JPanel namePanel = new JPanel();
 		mainPanel.add(namePanel, BorderLayout.NORTH);
 		namePanel.setLayout(new BorderLayout(0, 0));
 		
 		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:  " + context.getUser().getName());
-		namePanel.add(SubProgramChairlabel);
+		namePanel.add(SubProgramChairlabel, BorderLayout.NORTH);
 		submissionLabel = new JLabel(submissionMessage +
 				"for the manuscript " + context.getPaper().getTitle());
+		JLabel currentConference = new JLabel("Currently in the conference: " + context.getCurrentConference().toString());
+		namePanel.add(currentConference,BorderLayout.CENTER);
 		namePanel.add(submissionLabel, BorderLayout.SOUTH);
 		
 		JPanel placeHolder = new JPanel();
+		//Added spaces to make the button same size
+		JButton conferenceBack = new JButton("Papers           ");
+		conferenceBack.addActionListener(new cancelAction());
+		JButton cancelBut = new JButton("Conferences");
+		cancelBut.addActionListener(new conferenceAction());
+		JButton reviewersPage = new JButton("Reviewers     ");
+		reviewersPage.addActionListener(new reviewersPageAction());
+		placeHolder.add(cancelBut);
+		placeHolder.add(conferenceBack);
+		placeHolder.add(reviewersPage);
+//		JPanel justToCenterPanel = new JPanel(new GridBagLayout());
+//	    justToCenterPanel.add(placeHolder);
+		placeHolder.setLayout(new BoxLayout(placeHolder, BoxLayout.Y_AXIS));
+
 		mainPanel.add(placeHolder, BorderLayout.WEST);
+		//mainPanel.setLayout(new BoxLayout(placeHolder, BoxLayout.Y_AXIS));
 		
 		JPanel gridPanel = new JPanel();
 		mainPanel.add(gridPanel, BorderLayout.CENTER);
@@ -157,12 +174,12 @@ public class SubmitRecomendation extends PanelCard {
 		seeReviewsButtonLocation.gridy = 4;
 		gridLocation.add(btnSeeReviews, seeReviewsButtonLocation);
 		
-		JButton cancelButton = new JButton("Go Back");
+		//JButton cancelButton = new JButton("Go Back");
 		JPanel theSubmitPanel = new JPanel();
-		theSubmitPanel.add(cancelButton);
+		//theSubmitPanel.add(cancelButton);
 		theSubmitPanel.add(submitRecommendationButton);
 		submitRecommendationButton.setEnabled(false);
-		cancelButton.addActionListener(new cancelAction());
+		//cancelButton.addActionListener(new cancelAction());
 		submitRecommendationButton.addActionListener(new submitAction());
 		GridBagConstraints theSubmitPanelLocation = new GridBagConstraints();
 		theSubmitPanelLocation.insets = new Insets(50, 0, 0, 5);
@@ -270,4 +287,17 @@ public class SubmitRecomendation extends PanelCard {
 			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);			
 		}   	
     }
+    private class conferenceAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);			
+		}   	
+    }
+    private class reviewersPageAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			panelChanger.changeTo(AssignReviewer.PANEL_LOOKUP_NAME);			
+		}   	
+    }
+
 }
