@@ -39,6 +39,7 @@ public class SubmitRecomendation extends PanelCard {
     private JButton submitRecommendationButton = new JButton("Submit Recommendation");
     private JLabel fileNameLabel;
     private JLabel submissionLabel;
+    private JPanel gridLocation;
     /** */
     private String submissionMessage = "Recommendation Status: No recommendation has been given ";
     private String currentFilePath = "No file has been selected.";
@@ -64,35 +65,9 @@ public class SubmitRecomendation extends PanelCard {
 		add(mainPanel);
 		mainPanel.setLayout(new BorderLayout(Main.WINDOW_SIZE.height / 6 , Main.WINDOW_SIZE.height / 6));
 		
-		JPanel namePanel = new JPanel();
-		mainPanel.add(namePanel, BorderLayout.NORTH);
-		namePanel.setLayout(new BorderLayout(0, 0));
+		createUpperInfoPanel(mainPanel);
 		
-		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:  " + context.getUser().getName());
-		namePanel.add(SubProgramChairlabel, BorderLayout.NORTH);
-		submissionLabel = new JLabel(submissionMessage +
-				"for the manuscript " + context.getPaper().getTitle());
-		JLabel currentConference = new JLabel("Currently in the conference: " + context.getCurrentConference().toString());
-		namePanel.add(currentConference,BorderLayout.CENTER);
-		namePanel.add(submissionLabel, BorderLayout.SOUTH);
-		
-		JPanel placeHolder = new JPanel();
-		//Added spaces to make the button same size
-		JButton conferenceBack = new JButton("Papers           ");
-		conferenceBack.addActionListener(new cancelAction());
-		JButton cancelBut = new JButton("Conferences");
-		cancelBut.addActionListener(new conferenceAction());
-		JButton reviewersPage = new JButton("Reviewers     ");
-		reviewersPage.addActionListener(new reviewersPageAction());
-		placeHolder.add(cancelBut);
-		placeHolder.add(conferenceBack);
-		placeHolder.add(reviewersPage);
-//		JPanel justToCenterPanel = new JPanel(new GridBagLayout());
-//	    justToCenterPanel.add(placeHolder);
-		placeHolder.setLayout(new BoxLayout(placeHolder, BoxLayout.Y_AXIS));
-
-		mainPanel.add(placeHolder, BorderLayout.WEST);
-		//mainPanel.setLayout(new BoxLayout(placeHolder, BoxLayout.Y_AXIS));
+		mainPanel.add(quickNavigationPanel(), BorderLayout.WEST);
 		
 		JPanel gridPanel = new JPanel();
 		mainPanel.add(gridPanel, BorderLayout.CENTER);
@@ -106,15 +81,21 @@ public class SubmitRecomendation extends PanelCard {
 		lblUploadARecommendation.setAlignmentY(LEFT_ALIGNMENT);
 		instructionPanel.add(lblUploadARecommendation);
 		
-		JPanel gridLocation = new JPanel();
-		gridPanel.add(gridLocation, BorderLayout.CENTER);
-		GridBagLayout theGridColandRows = new GridBagLayout();
-		theGridColandRows.columnWidths = new int[]{0, 0, 0, 0};
-		theGridColandRows.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		theGridColandRows.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		theGridColandRows.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridLocation.setLayout(theGridColandRows);
+		createGridBagGrid(gridPanel);
 		
+
+		GridBagConstraints fileLabelLocation = new GridBagConstraints();
+		fileLabelLocation.insets = new Insets(50, 0, 5, 5);
+		fileLabelLocation.gridx = 0;
+		fileLabelLocation.gridy = 0;
+		gridLocation.add(fileChooserPanel(), fileLabelLocation);
+		
+		createRadioButtonGroupOnGrid(gridLocation);
+		createSubmitButtonAndLocation(gridLocation);
+		//JButton cancelButton = new JButton("Go Back");
+		
+    }  
+    private JPanel fileChooserPanel() {
 		JPanel filePanel = new JPanel();
 		JLabel info = new JLabel("Current file selected: ");
 		fileNameLabel = new JLabel(currentFilePath);
@@ -127,45 +108,55 @@ public class SubmitRecomendation extends PanelCard {
 		filePanel.add(info);
 		filePanel.add(fileChooserButton);
 		filePanel.add(fileNameLabel);
-		GridBagConstraints fileLabelLocation = new GridBagConstraints();
-		fileLabelLocation.insets = new Insets(50, 0, 5, 5);
-		fileLabelLocation.gridx = 0;
-		fileLabelLocation.gridy = 0;
-		gridLocation.add(filePanel, fileLabelLocation);
 		
-		JRadioButton recommendRadioButton= new JRadioButton("Recommend");
-		recommendRadioButton.setActionCommand(recommendRadioButton.getText());
-		recommendRadioButton.addActionListener(new checkRequirementsForRadioButtons());
-		buttonGroup.add(recommendRadioButton);
-		GridBagConstraints recommendRadioButtonLocation= new GridBagConstraints();
-		recommendRadioButtonLocation.anchor = GridBagConstraints.WEST;
-		recommendRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
-		recommendRadioButtonLocation.gridx = 0;
-		recommendRadioButtonLocation.gridy = 1;
-		gridLocation.add(recommendRadioButton, recommendRadioButtonLocation);
+		return filePanel;
+    }
+    private JPanel quickNavigationPanel() {
+		JPanel placeHolder = new JPanel();
+		//Added spaces to make the button same size
+		JButton conferenceBack = new JButton("Papers           ");
+		conferenceBack.addActionListener(new cancelAction());
+		JButton cancelBut = new JButton("Conferences");
+		cancelBut.addActionListener(new conferenceAction());
+		JButton reviewersPage = new JButton("Reviewers     ");
+		reviewersPage.addActionListener(new reviewersPageAction());
+		placeHolder.add(cancelBut);
+		placeHolder.add(conferenceBack);
+		placeHolder.add(reviewersPage);
+		placeHolder.setLayout(new BoxLayout(placeHolder, BoxLayout.Y_AXIS));
+		return placeHolder;
+    }
+    private void createGridBagGrid(JPanel gridPanel) {
+		gridLocation = new JPanel();
+		gridPanel.add(gridLocation, BorderLayout.CENTER);
+		GridBagLayout theGridColandRows = new GridBagLayout();
+		theGridColandRows.columnWidths = new int[]{0, 0, 0, 0};
+		theGridColandRows.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		theGridColandRows.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		theGridColandRows.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridLocation.setLayout(theGridColandRows);
+    }
+    private JPanel createUpperInfoPanel(JPanel mainPanel) {
+		JPanel namePanel = new JPanel();
+		mainPanel.add(namePanel, BorderLayout.NORTH);
+		namePanel.setLayout(new BorderLayout(0, 0));
 		
-		JRadioButton denyRadioButton = new JRadioButton("Don't Recommend");
-		denyRadioButton.setActionCommand(denyRadioButton.getText());
-		denyRadioButton.addActionListener(new checkRequirementsForRadioButtons());
-		buttonGroup.add(denyRadioButton);
-		GridBagConstraints denyRadioButtonLocation = new GridBagConstraints();
-		denyRadioButtonLocation.anchor = GridBagConstraints.WEST;
-		denyRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
-		denyRadioButtonLocation.gridx = 0;
-		denyRadioButtonLocation.gridy = 2;
-		gridLocation.add(denyRadioButton, denyRadioButtonLocation);
-		
-		JRadioButton unsureRadioButton = new JRadioButton("Unsure");
-		unsureRadioButton.setActionCommand(unsureRadioButton.getText());
-		unsureRadioButton.addActionListener(new checkRequirementsForRadioButtons());
-		buttonGroup.add(unsureRadioButton);
-		GridBagConstraints unsureRadioButtonLocation = new GridBagConstraints();
-		unsureRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
-		unsureRadioButtonLocation.anchor = GridBagConstraints.WEST;
-		unsureRadioButtonLocation.gridx = 0;
-		unsureRadioButtonLocation.gridy = 3;
-		gridLocation.add(unsureRadioButton, unsureRadioButtonLocation);
-		JButton btnSeeReviews = new JButton("See Reviews");
+		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:  " + context.getUser().getName());
+		namePanel.add(SubProgramChairlabel, BorderLayout.NORTH);
+		submissionLabel = new JLabel(submissionMessage +
+				"for the manuscript " + context.getPaper().getTitle());
+		JLabel currentConference = new JLabel("Currently in the conference: " + context.getCurrentConference().toString());
+		namePanel.add(currentConference,BorderLayout.CENTER);
+		namePanel.add(submissionLabel, BorderLayout.SOUTH);
+		return namePanel;
+    }
+    private void createRadioButtonGroupOnGrid(JPanel gridLocation) {
+    	radioButtonAndLocation(gridLocation, 1, "Recommend");
+    	radioButtonAndLocation(gridLocation, 2, "Don't Recommend");
+    	radioButtonAndLocation(gridLocation, 3, "Unsure");
+
+		JButton btnSeeReviews = new JButton("See Review Scores");
+		btnSeeReviews.addActionListener(new seeReviewsAction());
 		GridBagConstraints seeReviewsButtonLocation = new GridBagConstraints();
 
 		seeReviewsButtonLocation.insets = new Insets(0, 0, 5, 5);
@@ -173,8 +164,20 @@ public class SubmitRecomendation extends PanelCard {
 		seeReviewsButtonLocation.gridx = 0;
 		seeReviewsButtonLocation.gridy = 4;
 		gridLocation.add(btnSeeReviews, seeReviewsButtonLocation);
-		
-		//JButton cancelButton = new JButton("Go Back");
+	}
+    private void radioButtonAndLocation(JPanel gridLocation, int gridY, String buttonName) {
+		JRadioButton theRadioButton = new JRadioButton(buttonName);
+		theRadioButton.setActionCommand(theRadioButton.getText());
+		theRadioButton.addActionListener(new checkRequirementsForRadioButtons());
+		buttonGroup.add(theRadioButton);
+		GridBagConstraints theButtonLocation = new GridBagConstraints();
+		theButtonLocation.anchor = GridBagConstraints.WEST;
+		theButtonLocation.insets = new Insets(0, 0, 5, 5);
+		theButtonLocation.gridx = 0;
+		theButtonLocation.gridy = gridY;
+		gridLocation.add(theRadioButton, theButtonLocation);
+    }
+    private void createSubmitButtonAndLocation(JPanel gridLocation) {
 		JPanel theSubmitPanel = new JPanel();
 		//theSubmitPanel.add(cancelButton);
 		theSubmitPanel.add(submitRecommendationButton);
@@ -187,8 +190,7 @@ public class SubmitRecomendation extends PanelCard {
 		theSubmitPanelLocation.gridx = 0;
 		theSubmitPanelLocation.gridy = 5;
 		gridLocation.add(theSubmitPanel, theSubmitPanelLocation);
-		
-    }  
+    }
     private class submitAction implements ActionListener {
 
 		@Override
@@ -274,6 +276,16 @@ public class SubmitRecomendation extends PanelCard {
 	            displayErrorMessage("There was an error loading the selected file!");
 	        }  			
 		}  	
+    }
+    private class seeReviewsAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			//Hard Coded the scores since review scores are not implemented for this deliverable
+			JOptionPane.showMessageDialog(
+				    null, "Scale: 1-5 (5 being the best) \n \n"
+				    		+ "Brian Geving: 5 \n Zachary Chandler: 3 \n Ian Jury: 1", 
+				    "Review Scores", JOptionPane.PLAIN_MESSAGE);
+		}   	
     }
     
     /**

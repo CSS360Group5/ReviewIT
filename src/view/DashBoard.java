@@ -192,7 +192,7 @@ public class DashBoard extends PanelCard {
         authors.add(context.getUser().getName());
         Paper thePaper = Paper.createPaper(new File(""), authors, "Test title", context.getUser());
         submitPaperButton.setEnabled(context.getCurrentConference().getInfo().isSubmissionOpen(new Date())
-        		&& !context.getCurrentConference().getInfo().isPaperInAuthorSubmissionLimit(thePaper));
+        		&& context.getCurrentConference().getInfo().isPaperInAuthorSubmissionLimit(thePaper));
         
         JButton removePaperButton = new JButton("Remove Paper");
         removePaperButton.setAlignmentY(TOP_ALIGNMENT);
