@@ -3,17 +3,13 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -23,12 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import model.Paper;
 
 /**
  * 
@@ -49,7 +40,7 @@ public class SubmitRecomendation extends PanelCard {
     private JLabel fileNameLabel;
     private JLabel submissionLabel;
     /** */
-    private String submissionMessage = " No recommendation has been given ";
+    private String submissionMessage = "Recommendation Status: No recommendation has been given ";
     private String currentFilePath = "No file has been selected.";
     private String theRadioButtonRecommendationSelection;
     private JTable table = new JTable();
@@ -57,9 +48,6 @@ public class SubmitRecomendation extends PanelCard {
     public SubmitRecomendation(PanelChanger p, UserContext context) {
         super(p, context);
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-//        Border raisedetched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
-//        this.setBackground(Color.RED);
-//        this.setBorder(raisedetched);
 		table = new JTable();
 		add(table);
     }
@@ -82,8 +70,7 @@ public class SubmitRecomendation extends PanelCard {
 		
 		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:  " + context.getUser().getName());
 		namePanel.add(SubProgramChairlabel);
-		
-		submissionLabel = new JLabel("Recommendation Status: "+ submissionMessage +
+		submissionLabel = new JLabel(submissionMessage +
 				"for the manuscript " + context.getPaper().getTitle());
 		namePanel.add(submissionLabel, BorderLayout.SOUTH);
 		
@@ -111,31 +98,23 @@ public class SubmitRecomendation extends PanelCard {
 		theGridColandRows.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridLocation.setLayout(theGridColandRows);
 		
-		JLabel fileLabel = new JLabel("File:");
+		JPanel filePanel = new JPanel();
+		JLabel info = new JLabel("Current file selected: ");
+		fileNameLabel = new JLabel(currentFilePath);
+		JButton fileChooserButton = new JButton("Upload File");
+        final FileNameExtensionFilter fileTypeFilter = new FileNameExtensionFilter(
+                "docx, doc, and pdf", "docx", "doc", "pdf");
+            fileChooser.setFileFilter(fileTypeFilter);
+        fileChooserButton.addActionListener(new SelectFileAction());
+		
+		filePanel.add(info);
+		filePanel.add(fileChooserButton);
+		filePanel.add(fileNameLabel);
 		GridBagConstraints fileLabelLocation = new GridBagConstraints();
 		fileLabelLocation.insets = new Insets(50, 0, 5, 5);
 		fileLabelLocation.gridx = 0;
 		fileLabelLocation.gridy = 0;
-        final FileNameExtensionFilter fileTypeFilter = new FileNameExtensionFilter(
-                "docx, doc, and pdf", "docx", "doc", "pdf");
-        fileChooser.setFileFilter(fileTypeFilter);
-		gridLocation.add(fileLabel, fileLabelLocation);
-		
-		JButton btnChooseFile = new JButton("Choose File");
-		GridBagConstraints gbc_btnChooseFile = new GridBagConstraints();
-		gbc_btnChooseFile.anchor = GridBagConstraints.WEST;
-		gbc_btnChooseFile.insets = new Insets(50, 0, 5, 5);
-		gbc_btnChooseFile.gridx = 1;
-		gbc_btnChooseFile.gridy = 0;
-		btnChooseFile.addActionListener(new SelectFileAction());
-		gridLocation.add(btnChooseFile, gbc_btnChooseFile);
-		
-		fileNameLabel = new JLabel(currentFilePath);
-		GridBagConstraints fileNameLabelLocation = new GridBagConstraints();
-		fileNameLabelLocation.insets = new Insets(50, 0, 5, 5);
-		fileNameLabelLocation.gridx = 2;
-		fileNameLabelLocation.gridy = 0;
-		gridLocation.add(fileNameLabel, fileNameLabelLocation);
+		gridLocation.add(filePanel, fileLabelLocation);
 		
 		JRadioButton recommendRadioButton= new JRadioButton("Recommend");
 		recommendRadioButton.setActionCommand(recommendRadioButton.getText());
@@ -144,7 +123,7 @@ public class SubmitRecomendation extends PanelCard {
 		GridBagConstraints recommendRadioButtonLocation= new GridBagConstraints();
 		recommendRadioButtonLocation.anchor = GridBagConstraints.WEST;
 		recommendRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
-		recommendRadioButtonLocation.gridx = 1;
+		recommendRadioButtonLocation.gridx = 0;
 		recommendRadioButtonLocation.gridy = 1;
 		gridLocation.add(recommendRadioButton, recommendRadioButtonLocation);
 		
@@ -155,7 +134,7 @@ public class SubmitRecomendation extends PanelCard {
 		GridBagConstraints denyRadioButtonLocation = new GridBagConstraints();
 		denyRadioButtonLocation.anchor = GridBagConstraints.WEST;
 		denyRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
-		denyRadioButtonLocation.gridx = 1;
+		denyRadioButtonLocation.gridx = 0;
 		denyRadioButtonLocation.gridy = 2;
 		gridLocation.add(denyRadioButton, denyRadioButtonLocation);
 		
@@ -166,33 +145,32 @@ public class SubmitRecomendation extends PanelCard {
 		GridBagConstraints unsureRadioButtonLocation = new GridBagConstraints();
 		unsureRadioButtonLocation.insets = new Insets(0, 0, 5, 5);
 		unsureRadioButtonLocation.anchor = GridBagConstraints.WEST;
-		unsureRadioButtonLocation.gridx = 1;
+		unsureRadioButtonLocation.gridx = 0;
 		unsureRadioButtonLocation.gridy = 3;
 		gridLocation.add(unsureRadioButton, unsureRadioButtonLocation);
-		
 		JButton btnSeeReviews = new JButton("See Reviews");
 		GridBagConstraints seeReviewsButtonLocation = new GridBagConstraints();
+
 		seeReviewsButtonLocation.insets = new Insets(0, 0, 5, 5);
 		seeReviewsButtonLocation.anchor = GridBagConstraints.WEST;
-		seeReviewsButtonLocation.gridx = 1;
+		seeReviewsButtonLocation.gridx = 0;
 		seeReviewsButtonLocation.gridy = 4;
 		gridLocation.add(btnSeeReviews, seeReviewsButtonLocation);
 		
 		JButton cancelButton = new JButton("Go Back");
-		GridBagConstraints cancelButtonLocation = new GridBagConstraints();
-		cancelButtonLocation.insets = new Insets(50, 0, 0, 5);
-		cancelButtonLocation.gridx = 0;
-		cancelButtonLocation.gridy = 5;
-		cancelButton.addActionListener(new cancelAction());
-		gridLocation.add(cancelButton, cancelButtonLocation);
-		
+		JPanel theSubmitPanel = new JPanel();
+		theSubmitPanel.add(cancelButton);
+		theSubmitPanel.add(submitRecommendationButton);
 		submitRecommendationButton.setEnabled(false);
-		GridBagConstraints submitRecommendationButtonLocation = new GridBagConstraints();
-		submitRecommendationButtonLocation.insets = new Insets(50, 0, 0, 5);
-		submitRecommendationButtonLocation.gridx = 1;
-		submitRecommendationButtonLocation.gridy = 5;
+		cancelButton.addActionListener(new cancelAction());
 		submitRecommendationButton.addActionListener(new submitAction());
-		gridLocation.add(submitRecommendationButton, submitRecommendationButtonLocation); 
+		GridBagConstraints theSubmitPanelLocation = new GridBagConstraints();
+		theSubmitPanelLocation.insets = new Insets(50, 0, 0, 5);
+		theSubmitPanelLocation.anchor = GridBagConstraints.WEST;
+		theSubmitPanelLocation.gridx = 0;
+		theSubmitPanelLocation.gridy = 5;
+		gridLocation.add(theSubmitPanel, theSubmitPanelLocation);
+		
     }  
     private class submitAction implements ActionListener {
 
@@ -202,24 +180,32 @@ public class SubmitRecomendation extends PanelCard {
 			//theRadioButtonRecommendationSelection = buttonGroup.getSelection().getActionCommand();
 			//Debug print statement
 			//System.out.println(theRadioButtonRecommendationSelection);
-
-			try {
-				System.out.println("Testing a submission");
-				submissionMessage = "Recommendation Status: File Submitted! You decided " +
-						theRadioButtonRecommendationSelection;
-				submissionLabel.setText(submissionMessage +
-				" for the manuscript " + context.getPaper().getTitle());
-				submitRecommendationButton.setEnabled(false);
-				//Changing the paper is currently not working.
-				context.getPaper().setRecommendationShort(theRadioButtonRecommendationSelection);
-				File theRecommendationFile = fileChooser.getSelectedFile();
-				context.getPaper().setMyRecommendation(theRecommendationFile);
-				//System.out.println(context.getPaper().getRecommendationShort());
-				//panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
-	        	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
-	        	panelChanger.changeTo(SubmitRecomendation.PANEL_LOOKUP_NAME);
-			} catch (IllegalArgumentException ex) {
-				//displayErrorMessage("Paper could not be submitted due to invalid input");
+			int reply = JOptionPane.showConfirmDialog(
+				    null, "You Are About to submit the file: " + currentFilePath + 
+				    "\nYou also chose " +  "\"" + theRadioButtonRecommendationSelection + "\"" + 
+				    " for the manuscript: \n" + context.getPaper().getTitle() + " \nProceed?",
+				    "Recommendation Submission" ,  JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.YES_OPTION) {
+				try {
+					//System.out.println("Testing a submission");
+					submissionMessage = "Recommendation Status: File Submitted! You decided " +
+							theRadioButtonRecommendationSelection;
+					submissionLabel.setText(submissionMessage +
+					" for the manuscript " + context.getPaper().getTitle());
+					//Should this be permanent?
+					submitRecommendationButton.setEnabled(false);
+				    
+					//Changing the paper is currently not working. Due to business rule.
+					//Changing to english
+					context.getPaper().setRecommendationShort(theRadioButtonRecommendationSelection);
+					//System.out.println("helloedfsdf");
+					File theRecommendationFile = fileChooser.getSelectedFile();
+					context.getPaper().setMyRecommendation(theRecommendationFile);
+					//System.out.println(context.getPaper().getRecommendationShort());
+					//panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+				} catch (IllegalArgumentException ex) {
+					//displayErrorMessage("Paper could not be submitted due to invalid input");
+				}
 			}
 		}	
     }
@@ -230,7 +216,8 @@ public class SubmitRecomendation extends PanelCard {
     private class checkRequirementsForRadioButtons implements ActionListener {
     	@Override
 		public void actionPerformed(ActionEvent e) {
-    		theRadioButtonRecommendationSelection = buttonGroup.getSelection().getActionCommand();	
+    		theRadioButtonRecommendationSelection = buttonGroup.getSelection().getActionCommand();
+    		//Converting statement to english.
 	    	if(fileChooser.getSelectedFile() != null) {
 	    		submitRecommendationButton.setEnabled(true);
 	    	}
