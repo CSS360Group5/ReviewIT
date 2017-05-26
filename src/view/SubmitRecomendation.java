@@ -22,7 +22,13 @@ import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- * 
+ * This class creates submits the recommendation for the paper to the program chair.
+ * Preconditions:
+ * 	The paper must exist
+ * 	There must be atleast 3 reviews associated with the paper
+ *  There must be a subprogram chair
+ * Postconditions:
+ * 	Submits the recommendation file and short name
  * @author Kevin Nguyen
  *
  */
@@ -30,17 +36,20 @@ public class SubmitRecomendation extends PanelCard {
 
     /** The name to lookup this mainPanel in a mainPanel changer. */
     public static final String PANEL_LOOKUP_NAME = "SUBMIT_RECOMENDATION";
+    /** The button group to hold the radio buttons and make only 1 selectable */
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
     /** SVUID */
     private static final long serialVersionUID = 8305415430621852696L;
     /** File chooser where start page is set to current directory */
     private final JFileChooser fileChooser = new JFileChooser(".");
+    /** The submit button */
     private JButton submitRecommendationButton = new JButton("Submit Recommendation");
+    /** The JLabel and panel that gets added/defined in other classes */
     private JLabel fileNameLabel;
     private JLabel submissionLabel;
     private JPanel gridLocation;
-    /** */
+    /** These are the strings that change based on what the user submits */
     private String submissionMessage = "Recommendation Status: No recommendation has been given ";
     private String currentFilePath = "No file has been selected.";
     private String theRadioButtonRecommendationSelection;
@@ -52,23 +61,30 @@ public class SubmitRecomendation extends PanelCard {
 		table = new JTable();
 		add(table);
     }
-    
+    /**
+     * Gets the name and returns so that the panel changer method knows what
+     * panel to change when the user clicks on the jButton
+     */
 	@Override
     public String getNameOfPanel() {
         return PANEL_LOOKUP_NAME;
     }
-
+	/**
+	 * This is the panel that contains the submit recommendation stuff.	
+	 * @author Kevin Nguyen
+	 */
     @Override
     public void updatePanel() {
     	this.removeAll();
     	JPanel mainPanel = new JPanel();
 		add(mainPanel);
+		//Gots this from zachs code trial and error need to test on other screens
 		mainPanel.setLayout(new BorderLayout(Main.WINDOW_SIZE.height / 6 , Main.WINDOW_SIZE.height / 6));
 		
 		createUpperInfoPanel(mainPanel);
-		
+		//This is the jbuttons on the left side of the gui
 		mainPanel.add(quickNavigationPanel(), BorderLayout.WEST);
-		
+		//This is the center panel with the grid stuff
 		JPanel gridPanel = new JPanel();
 		mainPanel.add(gridPanel, BorderLayout.CENTER);
 		gridPanel.setLayout(new BorderLayout(0, 0));
@@ -76,14 +92,13 @@ public class SubmitRecomendation extends PanelCard {
 		JPanel instructionPanel = new JPanel();
 		gridPanel.add(instructionPanel, BorderLayout.NORTH);
 		instructionPanel.setLayout(new CardLayout(0, 0));
-		
+		//This is just a jlabel 
 		JLabel lblUploadARecommendation = new JLabel("Upload a recommendation File for the Paper and select your recommendation.");
 		lblUploadARecommendation.setAlignmentY(LEFT_ALIGNMENT);
 		instructionPanel.add(lblUploadARecommendation);
 		
 		createGridBagGrid(gridPanel);
-		
-
+		//This is the location of the jlabel that has the name/directory of the recommendation file
 		GridBagConstraints fileLabelLocation = new GridBagConstraints();
 		fileLabelLocation.insets = new Insets(50, 0, 5, 5);
 		fileLabelLocation.gridx = 0;
@@ -92,12 +107,18 @@ public class SubmitRecomendation extends PanelCard {
 		
 		createRadioButtonGroupOnGrid(gridLocation);
 		createSubmitButtonAndLocation(gridLocation);
-		//JButton cancelButton = new JButton("Go Back");
 		
     }  
+    /**
+     * This method creates the file chooser and its location 
+     * @return the Panel that contains the file chooser
+     * @author Ian Jury, Kevin Nguyen
+     * 
+     */
     private JPanel fileChooserPanel() {
 		JPanel filePanel = new JPanel();
 		JLabel info = new JLabel("Current file selected: ");
+		//The jlabele gets changed after submission.
 		fileNameLabel = new JLabel(currentFilePath);
 		JButton fileChooserButton = new JButton("Upload File");
         final FileNameExtensionFilter fileTypeFilter = new FileNameExtensionFilter(
@@ -111,9 +132,16 @@ public class SubmitRecomendation extends PanelCard {
 		
 		return filePanel;
     }
+    /**
+     * This makes a panel on the left side that contains buttons that navigates through the gui
+     * For user convenience instead of going back everything.
+     * @author Kevin Nguyen
+     * @return the navigation panel with buttons
+     */
     private JPanel quickNavigationPanel() {
+    	//The buttons might have icons for them later.
 		JPanel placeHolder = new JPanel();
-		//Added spaces to make the button same size
+		//Added spaces to make the button same size the hard code way.
 		JButton conferenceBack = new JButton("Papers           ");
 		conferenceBack.addActionListener(new cancelAction());
 		JButton cancelBut = new JButton("Conferences");
@@ -126,6 +154,11 @@ public class SubmitRecomendation extends PanelCard {
 		placeHolder.setLayout(new BoxLayout(placeHolder, BoxLayout.Y_AXIS));
 		return placeHolder;
     }
+    /**
+     * This creates the grid on the panel
+     * @author Kevin Nguyen
+     * @param gridPanel
+     */
     private void createGridBagGrid(JPanel gridPanel) {
 		gridLocation = new JPanel();
 		gridPanel.add(gridLocation, BorderLayout.CENTER);
@@ -136,6 +169,15 @@ public class SubmitRecomendation extends PanelCard {
 		theGridColandRows.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridLocation.setLayout(theGridColandRows);
     }
+    /**
+     * Creates a jpanel that contains jlabels that has the name conference and submittion status.
+     * pre:
+     * 	The main panel must exists
+     * post: 
+     * 	the top panel containing the jlabels must show.
+     * @param mainPanel The panel that contains the strings
+     * @return a jpanel that contains information on the top left of the screen
+     */
     private JPanel createUpperInfoPanel(JPanel mainPanel) {
 		JPanel namePanel = new JPanel();
 		mainPanel.add(namePanel, BorderLayout.NORTH);
@@ -150,6 +192,14 @@ public class SubmitRecomendation extends PanelCard {
 		namePanel.add(submissionLabel, BorderLayout.SOUTH);
 		return namePanel;
     }
+    /**
+     * Creates the jradio buttons that gets added into the button group.
+     * pre: 
+     * 	the grid panel must exist.
+     * post:
+     * 	adds in the buttons to the panel.
+     * @param gridLocation the panel that has the grid bag layout
+     */
     private void createRadioButtonGroupOnGrid(JPanel gridLocation) {
     	radioButtonAndLocation(gridLocation, 1, "Recommend");
     	radioButtonAndLocation(gridLocation, 2, "Don't Recommend");
@@ -165,6 +215,12 @@ public class SubmitRecomendation extends PanelCard {
 		seeReviewsButtonLocation.gridy = 4;
 		gridLocation.add(btnSeeReviews, seeReviewsButtonLocation);
 	}
+    /**
+     * Creates the actual buttons and where they exists on the grid layout
+     * @param gridLocation the grid panel
+     * @param gridY the y coordinate of the radio button
+     * @param buttonName the name of the jbutton
+     */
     private void radioButtonAndLocation(JPanel gridLocation, int gridY, String buttonName) {
 		JRadioButton theRadioButton = new JRadioButton(buttonName);
 		theRadioButton.setActionCommand(theRadioButton.getText());
@@ -177,6 +233,14 @@ public class SubmitRecomendation extends PanelCard {
 		theButtonLocation.gridy = gridY;
 		gridLocation.add(theRadioButton, theButtonLocation);
     }
+    /**
+     * Creates the submit button and the location.
+     * pre:
+     * 	The grid panel.
+     * post:
+     * 	creates the submit button and has the appropiate location.
+     * @param gridLocation the grid panel
+     */
     private void createSubmitButtonAndLocation(JPanel gridLocation) {
 		JPanel theSubmitPanel = new JPanel();
 		//theSubmitPanel.add(cancelButton);
@@ -191,14 +255,21 @@ public class SubmitRecomendation extends PanelCard {
 		theSubmitPanelLocation.gridy = 5;
 		gridLocation.add(theSubmitPanel, theSubmitPanelLocation);
     }
+    /**
+     * This is the action class for the paper submition.
+     * Pre: 
+     * 	The submit button must exist
+     * 	The paper and recommendation file must exist
+     * 	The user must select one of the radio buttons.
+     * Post:
+     * 	If the user selects okay then the recommendation gets added to the paper.
+     * @author Kevin Nguyen
+     * 
+     */
     private class submitAction implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//submit paper
-			//theRadioButtonRecommendationSelection = buttonGroup.getSelection().getActionCommand();
-			//Debug print statement
-			//System.out.println(theRadioButtonRecommendationSelection);
 			int reply = JOptionPane.showConfirmDialog(
 				    null, "You Are About to submit the file: " + currentFilePath + 
 				    "\nYou also chose " +  "\"" + theRadioButtonRecommendationSelection + "\"" + 
@@ -256,7 +327,7 @@ public class SubmitRecomendation extends PanelCard {
         JOptionPane.showMessageDialog(this, theMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }    
     /**
-     * 
+     * The action that gets the Jfile chooser.
      * @author Ian Jury
      *
      */
@@ -277,6 +348,11 @@ public class SubmitRecomendation extends PanelCard {
 	        }  			
 		}  	
     }
+    /**
+     * This is the message dialog that shows the placeholder reviews.
+     * @author K_Nguyen
+     *
+     */
     private class seeReviewsAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -287,18 +363,11 @@ public class SubmitRecomendation extends PanelCard {
 				    "Review Scores", JOptionPane.PLAIN_MESSAGE);
 		}   	
     }
-    
     /**
-     * Action for cancel button to change panel to previous.
-     * @author Ian Jury
+     * These are the actions that changes the panel for the left side jbuttons of the panel
+     * @author K_Nguyen
      *
      */
-    private class cancelAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);			
-		}   	
-    }
     private class conferenceAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -309,6 +378,17 @@ public class SubmitRecomendation extends PanelCard {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			panelChanger.changeTo(AssignReviewer.PANEL_LOOKUP_NAME);			
+		}   	
+    }
+    /**
+     * Action for cancel button to change panel to previous.
+     * @author Ian Jury
+     *
+     */
+    private class cancelAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);			
 		}   	
     }
 
