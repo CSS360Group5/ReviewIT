@@ -57,7 +57,7 @@ public class AssignReviewer extends PanelCard {
 
     private JList<String> reviewerJList;
 
-    private List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
+    private List<UserProfile> reviewerList;// = context.getCurrentConference().getInfo().getReviewers();
 
     /** SVUID */
     private static final long serialVersionUID = 5949259200759242048L;
@@ -73,6 +73,7 @@ public class AssignReviewer extends PanelCard {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(new EmptyBorder(INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING));
+        //reviewerList = context.getCurrentConference().getInfo().getReviewers();
     }
 
     /**
@@ -84,6 +85,7 @@ public class AssignReviewer extends PanelCard {
      */
     @Override
     public void updatePanel() {
+    	reviewerList = context.getCurrentConference().getInfo().getReviewers();
     	this.removeAll();
 
     	//JLabel selectReviewersLabel = new JLabel(" Assign Another Reviewer");
