@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.Paper;
@@ -67,7 +69,11 @@ public class SubmitPaper extends PanelCard {
     private JTextField authorToAdd = new JTextField();
     
     /** File object of paper to submit. */
-    File fileOfPaper = new File("Placeholder");
+    private File fileOfPaper = new File("Placeholder");
+    
+    private JButton submitButton = new JButton("Submit");
+    
+    private String titleOfPaper = "";
     
     /** Boolean check to see if user has been signed in */
     private boolean initialSignIn;
@@ -143,6 +149,7 @@ public class SubmitPaper extends PanelCard {
 		titlePanel.setAlignmentY(LEFT_ALIGNMENT);
 		JLabel paperTitleLabel = new JLabel("Title: ");
         paperTitleTextField.setPreferredSize(preferredDimension);
+        paperTitleTextField.addCaretListener(new textChangeAction());
 		
 		titlePanel.add(paperTitleLabel);
 		titlePanel.add(paperTitleTextField);
@@ -184,8 +191,9 @@ public class SubmitPaper extends PanelCard {
     private Component getConfirmationPanel() {
     	JPanel confirmationPanel = new JPanel();
     	confirmationPanel.setAlignmentX(RIGHT_ALIGNMENT);
-        JButton submitButton = new JButton("Submit");
+        
         JButton cancelButton = new JButton("Cancel");
+        setSubmitButtonState();
                 
         cancelButton.addActionListener(new CancelAction());
         submitButton.addActionListener(new submitAction());
@@ -200,7 +208,9 @@ public class SubmitPaper extends PanelCard {
      */
     private void addCurrentUserAsAuthor() {
     	initialSignIn = false;
-    	authorsOfPaper.add(context.getUser().getName());
+    	if (!authorsOfPaper.contains(context.getUser().getName())) {
+    		authorsOfPaper.add(context.getUser().getName());
+    	}
     }
             
     /**
@@ -212,6 +222,19 @@ public class SubmitPaper extends PanelCard {
     	paperTitleTextField.setText("");
     	authorsOfPaper.clear();
     	initialSignIn = true; 
+    }
+    
+    /**
+     * 
+     */
+    private void setSubmitButtonState() {
+    	if(!currentFilePath.equals("No file has been selected.")
+    	    && !paperTitleTextField.getText().equals("")
+    			) {
+    		submitButton.setEnabled(true);
+    	} else {
+    		submitButton.setEnabled(false);
+    	}
     }
     
     /**
@@ -267,6 +290,7 @@ public class SubmitPaper extends PanelCard {
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	        	fileOfPaper = fileChooser.getSelectedFile();
 	        	currentFilePath = fileOfPaper.getAbsolutePath();
+	        	setSubmitButtonState();
 	        	//this is super weird-- need to change
 	        	panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);
 	        	panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
@@ -299,8 +323,7 @@ public class SubmitPaper extends PanelCard {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//submit paper
-			String titleOfPaper = paperTitleTextField.getText();
+			titleOfPaper = paperTitleTextField.getText();
 			try {
 				Paper paperToSubmit = 
 						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser());
@@ -310,10 +333,18 @@ public class SubmitPaper extends PanelCard {
 						+ context.getCurrentConference().getInfo().getName() + "\".");
 				resetPaperInformation();	
 				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
-				//System.out.println(context.getCurrentConference().getInfo().getPapersSubmittedBy(context.getUser()).size());
 			} catch (IllegalArgumentException ex) {
-				displayErrorMessage("Paper could not be submitted due to invalid input");
+			//	displayErrorMessage("Paper could not be submitted due to invalid input");
 			}
 		}	
+    }
+    private class textChangeAction implements CaretListener {
+		@Override
+		public void caretUpdate(CaretEvent e) {
+
+			setSubmitButtonState();
+			
+		}
+    	
     }
 }
