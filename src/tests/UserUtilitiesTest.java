@@ -8,22 +8,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
 import model.Paper;
 import model.UserProfile;
+
 /**
- * Test unit testing business rule 1b of the ReviewIt application. 
- * Business Rule 1b:
- * An author is limited to 5 manuscript submissions as author or co-author per conference
+ * 
+ * @author Ian Jury 
  * @author Harlan Stewart
- * @version 1.5
+ *
  */
-public class PaperSubmissionLimitTests {
+public class UserUtilitiesTest {
 	/* Conference object used for creating mock conference for tests.*/
-	private Conference testCon;
+	private Conference testConference;
 	
 	/*Paper objects used for creating mock papers for tests.*/
 	private Paper testPaper1;
@@ -41,7 +42,6 @@ public class PaperSubmissionLimitTests {
 	
 	/*Integer constants for submission limit, under submission limit, and assignment limit.*/
 	private static final int SUBMISSION_LIMIT = 5;
-	private static final int SUBMISSION_UNDER_LIMIT_VAL = 4;
 	private static final int ASSIGNMENT_LIMIT = 8;
 	
 	/*String constants for date format and test date.*/
@@ -68,7 +68,7 @@ public class PaperSubmissionLimitTests {
 	public void setUp() throws ParseException {       
         deadline = FORMAT.parse(TEST_DATE);
         
-		testCon = Conference.createConference(TEST_CON_NAME, deadline, SUBMISSION_LIMIT,ASSIGNMENT_LIMIT);
+		testConference = Conference.createConference(TEST_CON_NAME, deadline, SUBMISSION_LIMIT,ASSIGNMENT_LIMIT);
 		
 		testPaper1 = Paper.createPaper(new File(""), 
 				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, testUserProfile);
@@ -90,46 +90,25 @@ public class PaperSubmissionLimitTests {
 		TEST_PAPER_LIST.add(testPaper6);
 	}
 
-	/**
-	 * This test method will add 3 test papers to the test user's submission map
-	 * to ensure that they were added without any issues.
-	 * @throws IllegalArgumentException
-	 */
-	@Test
-	public void paperSubmitUnderLimitCheck_IsSubmitted()throws IllegalArgumentException {
-		for(int i = 0; i < SUBMISSION_UNDER_LIMIT_VAL; i++) {
-			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
-		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_UNDER_LIMIT_VAL);		
-	}
-	
-	/**
-	 * This test method will add 5 test papers to the test user's submission map
-	 * to ensure that an author can submit the number of papers equal to the submission
-	 * limit set by the conference.
-	 * @throws IllegalArgumentException
-	 */
-	@Test
-	public void paperSubmitExactLimitCheck_IsSubmitted()throws IllegalArgumentException {
+	@Test 
+	public void paperSubmittedRemovedAndAnotherSubmitted_IsSubmitted() throws IllegalArgumentException {
 		for(int i = 0; i < SUBMISSION_LIMIT; i++) {
-			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
+			testConference.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
+		//check if valid size
+		assertTrue(testConference.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
+		
+		//remove one of the submitted papers
+		testConference.getUserRole().removePaper(testUserProfile,  TEST_PAPER_LIST.get(0));
+		assertTrue(testConference.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT - 1);
+//		
+		//add it back and check if size has increased
+		testConference.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(0));
+		assertTrue(testConference.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
+		
+//		
+		
+
 	}
-	
-	/**
-	 * This test method attempts to add all 6 of the test papers to ensure
-	 * that an author is not allowed to submit more than the allowed amount
-	 * of papers and also to ensure that the correct ErrorException is thrown.
-	 * @throws IllegalArgumentException
-	 */
-	@Test (expected = IllegalArgumentException.class)
-	public void paperSubmitOverLimitCheck_IsNotSubmitted() throws IllegalArgumentException {
-		for(int i = 0; i < TEST_PAPER_LIST.size(); i++) {
-			testCon.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
-		}
-		assertTrue(testCon.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
-	}
-	
 
 }

@@ -79,7 +79,7 @@ public class SubmitPaper extends PanelCard {
     private boolean initialSignIn;
     
     /**
-     * 
+     * Constructor for SubmitPaper panel that configures various alignment properties.
      * @param p
      * @param context
      */
@@ -341,9 +341,7 @@ public class SubmitPaper extends PanelCard {
     private class textChangeAction implements CaretListener {
 		@Override
 		public void caretUpdate(CaretEvent e) {
-
-			setSubmitButtonState();
-			
+			setSubmitButtonState();		
 		}
     	
     }
