@@ -150,7 +150,7 @@ public class UserUtilities implements Serializable {
             	//System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).size());
             }  
     		//for (int index = 0; index <myConferenceData.getPaperAuthorshipMap().get(currentAuthor).size(); index++)
-        	//	System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).get(index));
+        		//System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).get(index));
         }  	
     }
 }

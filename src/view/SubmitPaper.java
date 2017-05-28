@@ -325,10 +325,10 @@ public class SubmitPaper extends PanelCard {
 		public void actionPerformed(ActionEvent e) {
 			titleOfPaper = paperTitleTextField.getText();
 			try {
-				Paper paperToSubmit = 
-						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser());
 				//submits paper to conference
-				context.getCurrentConference().getUserRole().addPaper(context.getUser(), paperToSubmit);
+				addCurrentUserAsAuthor(); //I think the problem had something to do with this not being here(we'll see)
+				context.getCurrentConference().getUserRole().addPaper(context.getUser(), 
+						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser()));
 				displaySuccessMessage("Paper has been submitted to \"" 
 						+ context.getCurrentConference().getInfo().getName() + "\".");
 				resetPaperInformation();	
