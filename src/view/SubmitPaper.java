@@ -86,7 +86,7 @@ public class SubmitPaper extends PanelCard {
     public SubmitPaper(PanelChanger p, UserContext context) {
         super(p, context);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(Main.WINDOW_SIZE.height / 5 , 0 , Main.WINDOW_SIZE.height / 4, 0));
+        this.setBorder(new EmptyBorder(Main.BODY_SIZE.height / 5 , 0 , Main.BODY_SIZE.height / 4, 0));
 
         this.setAlignmentX(CENTER_ALIGNMENT);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
@@ -249,9 +249,9 @@ public class SubmitPaper extends PanelCard {
      * Message that displays if a paper has been successfully submitted to a conference.
      * @param theMessage to be displayed
      */
-    private void displaySuccessMessage(final String theMessage) {
-        JOptionPane.showMessageDialog(this, theMessage, "Success", JOptionPane.DEFAULT_OPTION);
-    }
+//    private void displaySuccessMessage(final String theMessage) {
+//        JOptionPane.showMessageDialog(this, theMessage, "Success", JOptionPane.DEFAULT_OPTION);
+//    }
     
 	@Override
     public String getNameOfPanel() {
@@ -329,8 +329,8 @@ public class SubmitPaper extends PanelCard {
 				addCurrentUserAsAuthor(); //I think the problem had something to do with this not being here(we'll see)
 				context.getCurrentConference().getUserRole().addPaper(context.getUser(), 
 						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser()));
-				displaySuccessMessage("Paper has been submitted to \"" 
-						+ context.getCurrentConference().getInfo().getName() + "\".");
+//				displaySuccessMessage("Paper has been submitted to \"" 
+//						+ context.getCurrentConference().getInfo().getName() + "\".");
 				resetPaperInformation();	
 				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);	
 			} catch (IllegalArgumentException ex) {

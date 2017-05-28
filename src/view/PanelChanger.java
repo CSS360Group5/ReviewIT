@@ -1,8 +1,10 @@
 package view;
 
 import java.awt.CardLayout;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Observable;
 import java.util.TreeMap;
 
 import javax.swing.JPanel;
@@ -12,7 +14,7 @@ import javax.swing.JPanel;
  *
  * @author Zachary Chandler
  */
-public class PanelChanger {
+public class PanelChanger extends Observable {
 
     /** The layout of the panel. */
     private CardLayout cardLayout;
@@ -21,6 +23,8 @@ public class PanelChanger {
     private JPanel parent;
     
     private Map<String, PanelCard> cards;
+
+    private LinkedList<String> previousPanelNames;
     
     /**
      * Creates a panel changer without any panels in it.
@@ -29,6 +33,7 @@ public class PanelChanger {
         cardLayout = new CardLayout();
         parent = new JPanel(cardLayout);
         cards = new TreeMap<>();
+        previousPanelNames = new LinkedList<>();
     }
     
     /**
@@ -65,12 +70,32 @@ public class PanelChanger {
      */
     public void changeTo(String panelName) {
         Objects.requireNonNull(panelName);
+        
         PanelCard card = cards.get(panelName);
         if (card == null) {
             throw new IllegalArgumentException();
         }
         
-        card.updatePanel();
         cardLayout.show(parent, panelName);
+        card.setVisible(false);
+        card.updatePanel();
+        card.setVisible(true);
+        card.repaint();
+        
+        previousPanelNames.push(panelName);
+        this.setChanged();
+        this.notifyObservers();
     }
+
+    public void back() {
+        cardLayout.previous(parent);
+        previousPanelNames.pop();
+        this.setChanged();
+        this.notifyObservers();
+    }
+
+    public String getCurrentPanelName() {
+        return previousPanelNames.peek();
+    }
+    
 }

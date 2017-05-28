@@ -46,7 +46,7 @@ public class ConferenceSelection extends PanelCard {
         this.removeAll();
         
         ConferenceSystem sys =  ConferenceSystem.getInstance();
-        Dimension panelSize = Main.WINDOW_SIZE;
+        Dimension panelSize = Main.BODY_SIZE;
         
         JLabel prompt = new JLabel("Choose a Conference");
         prompt.setAlignmentX(CENTER_ALIGNMENT);

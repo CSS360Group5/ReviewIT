@@ -79,7 +79,7 @@ public class SubmitRecomendation extends PanelCard {
     	JPanel mainPanel = new JPanel();
 		add(mainPanel);
 		//Gots this from zachs code trial and error need to test on other screens
-		mainPanel.setLayout(new BorderLayout(Main.WINDOW_SIZE.height / 6 , Main.WINDOW_SIZE.height / 6));
+		mainPanel.setLayout(new BorderLayout(Main.BODY_SIZE.height / 6 , Main.BODY_SIZE.height / 6));
 		
 		createUpperInfoPanel(mainPanel);
 		//This is the jbuttons on the left side of the gui

@@ -46,7 +46,7 @@ public class AssignReviewer extends PanelCard {
      */
     private static final int SIDE_PADDING = 100;
 
-    private static final int BETWEEN_PADDING = 10;
+//    private static final int BETWEEN_PADDING = 10;
 
     /**
      * Maximum number of reviews a reviewer is allowed to be assigned.
@@ -261,7 +261,7 @@ public class AssignReviewer extends PanelCard {
 
     	reviewerJList = new JList<String>(nameArray);
 
-    	Dimension panelSize = Main.WINDOW_SIZE;
+    	Dimension panelSize = Main.BODY_SIZE;
     	reviewerJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
     	reviewerJList.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
@@ -303,7 +303,7 @@ public class AssignReviewer extends PanelCard {
     	}
 
     	JList<String> currentReviewers = new JList<String>(nameArray);
-    	Dimension panelSize = Main.WINDOW_SIZE;
+    	Dimension panelSize = Main.BODY_SIZE;
     	currentReviewers.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
     	currentReviewers.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
     	currentReviewers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), INSIDE_PADDING / 2),

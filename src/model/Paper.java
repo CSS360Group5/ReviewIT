@@ -2,11 +2,11 @@ package model;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+
 /**
  * A class for storing all the information associated with a Paper.
  * For instantiation use to .createPaper() method.(see factory pattern)
