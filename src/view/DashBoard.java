@@ -94,7 +94,7 @@ public class DashBoard extends PanelCard {
      * Get the subprogram chair panel.
      */
     private JPanel getSubChairPanel(List<Paper> actualPapers) {
-        int width = Main.WINDOW_SIZE.width - (PADDING * 2);
+        int width = Main.BODY_SIZE.width - (PADDING * 2);
         
         JPanel result = new JPanel();
         result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
@@ -106,7 +106,7 @@ public class DashBoard extends PanelCard {
         JList<Paper> assignedPapers = new JList<Paper>(actualPapers.toArray(new Paper[0]));
         assignedPapers.setAlignmentX(LEFT_ALIGNMENT);
         assignedPapers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        assignedPapers.setPreferredSize(new Dimension(width , Main.WINDOW_SIZE.height / 3));
+        assignedPapers.setPreferredSize(new Dimension(width , Main.BODY_SIZE.height / 3));
         assignedPapers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 3), 
                               new CompoundBorder(new LineBorder(Color.BLACK),
                                                  new EmptyBorder(PADDING, PADDING, PADDING, PADDING))));
@@ -124,12 +124,7 @@ public class DashBoard extends PanelCard {
         submitRecomendationButton.setAlignmentY(TOP_ALIGNMENT);
         submitRecomendationButton.addActionListener(new RecomendPaperAction(assignedPapers));
         submitRecomendationButton.setEnabled(false);
-        //Added this button to go back to conferenc selection.
-        //Needs spacing and will change if we implement a logo with a hyperlink
-        JButton goToConferences = new JButton("Go Back");
-        goToConferences.setAlignmentY(TOP_ALIGNMENT);
-        goToConferences.setEnabled(true);
-        goToConferences.addActionListener(new cancelAction());
+        
         assignedPapers.addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -146,13 +141,12 @@ public class DashBoard extends PanelCard {
         buttonsPanel.add(assignReviewerButton);
         buttonsPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonsPanel.add(submitRecomendationButton);
-        buttonsPanel.add(goToConferences);
         
         result.add(assignedLabel);
         result.add(assignedPapersPanel);
         result.add(buttonsPanel);
         
-        result.setMaximumSize(new Dimension(width, Main.WINDOW_SIZE.height / 2 - PADDING * 2));
+        result.setMaximumSize(new Dimension(width, Main.BODY_SIZE.height / 2 - PADDING * 2));
         
         return result;
     }
@@ -161,7 +155,7 @@ public class DashBoard extends PanelCard {
      * Get the author panel.
      */
     private JPanel getAuthorPanel(List<Paper> actualPapers) {
-        int width = Main.WINDOW_SIZE.width - (PADDING * 2);
+        int width = Main.BODY_SIZE.width - (PADDING * 2);
 
         JPanel result = new JPanel();
         result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
@@ -173,7 +167,7 @@ public class DashBoard extends PanelCard {
         JList<Paper> submitedPapers = new JList<Paper>(actualPapers.toArray(new Paper[0]));
         submitedPapers.setAlignmentX(LEFT_ALIGNMENT);
         submitedPapers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        submitedPapers.setPreferredSize(new Dimension(width , Main.WINDOW_SIZE.height / 3));
+        submitedPapers.setPreferredSize(new Dimension(width , Main.BODY_SIZE.height / 3));
         submitedPapers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 3), 
                               new CompoundBorder(new LineBorder(Color.BLACK),
                                                  new EmptyBorder(PADDING, PADDING, PADDING, PADDING))));
@@ -199,13 +193,6 @@ public class DashBoard extends PanelCard {
         removePaperButton.addActionListener(new RemovePaperAction(submitedPapers));
         removePaperButton.setEnabled(false);
         
-        //Added this button to go back to conferenc selection.
-        //Needs spacing and will change if we implement a logo with a hyperlink
-        JButton goToConferencesButton = new JButton("Go Back");
-        goToConferencesButton.setAlignmentY(TOP_ALIGNMENT);
-        goToConferencesButton.setEnabled(true);
-        goToConferencesButton.addActionListener(new cancelAction());
-        
         submitedPapers.addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -222,13 +209,12 @@ public class DashBoard extends PanelCard {
         buttonsPanel.add(removePaperButton);
         buttonsPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonsPanel.add(submitPaperButton);
-        buttonsPanel.add(goToConferencesButton);
         
         result.add(submittedLabel);
         result.add(submittedPapersPanel);
         result.add(buttonsPanel);
         
-        result.setMaximumSize(new Dimension(width, Main.WINDOW_SIZE.height / 2 - PADDING * 2));
+        result.setMaximumSize(new Dimension(width, Main.BODY_SIZE.height / 2 - PADDING * 2));
         
         return result;
     }
@@ -308,9 +294,8 @@ public class DashBoard extends PanelCard {
             if (result == JOptionPane.YES_OPTION) {
             	try { //to test if paper can be removed (no reviewers assigned)
                 	context.getCurrentConference().getUserRole().removePaper(context.getUser(), papers.getSelectedValue());
-    				panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
     				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
-    				JOptionPane.showMessageDialog(null, "Paper has been successfully removed.");
+//    				JOptionPane.showMessageDialog(null, "Paper has been successfully removed.");
 
             	} catch (IllegalArgumentException ex) {
             		
@@ -319,11 +304,5 @@ public class DashBoard extends PanelCard {
 				
             }
         }
-    }
-    private class cancelAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);			
-		}   	
     }
 }

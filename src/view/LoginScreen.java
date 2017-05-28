@@ -32,7 +32,7 @@ public class LoginScreen extends PanelCard {
     public LoginScreen(PanelChanger p, UserContext context) {
         super(p, context);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(Main.WINDOW_SIZE.height / 3 , 0 , 0, 0));
+        this.setBorder(new EmptyBorder(Main.BODY_SIZE.height / 3 , 0 , 0, 0));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class LoginScreen extends PanelCard {
         field.setAlignmentX(CENTER_ALIGNMENT);
         field.add(prompt);
         field.add(input);
-        field.setMaximumSize(new Dimension(Main.WINDOW_SIZE.width, 35));
+        field.setMaximumSize(new Dimension(Main.BODY_SIZE.width, 35));
         
         JButton submit = new JButton("Login");
         submit.setAlignmentX(CENTER_ALIGNMENT);
