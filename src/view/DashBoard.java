@@ -306,10 +306,16 @@ public class DashBoard extends PanelCard {
             int result = JOptionPane.showConfirmDialog(null, 
             		"Are you sure you want to remove this paper?");
             if (result == JOptionPane.YES_OPTION) {
-            	context.getCurrentConference().getUserRole().removePaper(context.getUser(), papers.getSelectedValue());
-				JOptionPane.showMessageDialog(null, "Paper has been successfully removed.");
-				panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
-				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+            	try { //to test if paper can be removed (no reviewers assigned)
+                	context.getCurrentConference().getUserRole().removePaper(context.getUser(), papers.getSelectedValue());
+    				panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
+    				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+    				JOptionPane.showMessageDialog(null, "Paper has been successfully removed.");
+
+            	} catch (IllegalArgumentException ex) {
+            		
+            	}
+
 				
             }
         }

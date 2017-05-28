@@ -332,7 +332,7 @@ public class SubmitPaper extends PanelCard {
 				displaySuccessMessage("Paper has been submitted to \"" 
 						+ context.getCurrentConference().getInfo().getName() + "\".");
 				resetPaperInformation();	
-				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);	
 			} catch (IllegalArgumentException ex) {
 			//	displayErrorMessage("Paper could not be submitted due to invalid input");
 			}

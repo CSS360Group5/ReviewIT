@@ -118,7 +118,8 @@ public class UserUtilities implements Serializable {
         	//Remove paper from submission map:
             removePaperFromSubmissionMap(theUserProfile, thePaper);
         	//Remove paper to author map:
-        	removePaperFromAuthorshipMap(thePaper);    	
+        	removePaperFromAuthorshipMap(thePaper);
+        	//System.out.println("REMOVE");
         }	
     }
     
@@ -142,9 +143,14 @@ public class UserUtilities implements Serializable {
      */
     private void removePaperFromAuthorshipMap(final Paper thePaper) {
     	for(final String currentAuthor: thePaper.getAuthors()){
+
             if(myConferenceData.getPaperAuthorshipMap().containsKey(currentAuthor)){
+            	//System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).size());
             	myConferenceData.getPaperAuthorshipMap().get(currentAuthor).remove(thePaper);
-            }           
+            	//System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).size());
+            }  
+    		//for (int index = 0; index <myConferenceData.getPaperAuthorshipMap().get(currentAuthor).size(); index++)
+        	//	System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).get(index));
         }  	
     }
 }
