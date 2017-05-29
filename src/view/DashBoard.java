@@ -23,6 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import model.Conference;
@@ -129,14 +130,21 @@ public class DashBoard extends PanelCard {
             
         }
         
-        JTable assignedPapers = new JTable(papers, collumnNames);
+        JTable assignedPapers = new JTable();
         assignedPapers.setAlignmentX(LEFT_ALIGNMENT);
         assignedPapers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        assignedPapers.setPreferredSize(new Dimension(width , Main.BODY_SIZE.height / 3));
-//        assignedPapers.setBorder(new LineBorder(Color.BLACK));
-//        assignedPapers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 3), 
-//                              new CompoundBorder(new LineBorder(Color.BLACK),
-//                                                 new EmptyBorder(PADDING, PADDING, PADDING, PADDING))));
+
+        DefaultTableModel tableModel = new DefaultTableModel(papers, collumnNames) {
+            /** SVUID */
+            private static final long serialVersionUID = 5457480627821664367L;
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               return false;
+            }
+        };
+        
+        assignedPapers.setModel(tableModel);
         
         TableColumn column = null;
         for (int i = 0; i < collumnNames.length; i++) {
@@ -224,13 +232,21 @@ public class DashBoard extends PanelCard {
         }
         
         
-        JTable submitedPapers = new JTable(values, collumnNames);
+        JTable submitedPapers = new JTable();
         submitedPapers.setAlignmentX(LEFT_ALIGNMENT);
         submitedPapers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        submitedPapers.setPreferredSize(new Dimension(width , Main.BODY_SIZE.height / 3));
-//        submitedPapers.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), 3), 
-//                              new CompoundBorder(new LineBorder(Color.BLACK),
-//                                                 new EmptyBorder(PADDING, PADDING, PADDING, PADDING))));
+        
+        DefaultTableModel tableModel = new DefaultTableModel(values, collumnNames) {
+            /** SVUID */
+            private static final long serialVersionUID = 5457480627821664367L;
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               return false;
+            }
+        };
+        
+        submitedPapers.setModel(tableModel);
         
         JScrollPane scrollPane = new JScrollPane(submitedPapers);
         submitedPapers.setFillsViewportHeight(true);

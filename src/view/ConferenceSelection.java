@@ -16,6 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import model.Conference;
 import model.ConferenceSystem;
@@ -68,14 +69,22 @@ public class ConferenceSelection extends PanelCard {
             }
         }
         
-        JTable conferences = new JTable(values, tableHeader);
+        JTable conferences = new JTable();
+        conferences.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        DefaultTableModel tableModel = new DefaultTableModel(values, tableHeader) {
+            /** SVUID */
+            private static final long serialVersionUID = 5457480627821664367L;
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               return false;
+            }
+        };
+        
+        conferences.setModel(tableModel);
         conferences.getColumnModel().getColumn(0).setPreferredWidth(panelSize.width);
         conferences.getColumnModel().getColumn(1).setMinWidth(190);
-        conferences.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//        conferences.setPreferredSize(new Dimension(panelSize.width, panelSize.height));
-//        conferences.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), PADDING / 2), 
-//                              new CompoundBorder(new LineBorder(Color.BLACK),
-//                                                 new EmptyBorder(PADDING, PADDING, PADDING, PADDING))));
         
         JScrollPane scrollPane = new JScrollPane(conferences);
         conferences.setFillsViewportHeight(true);
