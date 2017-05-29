@@ -28,7 +28,16 @@ public class ReviewerUtilities implements Serializable {
             Paper thePaper,
             File review, int score
             ) throws IllegalArgumentException {
-    	thePaper.addReview(new Review(review, score));
+
+    	
+    	//added 5/29/2017
+    	//Prevents a user from sending a review to their own paper
+    	if (thePaper.getAuthors().contains(theReviewerProfile.getName())) {
+    		throw new IllegalArgumentException();
+    	} else {
+    		thePaper.addReview(new Review(review, score));
+    	}
+
     }
     
 }
