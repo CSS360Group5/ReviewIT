@@ -55,7 +55,7 @@ public class ReccomendationTests {
      */
     @Test (expected = IllegalArgumentException.class)
     public void giveReview_WithoutReviews_ThrowsException() throws IllegalArgumentException {
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f);
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, true);
     }
     
     /**
@@ -64,9 +64,9 @@ public class ReccomendationTests {
      */
     @Test (expected = IllegalArgumentException.class)
     public void giveReview_WithTwoReviews_ThrowsException() throws IllegalArgumentException {
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, f);
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, f);
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f);
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, f, 3);
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, f, 3);
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, true);
     }
 
     /**
@@ -75,9 +75,9 @@ public class ReccomendationTests {
      */
     @Test
     public void giveReview_WithThreeReviews_NoException() throws IllegalArgumentException {
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, f);
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, f);
-        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE3, testPaper1, f);
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f);
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, f, 3);
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, f, 3);
+        pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE3, testPaper1, f, 3);
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, true);
     }
 }

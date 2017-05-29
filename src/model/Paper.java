@@ -2,6 +2,7 @@ package model;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,10 +25,10 @@ public class Paper implements Serializable{
 	private final File myPaperFile;
 	private Date mySubmissionDate;
 	private final List<String> myAuthors;
-	private final List<File> myReviews;
+	private final List<Review> myReviews;
 	private final String myTitle;
 	private final UserProfile mySubmitter;
-	private File myRecommendation;
+	private Review myRecommendation;
 	private String myRecommendationShort;
 	
 	/**
@@ -46,7 +47,7 @@ public class Paper implements Serializable{
 		myAuthors = Objects.requireNonNull(theAuthors);
 		myTitle = Objects.requireNonNull(thePaperTitle);
 		mySubmitter = Objects.requireNonNull(theSubmitterUserProfile);
-		myReviews = new LinkedList<File>();
+		myReviews = new LinkedList<Review>();
 		myRecommendationShort = new String();
 		if(thePaperTitle.isEmpty())
 			throw new IllegalArgumentException();
@@ -119,8 +120,8 @@ public class Paper implements Serializable{
 		return myAuthors;
 	}
 	
-	public List<File> getReviews() {
-		return myReviews;
+	public List<Review> getReviews() {
+		return Collections.unmodifiableList(myReviews);
 	}
 
 	/**
@@ -144,14 +145,14 @@ public class Paper implements Serializable{
 	/**
 	 * @return the myRecommendation
 	 */
-	public File getMyRecommendation() {
+	public Review getMyRecommendation() {
 		return myRecommendation;
 	}
 
 	/**
 	 * @param recommendation the myRecommendation to set
 	 */
-	public void setMyRecommendation(File recommendation) {
+	public void setMyRecommendation(Review recommendation) {
 		if(myReviews.size() < 3) {
 			throw new IllegalArgumentException();
 		}
@@ -160,25 +161,14 @@ public class Paper implements Serializable{
 		
 	}
 	
-	public void addReview(File review) {
+	public void addReview(Review review) {
 		Objects.requireNonNull(review);
 		myReviews.add(review);
 	}
 	
 	@Override
 	public String toString() {
-	    StringBuilder result = new StringBuilder();
-	    result.append(myTitle);
-        result.append(", by ");
-        
-        for (String s : myAuthors) {
-            result.append(s);
-            result.append(", ");
-        }
-        
-        result.append(mySubmissionDate.toString());
-	    
-	    return result.toString();
+	    return myTitle;
 	}
 }
 

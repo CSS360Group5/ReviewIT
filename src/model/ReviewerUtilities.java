@@ -26,9 +26,9 @@ public class ReviewerUtilities implements Serializable {
     public void sendReview(
             final UserProfile theReviewerProfile,
             Paper thePaper,
-            File review
+            File review, int score
             ) throws IllegalArgumentException {
-    	thePaper.addReview(review);
+    	thePaper.addReview(new Review(review, score));
     }
     
 }
