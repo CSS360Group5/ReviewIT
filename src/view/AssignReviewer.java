@@ -203,7 +203,9 @@ public class AssignReviewer extends PanelCard {
      * @return refined List of UserProfiles of reviewers
      */
     private List<UserProfile> refineByCurrentReviewers(List<UserProfile> reviewerList) {
-    	List<UserProfile> currentReviewers = context.getCurrentConference().getInfo().getReviewers();
+    	//List<UserProfile> currentReviewers = context.getCurrentConference().getInfo().getReviewers();
+    	List<UserProfile> currentReviewers = context.getCurrentConference().getInfo().getReviewersForPaper(context.getPaper());
+
 
     	Iterator<UserProfile> refineByCurrentReviewer = reviewerList.iterator();
     	while(refineByCurrentReviewer.hasNext()) {
