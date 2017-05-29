@@ -79,11 +79,11 @@ public class SubmitRecomendation extends PanelCard {
     	JPanel mainPanel = new JPanel();
 		add(mainPanel);
 		//Gots this from zachs code trial and error need to test on other screens
-		mainPanel.setLayout(new BorderLayout(Main.BODY_SIZE.height / 6 , Main.BODY_SIZE.height / 6));
-		
+		mainPanel.setLayout(new BorderLayout(Main.BODY_SIZE.height / 4 , Main.BODY_SIZE.height / 8));
+		JPanel placeHolder = new JPanel();
 		createUpperInfoPanel(mainPanel);
 		//This is the jbuttons on the left side of the gui
-		mainPanel.add(quickNavigationPanel(), BorderLayout.WEST);
+		mainPanel.add(placeHolder, BorderLayout.WEST);
 		//This is the center panel with the grid stuff
 		JPanel gridPanel = new JPanel();
 		mainPanel.add(gridPanel, BorderLayout.CENTER);
@@ -187,8 +187,8 @@ public class SubmitRecomendation extends PanelCard {
 		namePanel.add(SubProgramChairlabel, BorderLayout.NORTH);
 		submissionLabel = new JLabel(submissionMessage +
 				"for the manuscript " + context.getPaper().getTitle());
-		JLabel currentConference = new JLabel("Currently in the conference: " + context.getCurrentConference().toString());
-		namePanel.add(currentConference,BorderLayout.CENTER);
+		//JLabel currentConference = new JLabel("Currently in the conference: " + context.getCurrentConference().toString());
+		//namePanel.add(currentConference,BorderLayout.CENTER);
 		namePanel.add(submissionLabel, BorderLayout.SOUTH);
 		return namePanel;
     }
@@ -361,7 +361,7 @@ public class SubmitRecomendation extends PanelCard {
 			//Hard Coded the scores since review scores are not implemented for this deliverable
 			JOptionPane.showMessageDialog(
 				    null, "Scale: 1-5 (5 being the best) \n \n"
-				    		+ "Brian Geving: 5 \n Zachary Chandler: 3 \n Ian Jury: 1", 
+				    		+ "Brian Geving: 5 \n Zachary Chandler: 3 \n Ian Jury: 2", 
 				    "Review Scores", JOptionPane.PLAIN_MESSAGE);
 		}   	
     }

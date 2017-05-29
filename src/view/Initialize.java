@@ -77,7 +77,7 @@ public class Initialize {
         withPapers.getSubprogramRole().assignReviewer(reviewer, simplePaper);
         simplePaper.addReview(new Review(new File(""), 5));
         simplePaper.addReview(new Review(new File(""), 2));
-        simplePaper.addReview(new Review(new File(""), 3));
+        //simplePaper.addReview(new Review(new File(""), 3));
     }
     
     private static void addPaperLimit(ConferenceSystem sys, Conference theConference, UserProfile author) {
