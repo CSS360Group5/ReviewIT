@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * A master class for Creating and using a Conference.
@@ -60,6 +61,9 @@ public class Conference implements Serializable{
      * @param thePaperSubmissionLimit The total amount of papers than an Author may submit.
      * @param thePaperAssignmentLimit The total amount of papers that a Reviewer can be assigned.
      * @return a Conference Object
+     * 
+     * @throws NullPointerException if theConferenceName or thePaperDeadline are null
+     * @throws IllegalArgumentException if thePaperSubmissionLimit or thePaperAssignmentLimit or zero or negative
      */
     public static Conference createConference(
     		final String theConferenceName,
@@ -67,6 +71,16 @@ public class Conference implements Serializable{
     		final int thePaperSubmissionLimit,
     		final int thePaperAssignmentLimit
     		) {
+
+        Objects.requireNonNull(theConferenceName);
+        Objects.requireNonNull(thePaperDeadline);
+        
+        
+        if (thePaperSubmissionLimit <= 0 || thePaperAssignmentLimit <= 0) {
+            throw new IllegalArgumentException();
+        }
+        
+        
         return new Conference(
         		theConferenceName,
                 thePaperDeadline,

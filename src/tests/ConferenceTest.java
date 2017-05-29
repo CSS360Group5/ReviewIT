@@ -13,31 +13,48 @@ public class ConferenceTest {
 
     
     Conference normalConference;
+    Date now;
     
     @Before
     public void setUp() throws Exception {
-        normalConference = Conference.createConference("Name", new Date(), 5, 8);
+        now = new Date();
+        normalConference = Conference.createConference("Name", now, 5, 8);
     }
 
     @Test
     public void testCreateConference_normalConference_ValuesSet() {
         assertEquals(normalConference.getInfo().getName(), "Name");
-        assertEquals(normalConference.getInfo().getSubmissionDate(), new Date());
+        assertEquals(normalConference.getInfo().getSubmissionDate(), now);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testCreateConference_NullName_NullPointerException() {
+        Conference.createConference(null, now, 5, 8);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testCreateConference_NullDate_NullPointerException() {
+        Conference.createConference("Name", null, 5, 8);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateConference_NegativeMaxSubmitions_IllegalArgumentException() {
+        Conference.createConference("Name", now, -1, 8);
     }
     
-    @Test
-    public void testCreateConference() {
-        Conference.createConference("Name", new Date(), 5, 8);
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateConference_ZeroMaxSubmitions_IllegalArgumentException() {
+        Conference.createConference("Name", now, 0, 8);
     }
-
-    @Test
-    public void testGetInfo() {
-        fail("Not yet implemented");
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateConference_NegativeMaxAssignedPapers_IllegalArgumentException() {
+        Conference.createConference("Name", now, 5, -1);
     }
-
-    @Test
-    public void testGetUserRole() {
-        fail("Not yet implemented");
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateConference_ZeroMaxAssignedPapers_IllegalArgumentException() {
+        Conference.createConference("Name", now, 5, 0);
     }
 
 }
