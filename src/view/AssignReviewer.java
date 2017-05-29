@@ -291,7 +291,7 @@ public class AssignReviewer extends PanelCard {
     /**
      * Method to receive a list component of all current Reviewers of the paper.
      *
-     * @return JList of Strings of all available Reviewers of the paper
+     * @return JList of Strings of all current Reviewers of the paper
      */
     private JList<String> getCurrentReviewers() {
     	//List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
