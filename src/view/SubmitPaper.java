@@ -102,6 +102,7 @@ public class SubmitPaper extends PanelCard {
     	titlePanel.removeAll();
     	authorPanel.removeAll();
     	authorDisplayPanel.removeAll();
+    	authorsOfPaper.clear();
     	
     	 Objects.requireNonNull(context.getCurrentConference());
          Objects.requireNonNull(context.getUser());

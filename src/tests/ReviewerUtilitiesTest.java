@@ -46,7 +46,7 @@ public class ReviewerUtilitiesTest {
 		assertTrue(numberOfReviewsSentToPaper == 1);
 	}
 	/**
-	 * 
+	 * Attempts to let an author of a paper submit a review to their own paper.
 	 * @throws IllegalArgumentException
 	 */
 	@Test (expected = IllegalArgumentException.class)
