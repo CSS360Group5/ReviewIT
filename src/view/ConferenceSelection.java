@@ -1,18 +1,19 @@
 package view;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -51,12 +52,39 @@ public class ConferenceSelection extends PanelCard {
         JLabel prompt = new JLabel("Choose a Conference");
         prompt.setAlignmentX(CENTER_ALIGNMENT);
         
-        JList<Conference> conferences = new JList<Conference>((sys.getConferences().toArray(new Conference[] {})));
+        Conference[] actualConferences = sys.getConferences().toArray(new Conference[] {});
+        
+        Object[] tableHeader = new Object[] {"Conference", "Submission Deadline"};
+        Object[][] values = new Object[actualConferences.length][tableHeader.length];
+        
+        for (int i = 0; i < actualConferences.length; i++) {
+            values[i][0] = actualConferences[i];
+            
+
+            if (actualConferences[i].getInfo().isSubmissionOpen(new Date())) {
+                values[i][1] = actualConferences[i].getInfo().getSubmissionDate();
+            } else {
+                values[i][1] = "CLOSED";
+            }
+        }
+        
+        JTable conferences = new JTable(values, tableHeader);
+        conferences.getColumnModel().getColumn(0).setPreferredWidth(panelSize.width);
+        conferences.getColumnModel().getColumn(1).setMinWidth(190);
         conferences.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        conferences.setPreferredSize(new Dimension(panelSize.width, panelSize.height));
-        conferences.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), PADDING / 2), 
-                              new CompoundBorder(new LineBorder(Color.BLACK),
-                                                 new EmptyBorder(PADDING, PADDING, PADDING, PADDING))));
+//        conferences.setPreferredSize(new Dimension(panelSize.width, panelSize.height));
+//        conferences.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), PADDING / 2), 
+//                              new CompoundBorder(new LineBorder(Color.BLACK),
+//                                                 new EmptyBorder(PADDING, PADDING, PADDING, PADDING))));
+        
+        JScrollPane scrollPane = new JScrollPane(conferences);
+        conferences.setFillsViewportHeight(true);
+        
+        JPanel conferencesPanel = new JPanel();
+        conferencesPanel.setLayout(new BorderLayout());
+        conferencesPanel.setAlignmentX(CENTER_ALIGNMENT);
+        conferencesPanel.add(conferences.getTableHeader(), BorderLayout.PAGE_START);
+        conferencesPanel.add(scrollPane, BorderLayout.CENTER);
         
         JButton selectButton = new JButton("Select");
         selectButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -64,7 +92,7 @@ public class ConferenceSelection extends PanelCard {
         selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                  context.setCurrentConference(conferences.getSelectedValue());
+                  context.setCurrentConference(getSelectedConference(conferences));
                   
                   if (context.getCurrentConference() == null) {
                       throw new IllegalStateException();
@@ -74,10 +102,10 @@ public class ConferenceSelection extends PanelCard {
             }
         });
         
-        conferences.addListSelectionListener(new ListSelectionListener() {
+        conferences.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent arg0) {
-                Conference c = conferences.getSelectedValue();
+                Conference c = getSelectedConference(conferences);
                 
                 selectButton.setEnabled(DashBoard.shouldShowAuthorPane(context.getUser(), c)
                         || DashBoard.shouldShowSubProgramChairPane(context.getUser(), c));
@@ -85,12 +113,17 @@ public class ConferenceSelection extends PanelCard {
         });
         
         this.add(prompt);
-        this.add(conferences);
+        this.add(conferencesPanel);
         this.add(selectButton);
     }
 
     @Override
     public String getNameOfPanel() {
         return PANEL_LOOKUP_NAME;
+    }
+    
+    private static Conference getSelectedConference(JTable theTable) {
+        int row = theTable.getSelectedRow();
+        return (Conference) theTable.getModel().getValueAt(row, 0);
     }
 }

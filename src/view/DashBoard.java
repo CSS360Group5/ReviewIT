@@ -106,7 +106,7 @@ public class DashBoard extends PanelCard {
         assignedLabel.setAlignmentX(LEFT_ALIGNMENT);
         
         
-        String[] collumnNames = new String[] {"Papers", "R1", "R2", "R3", "Recommended"};
+        String[] collumnNames = new String[] {"Papers", "R1", "R2", "R3", "Recommendation"};
         Object[][] papers = new Object[actualPapers.size()][collumnNames.length];
         
         
@@ -145,7 +145,7 @@ public class DashBoard extends PanelCard {
             if (i == 0) {
                 column.setPreferredWidth(1000); //third column is bigger
             } else if (i == collumnNames.length - 1) {
-                column.setMinWidth(100);
+                column.setMinWidth(120);
             } else {
                 column.setMinWidth(30);
             }

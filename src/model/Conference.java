@@ -134,18 +134,6 @@ public class Conference implements Serializable{
     
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append(myInfo.getName());
-        result.append(" (");
-        
-        if (myInfo.isSubmissionOpen(new Date())) {
-            result.append(myInfo.getSubmissionDate());
-        } else {
-            result.append("CLOSED");
-        }
-        
-        result.append(')');
-        
-        return  result.toString();
+        return myInfo.getName();
     }
 }
