@@ -102,7 +102,7 @@ public class SubmitPaper extends PanelCard {
     	titlePanel.removeAll();
     	authorPanel.removeAll();
     	authorDisplayPanel.removeAll();
-    	authorsOfPaper.clear();
+    	//
     	
     	 Objects.requireNonNull(context.getCurrentConference());
          Objects.requireNonNull(context.getUser());
@@ -110,6 +110,11 @@ public class SubmitPaper extends PanelCard {
          //adds the current user as an author of the paper, unless it has already been done.
          if (initialSignIn) {
         	 addCurrentUserAsAuthor();
+         }
+         //prevents logout bug-- checks if first index is currently signed in user.
+         //if it isn't, then the list is in the state left by the previously logged in user
+         if (authorsOfPaper.size() > 0 && !authorsOfPaper.get(0).equals(context.getUser().getName())) {
+        	 authorsOfPaper.clear();
          }
          
          centerPanel.add(getFilePanel());
@@ -309,9 +314,9 @@ public class SubmitPaper extends PanelCard {
      */
     private class CancelAction implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) {	
+			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);	
 			resetPaperInformation();
-			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);			
 		}   	
     }
     
@@ -326,14 +331,23 @@ public class SubmitPaper extends PanelCard {
 		public void actionPerformed(ActionEvent e) {
 			titleOfPaper = paperTitleTextField.getText();
 			try {
+				Paper currentPaper =
+						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser());
 				//submits paper to conference
 				addCurrentUserAsAuthor(); //I think the problem had something to do with this not being here(we'll see)
 				context.getCurrentConference().getUserRole().addPaper(context.getUser(), 
 						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser()));
 //				displaySuccessMessage("Paper has been submitted to \"" 
 //						+ context.getCurrentConference().getInfo().getName() + "\".");
-				resetPaperInformation();	
+				
+				//allows author changes to be seen
 				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);	
+				panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
+				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+				if (context.getCurrentConference().getInfo().getPapersSubmittedBy(context.getUser()).contains(currentPaper)) {
+					resetPaperInformation();
+				}
+				
 			} catch (IllegalArgumentException ex) {
 			//	displayErrorMessage("Paper could not be submitted due to invalid input");
 			}
