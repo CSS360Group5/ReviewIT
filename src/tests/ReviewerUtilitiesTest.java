@@ -41,7 +41,7 @@ public class ReviewerUtilitiesTest {
 
 	@Test
 	public void reviewerSendsReviewToPaper_SendsReview() {
-		testConference.getReviewerRole().sendReview(testReviewerProfile, testPaper, new File("./review"));
+		testConference.getReviewerRole().sendReview(testReviewerProfile, testPaper, new File("./review"), 1);
 		int numberOfReviewsSentToPaper = testPaper.getReviews().size();
 		assertTrue(numberOfReviewsSentToPaper == 1);
 	}
@@ -51,7 +51,7 @@ public class ReviewerUtilitiesTest {
 	 */
 	@Test (expected = IllegalArgumentException.class)
 	public void reviewerSendsReviewToPaperButItAuthor_ReviewIsntSent() throws IllegalArgumentException {
-		testConference.getReviewerRole().sendReview(testAuthorProfile, testPaper, new File("./review"));
+		testConference.getReviewerRole().sendReview(testAuthorProfile, testPaper, new File("./review"), 1);
 	}
 
 }

@@ -72,9 +72,9 @@ public class SubprogramUtilities implements Serializable {
     public void recommend(
             final UserProfile theSubProgramProfile,
             Paper thePaper,
-            File recommendation
+            File recommendation, boolean recommneded
             ) throws IllegalArgumentException {
-    	thePaper.setMyRecommendation(recommendation);
+    	thePaper.setMyRecommendation(new Review(recommendation, recommneded ? 1 : 0));
     	
     	
     	

@@ -203,7 +203,6 @@ public class SubmitRecomendation extends PanelCard {
     private void createRadioButtonGroupOnGrid(JPanel gridLocation) {
     	radioButtonAndLocation(gridLocation, 1, "Recommend");
     	radioButtonAndLocation(gridLocation, 2, "Don't Recommend");
-    	radioButtonAndLocation(gridLocation, 3, "Unsure");
 
 		JButton btnSeeReviews = new JButton("See Review Scores");
 		btnSeeReviews.addActionListener(new seeReviewsAction());
@@ -290,7 +289,10 @@ public class SubmitRecomendation extends PanelCard {
 					context.getPaper().setRecommendationShort(theRadioButtonRecommendationSelection);
 					//System.out.println("helloedfsdf");
 					File theRecommendationFile = fileChooser.getSelectedFile();
-					context.getPaper().setMyRecommendation(theRecommendationFile);
+					context.getCurrentConference().getSubprogramRole().recommend(context.getUser(),
+					        context.getPaper(), theRecommendationFile, 
+					        theRadioButtonRecommendationSelection.equals("Recommend"));
+					
 					//System.out.println(context.getPaper().getRecommendationShort());
 					//panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
 				} catch (IllegalArgumentException ex) {
