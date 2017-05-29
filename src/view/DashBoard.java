@@ -226,8 +226,7 @@ public class DashBoard extends PanelCard {
         Object[][] values = new Object[actualPapers.size()][collumnNames.length];
         
         for (int i = 0; i < actualPapers.size(); i++) {
-            Paper p = actualPapers.get(0);
-            
+            Paper p = actualPapers.get(i); //this was .get(0), changed because it only displayed first paper
             values[i][0] = p;
             values[i][1] = stringListToString(p.getAuthors());
             values[i][2] = p.getSubmitDate();
