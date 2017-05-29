@@ -117,11 +117,13 @@ public class DashBoard extends PanelCard {
             
             papers[i][0] = p;
             
-            for (int j = 0; j < 3 && j < reviews.length; j++) {
-                papers[i][j+1] = reviews[j];
+            int j;
+            
+            for (j = 0; j < 3 && j < reviews.length; j++) {
+                papers[i][j+1] = reviews[j].score;
             }
             
-            for (int j = 0; j < 3; j++) {
+            for (; j < 3; j++) {
                 papers[i][j+1] = "";
             }
             

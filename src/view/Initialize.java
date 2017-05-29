@@ -8,6 +8,7 @@ import java.util.List;
 import model.Conference;
 import model.ConferenceSystem;
 import model.Paper;
+import model.Review;
 import model.UserProfile;
 
 public class Initialize {
@@ -74,6 +75,9 @@ public class Initialize {
         withPapers.getDirectorRole().assignPaperToSubProgramChair(subchair, simplePaper);
         withPapers.getInfo().getSubmissionDate().setTime(now.getTime() - 1);
         withPapers.getSubprogramRole().assignReviewer(reviewer, simplePaper);
+        simplePaper.addReview(new Review(new File(""), 5));
+        simplePaper.addReview(new Review(new File(""), 2));
+        simplePaper.addReview(new Review(new File(""), 3));
     }
     
     private static void addPaperLimit(ConferenceSystem sys, Conference theConference, UserProfile author) {
