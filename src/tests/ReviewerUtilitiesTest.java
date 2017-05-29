@@ -22,15 +22,15 @@ import model.UserProfile;
  */
 public class ReviewerUtilitiesTest {
 	
-	Conference testConference;
+	private Conference testConference;
 	
-	Paper testPaper;
+	private Paper testPaper;
 	
-	ArrayList<String> testAuthorList = new ArrayList<>();
+	private ArrayList<String> testAuthorList = new ArrayList<>();
 	
-	UserProfile testAuthorProfile = new UserProfile("TestUserID", "test user name");
+	private UserProfile testAuthorProfile = new UserProfile("TestUserID", "test user name");
 	
-	UserProfile testReviewerProfile = new UserProfile("ReviewerTestUID", "Reviewer name");
+	private UserProfile testReviewerProfile = new UserProfile("ReviewerTestUID", "Reviewer name");
 	
 	@Before
 	public void setUp() throws Exception {
