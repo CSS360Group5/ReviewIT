@@ -24,7 +24,7 @@ public class PanelChanger extends Observable {
     
     private Map<String, PanelCard> cards;
 
-    private LinkedList<String> previousPanelNames;
+    private LinkedList<String> panelNameHistory;
     
     /**
      * Creates a panel changer without any panels in it.
@@ -33,7 +33,7 @@ public class PanelChanger extends Observable {
         cardLayout = new CardLayout();
         parent = new JPanel(cardLayout);
         cards = new TreeMap<>();
-        previousPanelNames = new LinkedList<>();
+        panelNameHistory = new LinkedList<>();
     }
     
     /**
@@ -82,20 +82,18 @@ public class PanelChanger extends Observable {
         card.setVisible(true);
         card.repaint();
         
-        previousPanelNames.push(panelName);
+        panelNameHistory.push(panelName);
         this.setChanged();
         this.notifyObservers();
     }
 
     public void back() {
-        cardLayout.previous(parent);
-        previousPanelNames.pop();
-        this.setChanged();
-        this.notifyObservers();
+        panelNameHistory.pop();
+        changeTo(panelNameHistory.pop());
     }
 
     public String getCurrentPanelName() {
-        return previousPanelNames.peek();
+        return panelNameHistory.peek();
     }
     
 }
