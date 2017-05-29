@@ -17,9 +17,11 @@ import model.Paper;
 import model.UserProfile;
 
 /**
- * 
+ * Unit testing to cover UserUtilities model class.
+ * Tests various methods not tested by 'feature' unit tests.
  * @author Ian Jury 
  * @author Harlan Stewart
+ * @version 5/29/2017
  *
  */
 public class UserUtilitiesTest {
@@ -91,7 +93,7 @@ public class UserUtilitiesTest {
 	}
 
 	@Test 
-	public void paperSubmittedRemovedAndAnotherSubmitted_IsSubmitted() throws IllegalArgumentException {
+	public void paperSubmittedRemovedAndAnotherSubmitted_IsSubmitted() {
 		for(int i = 0; i < SUBMISSION_LIMIT; i++) {
 			testConference.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
 		}
@@ -101,14 +103,35 @@ public class UserUtilitiesTest {
 		//remove one of the submitted papers
 		testConference.getUserRole().removePaper(testUserProfile,  TEST_PAPER_LIST.get(0));
 		assertTrue(testConference.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT - 1);
-//		
+		
 		//add it back and check if size has increased
 		testConference.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(0));
 		assertTrue(testConference.getInfo().getPapersSubmittedBy(testUserProfile).size() == SUBMISSION_LIMIT);
+	}
+	
+	@Test
+	public void paperRemovedAndCorrespondingDataStructuresAreDecrememted_IsRemoved() {
+		for(int i = 0; i < SUBMISSION_LIMIT; i++) {
+			testConference.getUserRole().addPaper(testUserProfile, TEST_PAPER_LIST.get(i));
+		}
+		testConference.getUserRole().removePaper(testUserProfile,  TEST_PAPER_LIST.get(0));
 		
-//		
+		int numberOfPaperAuthorHasAuthoredAfterOneRemoval = testConference.getInfo().getPapersAuthoredBy(TEST_AUTHOR).size();
 		
+		assertTrue(numberOfPaperAuthorHasAuthoredAfterOneRemoval == SUBMISSION_LIMIT - 1);
+	}
+	
+	@Test
+	public void submittedPaperIsAssignedToReviewer_IsAssigned() {
+		UserProfile testReviewerProfile = new UserProfile("reviewerUID", "John Reviewer");
+		Conference assignReviewerTestConference = Conference.createConference("Sample Conference", new Date(0L), 5, 8);
 
+		assignReviewerTestConference.getSubprogramRole().assignReviewer(testReviewerProfile, TEST_PAPER_LIST.get(0));
+		
+		int sizeOfAssignedPapersToTestReviewerProfile 
+			= assignReviewerTestConference.getInfo().getPapersAssignedToReviewer(testReviewerProfile).size();
+		
+		assertTrue(sizeOfAssignedPapersToTestReviewerProfile == 1);
 	}
 
 }

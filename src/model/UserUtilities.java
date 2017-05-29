@@ -99,8 +99,7 @@ public class UserUtilities implements Serializable {
      * @author Ian Jury
      */
     public void removePaper(final UserProfile theUserProfile, final Paper thePaper) throws IllegalArgumentException {
-    	//if a reviewer has been assigned, then we can't do anything
-    	
+    	//if a reviewer has been assigned, then we can't do anything	
     	boolean foundPaper = false;
     	Map<UserProfile, List<Paper>> reviewerMap = myConferenceData.getReviewerAssignmentMap();
     	
@@ -119,7 +118,6 @@ public class UserUtilities implements Serializable {
             removePaperFromSubmissionMap(theUserProfile, thePaper);
         	//Remove paper to author map:
         	removePaperFromAuthorshipMap(thePaper);
-        	//System.out.println("REMOVE");
         }	
     }
     
@@ -145,12 +143,8 @@ public class UserUtilities implements Serializable {
     	for(final String currentAuthor: thePaper.getAuthors()){
 
             if(myConferenceData.getPaperAuthorshipMap().containsKey(currentAuthor)){
-            	//System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).size());
             	myConferenceData.getPaperAuthorshipMap().get(currentAuthor).remove(thePaper);
-            	//System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).size());
             }  
-    		//for (int index = 0; index <myConferenceData.getPaperAuthorshipMap().get(currentAuthor).size(); index++)
-        		//System.out.println(myConferenceData.getPaperAuthorshipMap().get(currentAuthor).get(index));
         }  	
     }
 }
