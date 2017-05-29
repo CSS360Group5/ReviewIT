@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Dimension;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import model.ConferenceSystem;
@@ -9,6 +10,8 @@ import model.ConferenceSystem;
 public class Main {
 
     public static final Dimension BODY_SIZE = new Dimension(800, 600);
+    
+    public static final ImageIcon ICON = new ImageIcon("Icon.png", "a pretty but meaningless splat");
     
     public static void main(String[] args) {
         intializeSystem();
@@ -30,6 +33,7 @@ public class Main {
         frame.setSize(new Dimension(BODY_SIZE.width, BODY_SIZE.height + 38));
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
+        frame.setIconImage(ICON.getImage());
         
         UserContext context = new UserContext();
         
