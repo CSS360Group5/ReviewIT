@@ -30,14 +30,18 @@ public class Initialize {
         Conference openDeadline = getConferenceWithOpenDeadline(now);
         Conference closedDeadline = getConferenceWithClosedDeadline();
         Conference withPapers = getAnotherConference(now);
+        Conference withOnly2Reviews = getAnotherConferenceWithLessReviews(now);
         
-        addSimplePaper(sys, withPapers, zachac, kvn96, briang5);
+        addSimplePaper(sys, true, withPapers, zachac, kvn96, briang5);
+        addSimplePaper(sys, false, withOnly2Reviews, zachac, kvn96, briang5);
         
         addPaperLimit(sys, openDeadline, ianjury);
 
         sys.addConference(openDeadline);
         sys.addConference(closedDeadline);
         sys.addConference(withPapers);
+        sys.addConference(withOnly2Reviews);
+        
         sys.serializeModel();
     }
 
@@ -46,8 +50,10 @@ public class Initialize {
         return Conference.createConference("ASME/BATH FPMC Symposium on Fluid Power and Motion", 
                 new Date(now.getTime() + 9000L), 5, 8);
     }
-
-
+    private static Conference getAnotherConferenceWithLessReviews(Date now) {
+        return Conference.createConference("International Conference on Control, Automation, Robotics and Vision Engineering", 
+                new Date(now.getTime() + 9000L), 5, 8);
+    }
     private static Conference getConferenceWithClosedDeadline() {
         return Conference.createConference("International Conference on Nuclear Engineering (ICONE 26)",
                 new Date(), 5, 8);
@@ -60,7 +66,7 @@ public class Initialize {
     }
 
 
-    private static void addSimplePaper(ConferenceSystem sys, Conference withPapers, UserProfile author, 
+    private static void addSimplePaper(ConferenceSystem sys, boolean amountOfReviews, Conference withPapers, UserProfile author, 
                                                                                     UserProfile subchair,
                                                                                     UserProfile reviewer) {
         Date now = new Date();
@@ -68,8 +74,13 @@ public class Initialize {
         List<String> authors = new LinkedList<String>();
         authors.add("Zachary Chandler");
         authors.add("Ian Jury");        
-        
-        Paper simplePaper = Paper.createPaper(new File(""), authors, "Fuild Motion Powered Generators", author);
+        String paperName;
+        if(amountOfReviews) {
+        	paperName = "Fuild Motion Powered Generators";
+        } else {
+        	paperName = "Simplified Data Processing on Large Clusters";
+        }
+        Paper simplePaper = Paper.createPaper(new File(""), authors, paperName, author);
         
         withPapers.getUserRole().addPaper(author, simplePaper);
         withPapers.getDirectorRole().assignPaperToSubProgramChair(subchair, simplePaper);
@@ -77,7 +88,9 @@ public class Initialize {
         withPapers.getSubprogramRole().assignReviewer(reviewer, simplePaper);
         simplePaper.addReview(new Review(new File(""), 5));
         simplePaper.addReview(new Review(new File(""), 2));
-        //simplePaper.addReview(new Review(new File(""), 3));
+        if(amountOfReviews) {
+        	simplePaper.addReview(new Review(new File(""), 3));
+        }
     }
     
     private static void addPaperLimit(ConferenceSystem sys, Conference theConference, UserProfile author) {
