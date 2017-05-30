@@ -47,11 +47,18 @@ public class AssignReviewer extends PanelCard {
     private static final int SIDE_PADDING = 100;
 
     /**
+     * Space in between the panels.
+     */
+    private static final int BETWEEN_PADDING = 10;
+    
+    /**
      * Maximum number of reviews a reviewer is allowed to be assigned.
      */
     public static final int MAX_REVIEWS = 8;
 
     private static JButton assignButton;
+    
+    private static JLabel successLabel;
 
     /** SVUID */
     private static final long serialVersionUID = 5949259200759242048L;
@@ -80,6 +87,17 @@ public class AssignReviewer extends PanelCard {
     public void updatePanel() {
     	this.removeAll();
     	
+    	successLabel = new JLabel();
+    	successLabel.setForeground(new Color(0, 153, 0)); // green color
+    	successLabel.setHorizontalAlignment(BoxLayout.LINE_AXIS);
+    	
+    	JPanel successPanel = new JPanel(new BorderLayout());
+    	successPanel.add(successLabel, BorderLayout.CENTER);
+    	successPanel.setBorder(new EmptyBorder(0, 0, BETWEEN_PADDING, 0));
+    	successLabel.setVisible(false);
+    	successLabel.setHorizontalAlignment(JLabel.CENTER);
+    	this.add(successPanel);
+    	
     	this.add(getInfoPanel());
     	this.add(new JPanel());  	//adding a border between panels
     	this.add(getCurrentReviewersPanel());
@@ -103,31 +121,23 @@ public class AssignReviewer extends PanelCard {
     	reviewerList = refineByCurrentReviewers(reviewerList);
     	reviewerList = refineByMaxReviews(reviewerList);
     	reviewerList = refineBySubchair(reviewerList);
-
     	final List<UserProfile> finalReviewerList = reviewerList;
-
     	String[] nameArray = new String[reviewerList.size()];
-    	for(int i = 0; i < reviewerList.size(); i++) {
+    	for(int i = 0; i < reviewerList.size(); i++) {	// what will be actually displayed to the user
     		nameArray[i] = reviewerList.get(i).getName();
     	}
-
     	JList<String> reviewerJList = new JList<String>(nameArray);
-
     	Dimension panelSize = Main.BODY_SIZE;
     	reviewerJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
     	reviewerJList.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
     	reviewerJList.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
     	reviewerJList.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), INSIDE_PADDING / 2),
                               new CompoundBorder(new LineBorder(Color.BLACK),
                                                  new EmptyBorder(INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING))));
-
-
     	reviewerJList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent arg0) {
                 String name = reviewerJList.getSelectedValue();
-
                 if (name != null && !name.equals("")) {
                 	assignButton.setEnabled(true);
                 } else {
@@ -135,43 +145,20 @@ public class AssignReviewer extends PanelCard {
                 }
             }
         });
-    	
     	JPanel buttonPanel = new JPanel();
-    	bottomPanel.add(reviewerJList, BorderLayout.CENTER);
-    	
+    	bottomPanel.add(reviewerJList, BorderLayout.CENTER); 	
         assignButton = new JButton("Assign Reviewer");
         assignButton.setEnabled(false);
-        JButton cancelButton = new JButton("Cancel");
-
         assignButton.addActionListener(new ActionListener() {
-
         	@Override
             public void actionPerformed(ActionEvent arg) {
         		context.getCurrentConference().getSubprogramRole().assignReviewer(finalReviewerList.get((reviewerJList.getSelectedIndex())), context.getPaper());
-        		//System.out.println(reviewerList.get((reviewerJList.getSelectedIndex())).getName());
         		panelChanger.changeTo(PANEL_LOOKUP_NAME);
-//        		System.out.println(reviewerJList.getSelectedIndex());
-//        		System.out.println(reviewerJList.getSelectedValue());
-//        		System.out.println();
-//        		for(UserProfile a : finalReviewerList) {
-//        			System.out.println(a.getName());
-//        		}
-//        		System.out.println();
-//        		System.out.println(finalReviewerList.get((reviewerJList.getSelectedIndex())).getName());
+        		successLabel.setText("Successfully assigned \"" + finalReviewerList.get((reviewerJList.getSelectedIndex())).getName() 
+        				+ "\" to review Paper \"" + context.getPaper().getTitle() +"\"");
+        		successLabel.setVisible(true);
         	}
-
         });
-
-        cancelButton.addActionListener(new ActionListener() {
-
-        	@Override
-            public void actionPerformed(ActionEvent arg) {
-        		panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
-        	}
-
-        });
-
-    	//buttonPanel.add(cancelButton);
         buttonPanel.add(assignButton);
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
         
