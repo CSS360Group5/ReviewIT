@@ -132,28 +132,30 @@ public class SubmitRecomendation extends PanelCard {
 		
 		return filePanel;
     }
-    /**
-     * This makes a panel on the left side that contains buttons that navigates through the gui
-     * For user convenience instead of going back everything.
-     * @author Kevin Nguyen
-     * @return the navigation panel with buttons
-     */
-    private JPanel quickNavigationPanel() {
-    	//The buttons might have icons for them later.
-		JPanel placeHolder = new JPanel();
-		//Added spaces to make the button same size the hard code way.
-		JButton conferenceBack = new JButton("Papers           ");
-		conferenceBack.addActionListener(new cancelAction());
-		JButton cancelBut = new JButton("Conferences");
-		cancelBut.addActionListener(new conferenceAction());
-		JButton reviewersPage = new JButton("Reviewers     ");
-		reviewersPage.addActionListener(new reviewersPageAction());
-		placeHolder.add(cancelBut);
-		placeHolder.add(conferenceBack);
-		placeHolder.add(reviewersPage);
-		placeHolder.setLayout(new BoxLayout(placeHolder, BoxLayout.Y_AXIS));
-		return placeHolder;
-    }
+    
+//    /**
+//     * This makes a panel on the left side that contains buttons that navigates through the gui
+//     * For user convenience instead of going back everything.
+//     * @author Kevin Nguyen
+//     * @return the navigation panel with buttons
+//     */
+//    private JPanel quickNavigationPanel() {
+//    	//The buttons might have icons for them later.
+//		JPanel placeHolder = new JPanel();
+//		//Added spaces to make the button same size the hard code way.
+//		JButton conferenceBack = new JButton("Papers           ");
+//		conferenceBack.addActionListener(new cancelAction());
+//		JButton cancelBut = new JButton("Conferences");
+//		cancelBut.addActionListener(new conferenceAction());
+//		JButton reviewersPage = new JButton("Reviewers     ");
+//		reviewersPage.addActionListener(new reviewersPageAction());
+//		placeHolder.add(cancelBut);
+//		placeHolder.add(conferenceBack);
+//		placeHolder.add(reviewersPage);
+//		placeHolder.setLayout(new BoxLayout(placeHolder, BoxLayout.Y_AXIS));
+//		return placeHolder;
+//    }
+    
     /**
      * This creates the grid on the panel
      * @author Kevin Nguyen
@@ -184,12 +186,18 @@ public class SubmitRecomendation extends PanelCard {
 		namePanel.setLayout(new BorderLayout(0, 0));
 		
 		JLabel SubProgramChairlabel = new JLabel("Sub Program Chair:  " + context.getUser().getName());
-		namePanel.add(SubProgramChairlabel, BorderLayout.NORTH);
 		submissionLabel = new JLabel(submissionMessage +
 				"for the manuscript " + context.getPaper().getTitle());
 		//JLabel currentConference = new JLabel("Currently in the conference: " + context.getCurrentConference().toString());
 		//namePanel.add(currentConference,BorderLayout.CENTER);
+		
+		namePanel.add(SubProgramChairlabel, BorderLayout.NORTH);
 		namePanel.add(submissionLabel, BorderLayout.SOUTH);
+		
+		// Disabling this panel here, I don't think we need it -Zach
+		namePanel.add(new JLabel(""), BorderLayout.NORTH);
+        namePanel.add(new JLabel(""), BorderLayout.SOUTH);
+		
 		return namePanel;
     }
     /**
@@ -365,33 +373,33 @@ public class SubmitRecomendation extends PanelCard {
 				    "Review Scores", JOptionPane.PLAIN_MESSAGE);
 		}   	
     }
-    /**
-     * These are the actions that changes the panel for the left side jbuttons of the panel
-     * @author K_Nguyen
-     *
-     */
-    private class conferenceAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);			
-		}   	
-    }
-    private class reviewersPageAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			panelChanger.changeTo(AssignReviewer.PANEL_LOOKUP_NAME);			
-		}   	
-    }
-    /**
-     * Action for cancel button to change panel to previous.
-     * @author Ian Jury
-     *
-     */
-    private class cancelAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);			
-		}   	
-    }
+//    /**
+//     * These are the actions that changes the panel for the left side jbuttons of the panel
+//     * @author K_Nguyen
+//     *
+//     */
+//    private class conferenceAction implements ActionListener {
+//		@Override
+//		public void actionPerformed(ActionEvent e) {
+//			panelChanger.changeTo(ConferenceSelection.PANEL_LOOKUP_NAME);			
+//		}   	
+//    }
+//    private class reviewersPageAction implements ActionListener {
+//		@Override
+//		public void actionPerformed(ActionEvent e) {
+//			panelChanger.changeTo(AssignReviewer.PANEL_LOOKUP_NAME);			
+//		}   	
+//    }
+//    /**
+//     * Action for cancel button to change panel to previous.
+//     * @author Ian Jury
+//     *
+//     */
+//    private class cancelAction implements ActionListener {
+//		@Override
+//		public void actionPerformed(ActionEvent e) {
+//			panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);			
+//		}   	
+//    }
 
 }
