@@ -115,6 +115,7 @@ public class SubmitPaper extends PanelCard {
          //if it isn't, then the list is in the state left by the previously logged in user
          if (authorsOfPaper.size() > 0 && !authorsOfPaper.get(0).equals(context.getUser().getName())) {
         	 authorsOfPaper.clear();
+        	 addCurrentUserAsAuthor();
          }
          
          centerPanel.add(getFilePanel());
@@ -335,8 +336,7 @@ public class SubmitPaper extends PanelCard {
 						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser());
 				//submits paper to conference
 				addCurrentUserAsAuthor(); //I think the problem had something to do with this not being here(we'll see)
-				context.getCurrentConference().getUserRole().addPaper(context.getUser(), 
-						Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser()));
+				
 //				displaySuccessMessage("Paper has been submitted to \"" 
 //						+ context.getCurrentConference().getInfo().getName() + "\".");
 				
@@ -346,6 +346,9 @@ public class SubmitPaper extends PanelCard {
 				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
 				if (context.getCurrentConference().getInfo().getPapersSubmittedBy(context.getUser()).contains(currentPaper)) {
 					resetPaperInformation();
+				} else {
+					context.getCurrentConference().getUserRole().addPaper(context.getUser(), 
+							Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser()));
 				}
 				
 			} catch (IllegalArgumentException ex) {
