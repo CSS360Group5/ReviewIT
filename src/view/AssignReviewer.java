@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,11 +54,11 @@ public class AssignReviewer extends PanelCard {
      */
     public static final int MAX_REVIEWS = 8;
 
-    private JButton assignButton;
+    private static JButton assignButton;
 
-    private JList<String> reviewerJList;
+    private static JList<String> reviewerJList;
 
-    private List<UserProfile> reviewerList;// = context.getCurrentConference().getInfo().getReviewers();
+    private static List<UserProfile> reviewerList;// = context.getCurrentConference().getInfo().getReviewers();
 
     /** SVUID */
     private static final long serialVersionUID = 5949259200759242048L;
@@ -264,7 +265,7 @@ public class AssignReviewer extends PanelCard {
     	reviewerJList = new JList<String>(nameArray);
 
     	Dimension panelSize = Main.BODY_SIZE;
-    	reviewerJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    	reviewerJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     	reviewerJList.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
     	reviewerJList.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
@@ -342,8 +343,13 @@ public class AssignReviewer extends PanelCard {
             public void actionPerformed(ActionEvent arg) {
         		//context.getPaper().addReviewer(reviewerJList.getSelectedValue());
         		//reviewerJList.getSelectedIndex();
-        		context.getCurrentConference().getSubprogramRole().assignReviewer(reviewerList.get((reviewerJList.getSelectedIndex())), context.getPaper());
-        		panelChanger.changeTo(PANEL_LOOKUP_NAME);
+        		//context.getCurrentConference().getSubprogramRole().assignReviewer(reviewerList.get((reviewerJList.getSelectedIndex())), context.getPaper());
+        		//System.out.println(reviewerList.get((reviewerJList.getSelectedIndex())).getName());
+        		//panelChanger.changeTo(PANEL_LOOKUP_NAME);
+        		updatePanel();
+        		System.out.println(reviewerJList.getSelectedIndex());
+        		System.out.println(reviewerJList.getSelectedValue());
+        		System.out.println(Arrays.toString(reviewerJList.getSelectedIndices()));
         	}
 
         });
