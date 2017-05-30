@@ -397,7 +397,7 @@ public class DashBoard extends PanelCard {
             
             // opens a confirmation dialog box with yes/no/cancel
             int result = JOptionPane.showConfirmDialog(null, 
-            		"Are you sure you want to remove this paper?");
+            		"Are you sure you want to remove this paper?", "Confirm remove", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
             	try { //to test if paper can be removed (no reviewers assigned)
                 	context.getCurrentConference().getUserRole().removePaper(context.getUser(), p);
