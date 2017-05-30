@@ -86,7 +86,21 @@ public class AssignReviewer extends PanelCard {
     @Override
     public void updatePanel() {
     	this.removeAll();
-    	
+     	
+    	this.add(getSuccessPanel());  	
+    	this.add(getInfoPanel());
+    	this.add(new JPanel());  	//adding a border between panels
+    	this.add(getCurrentReviewersPanel());
+    	this.add(new JPanel());		//adding a border between panels
+    	this.add(getAvailableReviewersPanel());
+    }
+    
+    /**
+     * Method to receive a panel which contains a success message if a Reviewer was added.
+     *
+     * @return JPanel which contains the success message.
+     */
+    private JPanel getSuccessPanel() {
     	successLabel = new JLabel();
     	successLabel.setForeground(new Color(0, 153, 0)); // green color
     	successLabel.setHorizontalAlignment(BoxLayout.LINE_AXIS);
@@ -96,13 +110,7 @@ public class AssignReviewer extends PanelCard {
     	successPanel.setBorder(new EmptyBorder(0, 0, BETWEEN_PADDING, 0));
     	successLabel.setVisible(false);
     	successLabel.setHorizontalAlignment(JLabel.CENTER);
-    	this.add(successPanel);
-    	
-    	this.add(getInfoPanel());
-    	this.add(new JPanel());  	//adding a border between panels
-    	this.add(getCurrentReviewersPanel());
-    	this.add(new JPanel());		//adding a border between panels
-    	this.add(getAvailableReviewersPanel());
+    	return successPanel;
     }
 
     /**
