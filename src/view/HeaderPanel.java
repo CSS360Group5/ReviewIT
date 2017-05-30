@@ -12,6 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+/**
+ * A panel to hold a sub panel and display a header above it.
+ *
+ * @author Zachary Chandler
+ */
 public class HeaderPanel extends JPanel implements Observer {
 
     /** SVUID */
@@ -20,6 +25,10 @@ public class HeaderPanel extends JPanel implements Observer {
     private PanelChanger changer;
     private JLabel conferenceLabel;
     
+    /**
+     * @param context the context associated to the user viewing the panel.
+     * @param changer the panel changer associated with this panel.
+     */
     public HeaderPanel(UserContext context, PanelChanger changer) {
         super();
         
@@ -38,17 +47,6 @@ public class HeaderPanel extends JPanel implements Observer {
 
         JButton home = new JButton("MSEE");
         home.addActionListener(new HomeButton());
-        
-//        Runnable run = () -> { System.out.println(header.getSize()); };
-//        
-//        home.addActionListener(new ActionListener() {
-//
-//            @Override
-//            public void actionPerformed(ActionEvent arg0) {
-//                run.run();
-//            }
-//            
-//        });
         
         this.conferenceLabel = new JLabel("Conferences");
         
@@ -69,7 +67,9 @@ public class HeaderPanel extends JPanel implements Observer {
         this.add(header, BorderLayout.NORTH);
     }
     
-    
+    /**
+     * Add the given body panel to the body. 
+     */
     public void addBody(JPanel body) {
         this.add(body, BorderLayout.CENTER);
     }

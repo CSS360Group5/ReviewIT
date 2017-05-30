@@ -36,6 +36,7 @@ import model.SubprogramUtilities.RecommendStatus;
  * A class to display options to a user based on their role.
  *
  * @author Zachary Chandler
+ * @author Brian Geving
  */
 public class DashBoard extends PanelCard {
 
@@ -48,6 +49,12 @@ public class DashBoard extends PanelCard {
     /** A padding value used to determine the desired padding of several elements in the panel. */
     private static final int PADDING = 20;
     
+    /**
+     * See PanelCard constructor for more details.
+     * 
+     * @param p the panel changer of this panel card.
+     * @param context the context of this panel card.
+     */
     public DashBoard(PanelChanger p, UserContext context) {
         super(p, context);
         
@@ -107,71 +114,7 @@ public class DashBoard extends PanelCard {
         JLabel assignedLabel = new JLabel("Assigned Papers");
         assignedLabel.setAlignmentX(LEFT_ALIGNMENT);
         
-        
-        String[] collumnNames = new String[] {"Papers", "R1", "R2", "R3", "Recommendation"};
-        Object[][] papers = new Object[actualPapers.size()][collumnNames.length];
-        
-        
-        for (int i = 0; i < actualPapers.size(); i++) {
-            Paper p = actualPapers.get(i);
-            Review[] reviews = p.getReviews().toArray(new Review[0]);
-            int amountOfReviewers = context.getCurrentConference().getInfo().getReviewersForPaper(p).size();
-            
-            papers[i][0] = p;
-            
-            int j;
-            
-            for (j = 0; j < 3 && j < reviews.length; j++) {
-                papers[i][j+1] = reviews[j].score;
-            }
-            
-            for (; j < 3; j++) {
-                papers[i][j+1] = j + 1 > amountOfReviewers ? "Not Assigned" : "Not Submitted";
-            }
-            
-            Review recommendation = p.getMyRecommendation();
-            
-            if (recommendation == null) {
-                papers[i][collumnNames.length - 1] = "";
-            } else if (recommendation.score == RecommendStatus.YES.intRepresentation) {
-                papers[i][collumnNames.length - 1] = "yes";
-            } else if (recommendation.score == RecommendStatus.NO.intRepresentation) {
-                papers[i][collumnNames.length - 1] = "no";
-            } else if (recommendation.score == RecommendStatus.NOT_SURE.intRepresentation) {
-                papers[i][collumnNames.length - 1] = "?";
-            } else {
-                throw new IllegalStateException();
-            }
-        }
-        
-        JTable assignedPapers = new JTable();
-        assignedPapers.setAlignmentX(LEFT_ALIGNMENT);
-        assignedPapers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        DefaultTableModel tableModel = new DefaultTableModel(papers, collumnNames) {
-            /** SVUID */
-            private static final long serialVersionUID = 5457480627821664367L;
-
-            @Override
-            public boolean isCellEditable(int row, int column) {
-               return false;
-            }
-        };
-        
-        assignedPapers.setModel(tableModel);
-        
-        TableColumn column = null;
-        for (int i = 0; i < collumnNames.length; i++) {
-            column = assignedPapers.getColumnModel().getColumn(i);
-            
-            if (i == 0) {
-                column.setPreferredWidth(1000); //third column is bigger
-            } else if (i == collumnNames.length - 1) {
-                column.setMinWidth(120);
-            } else {
-                column.setMinWidth(30);
-            }
-        }
+        JTable assignedPapers = getAssignedPapersTable(actualPapers);
         
         JScrollPane scrollPane = new JScrollPane(assignedPapers);
         assignedPapers.setFillsViewportHeight(true);
@@ -221,6 +164,79 @@ public class DashBoard extends PanelCard {
     }
 
     /**
+     * Get a JTable to display the information of a subprogram chair's assigned papers
+     * @param actualPapers the papers assigned to the subprogram chair.
+     * @return the JTable for the assigned papers.
+     */
+    private JTable getAssignedPapersTable(List<Paper> actualPapers) {
+        String[] collumnNames = new String[] {"Papers", "R1", "R2", "R3", "Recommendation"};
+        Object[][] papers = new Object[actualPapers.size()][collumnNames.length];
+        
+        for (int i = 0; i < actualPapers.size(); i++) {
+            Paper p = actualPapers.get(i);
+            Review[] reviews = p.getReviews().toArray(new Review[0]);
+            int amountOfReviewers = context.getCurrentConference().getInfo().getReviewersForPaper(p).size();
+            
+            papers[i][0] = p;
+            
+            int j;
+            
+            for (j = 0; j < 3 && j < reviews.length; j++) {
+                papers[i][j+1] = reviews[j].score;
+            }
+            
+            for (; j < 3; j++) {
+                papers[i][j+1] = j + 1 > amountOfReviewers ? "Not Assigned" : "Not Submitted";
+            }
+            
+            Review recommendation = p.getMyRecommendation();
+            
+            if (recommendation == null) {
+                papers[i][collumnNames.length - 1] = "";
+            } else if (recommendation.score == RecommendStatus.YES.intRepresentation) {
+                papers[i][collumnNames.length - 1] = "yes";
+            } else if (recommendation.score == RecommendStatus.NO.intRepresentation) {
+                papers[i][collumnNames.length - 1] = "no";
+            } else if (recommendation.score == RecommendStatus.NOT_SURE.intRepresentation) {
+                papers[i][collumnNames.length - 1] = "?";
+            } else {
+                throw new IllegalStateException();
+            }
+        }
+    
+        JTable assignedPapers = new JTable();
+        assignedPapers.setAlignmentX(LEFT_ALIGNMENT);
+        assignedPapers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    
+        DefaultTableModel tableModel = new DefaultTableModel(papers, collumnNames) {
+            /** SVUID */
+            private static final long serialVersionUID = 5457480627821664367L;
+    
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               return false;
+            }
+        };
+    
+        assignedPapers.setModel(tableModel);
+    
+        TableColumn column = null;
+        for (int i = 0; i < collumnNames.length; i++) {
+            column = assignedPapers.getColumnModel().getColumn(i);
+            
+            if (i == 0) {
+                column.setPreferredWidth(1000); //third column is bigger
+            } else if (i == collumnNames.length - 1) {
+                column.setMinWidth(120);
+            } else {
+                column.setMinWidth(30);
+            }
+        }
+        
+        return assignedPapers;
+    }
+
+    /**
      * Get the author panel.
      */
     private JPanel getAuthorPanel(List<Paper> actualPapers) {
@@ -234,32 +250,7 @@ public class DashBoard extends PanelCard {
         submittedLabel.setAlignmentX(LEFT_ALIGNMENT);
         
         
-        String[] collumnNames = new String[] {"Paper", "Authors", "Date Submitted"};
-        Object[][] values = new Object[actualPapers.size()][collumnNames.length];
-        
-        for (int i = 0; i < actualPapers.size(); i++) {
-            Paper p = actualPapers.get(i); //this was .get(0), changed because it only displayed first paper
-            values[i][0] = p;
-            values[i][1] = stringListToString(p.getAuthors());
-            values[i][2] = p.getSubmitDate();
-        }
-        
-        
-        JTable submitedPapers = new JTable();
-        submitedPapers.setAlignmentX(LEFT_ALIGNMENT);
-        submitedPapers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        DefaultTableModel tableModel = new DefaultTableModel(values, collumnNames) {
-            /** SVUID */
-            private static final long serialVersionUID = 5457480627821664367L;
-
-            @Override
-            public boolean isCellEditable(int row, int column) {
-               return false;
-            }
-        };
-        
-        submitedPapers.setModel(tableModel);
+        JTable submitedPapers = getAuthoredPapersTable(actualPapers);
         
         JScrollPane scrollPane = new JScrollPane(submitedPapers);
         submitedPapers.setFillsViewportHeight(true);
@@ -313,11 +304,49 @@ public class DashBoard extends PanelCard {
         
         return result;
     }
+
+    /**
+     * @param actualPapers the papers this author has authored.
+     * @return the JTable of the papers to display the actualPapers
+     */
+    private JTable getAuthoredPapersTable(List<Paper> actualPapers) {
+        String[] collumnNames = new String[] {"Paper", "Authors", "Date Submitted"};
+        Object[][] values = new Object[actualPapers.size()][collumnNames.length];
+        
+        for (int i = 0; i < actualPapers.size(); i++) {
+            Paper p = actualPapers.get(i); //this was .get(0), changed because it only displayed first paper
+            values[i][0] = p;
+            values[i][1] = stringListToString(p.getAuthors());
+            values[i][2] = p.getSubmitDate();
+        }
+        
+        
+        JTable submitedPapers = new JTable();
+        submitedPapers.setAlignmentX(LEFT_ALIGNMENT);
+        submitedPapers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        DefaultTableModel tableModel = new DefaultTableModel(values, collumnNames) {
+            /** SVUID */
+            private static final long serialVersionUID = 5457480627821664367L;
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               return false;
+            }
+        };
+        
+        submitedPapers.setModel(tableModel);
+        return submitedPapers;
+    }
     
-    private static String stringListToString(List<String> authors) {
+    /**
+     * @param strings a list of strings to turn into a single string
+     * @return a string merge of all of the strings in the list separated by ", "
+     */
+    private static String stringListToString(List<String> strings) {
         StringBuilder result = new StringBuilder();
         
-        Iterator<String> iter = authors.iterator();
+        Iterator<String> iter = strings.iterator();
         
         if (iter.hasNext()) {
             result.append(iter.next());
@@ -331,6 +360,11 @@ public class DashBoard extends PanelCard {
         return result.toString();
     }
 
+    /**
+     * Gets a selected paper from a valid table.
+     * @param theTable a table in which the selected row's zeroth column holds a paper.
+     * @return a selected paper from a JTable.
+     */
     private static Paper getSelectedPaper(JTable theTable) {
         int row = theTable.getSelectedRow();
         return (Paper) theTable.getModel().getValueAt(row, 0);
@@ -341,6 +375,13 @@ public class DashBoard extends PanelCard {
         return PANEL_LOOKUP_NAME;
     }
 
+    /**
+     * An action to change to the assign reviewer panel and set the current paper of the context. The currently selected
+     * paper in the assignedPapers JTable will be set to be the current paper in the context after this action is 
+     * performed. 
+     * 
+     * @author Zachary Chandler
+     */
     private class AssignReviewerAction implements ActionListener {
 
         private JTable papers;
@@ -360,7 +401,14 @@ public class DashBoard extends PanelCard {
             panelChanger.changeTo(AssignReviewer.PANEL_LOOKUP_NAME);
         }
     }
-    
+
+    /**
+     * An action to change to the recommend panel and set the current paper of the context. The currently selected
+     * paper in the assignedPapers JTable will be set to be the current paper in the context after this action is 
+     * performed. 
+     * 
+     * @author Zachary Chandler
+     */
     private class RecomendPaperAction implements ActionListener {
 
         private JTable papers;
@@ -380,7 +428,14 @@ public class DashBoard extends PanelCard {
             panelChanger.changeTo(SubmitRecomendation.PANEL_LOOKUP_NAME);
         }
     }
-    
+
+    /**
+     * An action to change to the submit paper panel and set the current paper of the context. The currently selected
+     * paper in the assignedPapers JTable will be set to be the current paper in the context after this action is 
+     * performed. 
+     * 
+     * @author Zachary Chandler
+     */
     private class SubmitPaperAction implements ActionListener {
 
         @Override
@@ -389,6 +444,11 @@ public class DashBoard extends PanelCard {
         }
     }
     
+    /**
+     * An action to remove the currently selected paper from the submitedPapers JTable.
+     *
+     * @author Brian Geving
+     */
     private class RemovePaperAction implements ActionListener {
 
         private JTable papers;

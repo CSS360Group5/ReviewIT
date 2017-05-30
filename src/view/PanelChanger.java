@@ -22,6 +22,7 @@ public class PanelChanger extends Observable {
     /** The actual panel. */
     private JPanel parent;
     
+    /** The panel cards with there respective name. */
     private Map<String, PanelCard> cards;
 
     private LinkedList<String> panelNameHistory;
@@ -90,6 +91,10 @@ public class PanelChanger extends Observable {
         this.notifyObservers();
     }
 
+    /**
+     * Changes to the previously shown panel. If the current panel has been shown more than once, the last panel besides
+     * the current one will be shown.
+     */
     public void back() {
         panelNameHistory.pop();
         changeTo(panelNameHistory.pop());
