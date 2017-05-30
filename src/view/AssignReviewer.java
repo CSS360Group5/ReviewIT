@@ -300,10 +300,11 @@ public class AssignReviewer extends PanelCard {
     	
     	List<UserProfile> currentReviewerList = context.getCurrentConference().getInfo().getReviewersForPaper(context.getPaper());
       	
-    	for(UserProfile a : currentReviewerList) {
-    		System.out.println(a.getName());
-    	}
-    	System.out.println(currentReviewerList.size());
+//    	for(UserProfile a : currentReviewerList) {
+//    		System.out.println(a.getName());
+//    	}
+    	
+//    	System.out.println(currentReviewerList.size());
       	
     	String[] nameArray = new String[currentReviewerList.size()]; // getting the name of reviewers to display
     	for(int i = 0; i < currentReviewerList.size(); i++) {
