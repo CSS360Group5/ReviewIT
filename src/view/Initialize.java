@@ -24,7 +24,7 @@ public class Initialize {
         UserProfile briang5 = sys.getUserProfile("briang5");
         UserProfile kvn96 = sys.getUserProfile("kvn96");
         UserProfile ianjury = sys.getUserProfile("ianjury");
-        UserProfile dimabliz = sys.getUserProfile("ianjury");
+        UserProfile dimabliz = sys.getUserProfile("dimabliz");
         
         Date now = new Date();
         
