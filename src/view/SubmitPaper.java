@@ -92,6 +92,8 @@ public class SubmitPaper extends PanelCard {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setAlignmentX(CENTER_ALIGNMENT);
         initialSignIn = true; //because object is instantiated before user is signed in.
+        submitButton.addActionListener(new submitAction());
+        paperTitleTextField.addCaretListener(new textChangeAction());
     }
 
     @Override
@@ -156,7 +158,7 @@ public class SubmitPaper extends PanelCard {
 		titlePanel.setAlignmentY(LEFT_ALIGNMENT);
 		JLabel paperTitleLabel = new JLabel("Title: ");
         paperTitleTextField.setPreferredSize(preferredDimension);
-        paperTitleTextField.addCaretListener(new textChangeAction());
+       
 		
 		titlePanel.add(paperTitleLabel);
 		titlePanel.add(paperTitleTextField);
@@ -203,7 +205,7 @@ public class SubmitPaper extends PanelCard {
         setSubmitButtonState();
                 
         cancelButton.addActionListener(new CancelAction());
-        submitButton.addActionListener(new submitAction());
+        
         
     	confirmationPanel.add(cancelButton);
         confirmationPanel.add(submitButton);
@@ -340,16 +342,18 @@ public class SubmitPaper extends PanelCard {
 //				displaySuccessMessage("Paper has been submitted to \"" 
 //						+ context.getCurrentConference().getInfo().getName() + "\".");
 				
-				//allows author changes to be seen
-				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);	
-				panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
-				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+				
+
 				if (context.getCurrentConference().getInfo().getPapersSubmittedBy(context.getUser()).contains(currentPaper)) {
 					resetPaperInformation();
 				} else {
 					context.getCurrentConference().getUserRole().addPaper(context.getUser(), 
 							Paper.createPaper(fileOfPaper, authorsOfPaper, titleOfPaper, context.getUser()));
 				}
+				//allows author changes to be seen
+				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);	
+				panelChanger.changeTo(SubmitPaper.PANEL_LOOKUP_NAME);
+				panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
 				
 			} catch (IllegalArgumentException ex) {
 			//	displayErrorMessage("Paper could not be submitted due to invalid input");
