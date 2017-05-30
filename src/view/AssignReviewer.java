@@ -102,6 +102,7 @@ public class AssignReviewer extends PanelCard {
     	reviewerList = refineByAuthors(reviewerList);
     	reviewerList = refineByCurrentReviewers(reviewerList);
     	reviewerList = refineByMaxReviews(reviewerList);
+    	reviewerList = refineBySubchair(reviewerList);
 
     	final List<UserProfile> finalReviewerList = reviewerList;
 
@@ -172,7 +173,6 @@ public class AssignReviewer extends PanelCard {
 
     	//buttonPanel.add(cancelButton);
         buttonPanel.add(assignButton);
-    	
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
         
     	return bottomPanel;
@@ -250,6 +250,25 @@ public class AssignReviewer extends PanelCard {
     		}
     	}
 
+    	return reviewerList;
+    }
+    
+    /**
+     * Method that refines the list of Reviewers, getting rid of Reviewers if they are
+     * a Subprogram chair of the paper.
+     *
+     * @param reviewerList List of UserProfiles of potential reviewers
+     * @return refined List of UserProfiles of reviewers
+     */
+    private List<UserProfile> refineBySubchair(List<UserProfile> reviewerList) { 
+    	
+    	Iterator<UserProfile> refineByAuthor = reviewerList.iterator();
+    	while(refineByAuthor.hasNext()) {
+    		UserProfile nextReviewer = refineByAuthor.next();
+    		if(context.getUser().getName().equals(nextReviewer.getName())) {
+    			refineByAuthor.remove();
+    		}
+    	}
     	return reviewerList;
     }
 
