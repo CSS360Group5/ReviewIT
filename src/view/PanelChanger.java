@@ -82,7 +82,10 @@ public class PanelChanger extends Observable {
         card.setVisible(true);
         card.repaint();
         
-        panelNameHistory.push(panelName);
+        if (panelNameHistory.isEmpty() || !panelNameHistory.peek().equals(panelName)) {
+            panelNameHistory.push(panelName);
+        }
+        
         this.setChanged();
         this.notifyObservers();
     }
