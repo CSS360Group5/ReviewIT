@@ -30,6 +30,7 @@ import model.Conference;
 import model.Paper;
 import model.Review;
 import model.UserProfile;
+import model.SubprogramUtilities.RecommendStatus;
 
 /**
  * A class to display options to a user based on their role.
@@ -127,9 +128,19 @@ public class DashBoard extends PanelCard {
                 papers[i][j+1] = "";
             }
             
-            papers[i][collumnNames.length - 1] = p.getMyRecommendation() == null ? "" 
-                    : (p.getMyRecommendation().score == 0 ? "no": "yes");
+            Review recommendation = p.getMyRecommendation();
             
+            if (recommendation == null) {
+                papers[i][collumnNames.length - 1] = "";
+            } else if (recommendation.score == RecommendStatus.YES.intRepresentation) {
+                papers[i][collumnNames.length - 1] = "yes";
+            } else if (recommendation.score == RecommendStatus.NO.intRepresentation) {
+                papers[i][collumnNames.length - 1] = "no";
+            } else if (recommendation.score == RecommendStatus.NOT_SURE.intRepresentation) {
+                papers[i][collumnNames.length - 1] = "?";
+            } else {
+                throw new IllegalStateException();
+            }
         }
         
         JTable assignedPapers = new JTable();

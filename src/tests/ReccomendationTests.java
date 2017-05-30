@@ -11,6 +11,7 @@ import org.junit.Test;
 import model.Conference;
 import model.Paper;
 import model.UserProfile;
+import model.SubprogramUtilities.RecommendStatus;
 
 /**
  * A class to tests the business rules for submitting a recommendation.
@@ -55,7 +56,7 @@ public class ReccomendationTests {
      */
     @Test (expected = IllegalArgumentException.class)
     public void giveReview_WithoutReviews_ThrowsException() throws IllegalArgumentException {
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, true);
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, RecommendStatus.YES);
     }
     
     /**
@@ -66,7 +67,7 @@ public class ReccomendationTests {
     public void giveReview_WithTwoReviews_ThrowsException() throws IllegalArgumentException {
         pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, f, 3);
         pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, f, 3);
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, true);
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, RecommendStatus.YES);
     }
 
     /**
@@ -78,6 +79,6 @@ public class ReccomendationTests {
         pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE1, testPaper1, f, 3);
         pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE2, testPaper1, f, 3);
         pastDeadlineConference.getReviewerRole().sendReview(REVIEWER_PROFILE3, testPaper1, f, 3);
-        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, true);
+        pastDeadlineConference.getSubprogramRole().recommend(SUBPROGRAMCHAIR_PROFILE1, testPaper1, f, RecommendStatus.YES);
     }
 }

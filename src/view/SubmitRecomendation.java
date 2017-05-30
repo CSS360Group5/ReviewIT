@@ -21,6 +21,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import model.SubprogramUtilities.RecommendStatus;
+
 /**
  * This class creates submits the recommendation for the paper to the program chair.
  * Preconditions:
@@ -76,6 +78,9 @@ public class SubmitRecomendation extends PanelCard {
     @Override
     public void updatePanel() {
     	this.removeAll();
+    	
+    	submitRecommendationButton = new JButton("Submit Recommendation");
+    	
     	JPanel mainPanel = new JPanel();
 		add(mainPanel);
 		//Gots this from zachs code trial and error need to test on other screens
@@ -210,7 +215,8 @@ public class SubmitRecomendation extends PanelCard {
      */
     private void createRadioButtonGroupOnGrid(JPanel gridLocation) {
     	radioButtonAndLocation(gridLocation, 1, "Recommend");
-    	radioButtonAndLocation(gridLocation, 2, "Don't Recommend");
+        radioButtonAndLocation(gridLocation, 2, "Don't Recommend");
+        radioButtonAndLocation(gridLocation, 3, "Not Sure");
 
 		JButton btnSeeReviews = new JButton("See Review Scores");
 		btnSeeReviews.addActionListener(new seeReviewsAction());
@@ -297,12 +303,31 @@ public class SubmitRecomendation extends PanelCard {
 					context.getPaper().setRecommendationShort(theRadioButtonRecommendationSelection);
 					//System.out.println("helloedfsdf");
 					File theRecommendationFile = fileChooser.getSelectedFile();
+					
+					RecommendStatus status;
+					
+					switch(theRadioButtonRecommendationSelection) {
+					case "Recommend":
+					    status = RecommendStatus.YES;
+					    break;
+					    
+					case "Don't Recommend":
+					    status = RecommendStatus.NO;
+					    break;
+					    
+					case "Not Sure":
+					    status = RecommendStatus.NOT_SURE;
+					    break;
+					    
+				    default:
+					    throw new IllegalStateException();    
+					}
+					
 					context.getCurrentConference().getSubprogramRole().recommend(context.getUser(),
-					        context.getPaper(), theRecommendationFile, 
-					        theRadioButtonRecommendationSelection.equals("Recommend"));
+					        context.getPaper(), theRecommendationFile, status);
 					
 					//System.out.println(context.getPaper().getRecommendationShort());
-					//panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
+					panelChanger.changeTo(DashBoard.PANEL_LOOKUP_NAME);
 				} catch (IllegalArgumentException ex) {
 					//displayErrorMessage("Paper could not be submitted due to invalid input");
 				}
