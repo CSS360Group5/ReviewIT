@@ -115,6 +115,7 @@ public class DashBoard extends PanelCard {
         for (int i = 0; i < actualPapers.size(); i++) {
             Paper p = actualPapers.get(i);
             Review[] reviews = p.getReviews().toArray(new Review[0]);
+            int amountOfReviewers = context.getCurrentConference().getInfo().getReviewersForPaper(p).size();
             
             papers[i][0] = p;
             
@@ -125,7 +126,7 @@ public class DashBoard extends PanelCard {
             }
             
             for (; j < 3; j++) {
-                papers[i][j+1] = "";
+                papers[i][j+1] = j + 1 > amountOfReviewers ? "Not Assigned" : "Not Submitted";
             }
             
             Review recommendation = p.getMyRecommendation();

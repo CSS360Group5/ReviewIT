@@ -343,7 +343,7 @@ public class AssignReviewer extends PanelCard {
         		//context.getPaper().addReviewer(reviewerJList.getSelectedValue());
         		//reviewerJList.getSelectedIndex();
         		context.getCurrentConference().getSubprogramRole().assignReviewer(reviewerList.get((reviewerJList.getSelectedIndex())), context.getPaper());
-        		updatePanel();
+        		panelChanger.changeTo(PANEL_LOOKUP_NAME);
         	}
 
         });

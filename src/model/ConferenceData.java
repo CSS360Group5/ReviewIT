@@ -378,7 +378,7 @@ public class ConferenceData implements ConferenceInfo, Serializable{
         
         for (UserProfile reviewer : this.myReviewerAssignmentMap.keySet()) {
             
-            if (myReviewerAssignmentMap.get(reviewer).contains(p)) {
+            if (myReviewerAssignmentMap.get(reviewer).contains(p) && !result.contains(reviewer)) {
                 result.add(reviewer);
             }
         }
