@@ -13,8 +13,15 @@ import model.Paper;
 import model.Review;
 import model.UserProfile;
 
+/**
+ * A class to initialize the conference system object.
+ */
 public class Initialize {
 
+    /**
+     * Initializes the ConferenceSystem.
+     * @param args command line arguments are ignored.
+     */
 	public static void main(String[] args) {
         ConferenceSystem sys = ConferenceSystem.getInstance();
         
@@ -61,28 +68,41 @@ public class Initialize {
         sys.serializeModel();
     }
 
-
-
+	/**
+	 * @return the ASME/BATH FPMC Symposium on Fluid Power and Motion Conference
+	 */
     private static Conference getAnotherConference(Date now) {
         return Conference.createConference("ASME/BATH FPMC Symposium on Fluid Power and Motion", 
                 new Date(now.getTime() + 9000L), 5, 8);
     }
+
+    /**
+     * @return the International Conference on Control, Automation, Robotics and Vision Engineering Conference
+     */
     private static Conference getAnotherConferenceWithLessReviews(Date now) {
         return Conference.createConference("International Conference on Control, Automation, Robotics and Vision Engineering", 
                 new Date(now.getTime() + 9000L), 5, 8);
     }
+
+    /**
+     * @return the International Conference on Nuclear Engineering (ICONE 26) Conference
+     */
     private static Conference getConferenceWithClosedDeadline() {
         return Conference.createConference("International Conference on Nuclear Engineering (ICONE 26)",
                 new Date(), 5, 8);
     }
 
-
+    /**
+     * @return the Internal Combustion Engine Fall Technical Conference Conference
+     */
     private static Conference getConferenceWithOpenDeadline(Date now) {
         return Conference.createConference("Internal Combustion Engine Fall Technical Conference",
                 new Date(now.getTime() + 10000000000L), 5, 8);
     }
 
-
+    /**
+     * Add a paper that can be recommended to the given conference and conference system.
+     */
     private static void addRecommendablePaper(ConferenceSystem sys, Conference withPapers, UserProfile author,
             UserProfile subchair, UserProfile reviewer1,  UserProfile reviewer2,  UserProfile reviewer3) {
         
@@ -106,7 +126,10 @@ public class Initialize {
         simplePaper.addReview(new Review(new File(""), 3));
         
     }
-    
+
+    /**
+     * Add a paper that cannot be recommended to the given conference and conference system.
+     */
     private static void addNonRecommendablePaper(ConferenceSystem sys, Conference conference, UserProfile author,
             UserProfile subchair, UserProfile reviewer1,  UserProfile reviewer2,  UserProfile reviewer3) {
         
@@ -131,6 +154,10 @@ public class Initialize {
         simplePaper.addReview(new Review(new File(""), 6));
     }
 
+
+    /**
+     * Add a paper with a single reviewer to the given conference and conference system.
+     */
     private static void addPaperWithOneReviewer(ConferenceSystem sys, Conference conference, UserProfile author,
             UserProfile subchair, UserProfile reviewer1) {
         Date now = new Date();
@@ -148,6 +175,10 @@ public class Initialize {
         conference.getSubprogramRole().assignReviewer(reviewer1, simplePaper);
     }
     
+
+    /**
+     * Add a max - 1 papers to the given author to the given conference and conference system.
+     */
     private static void addPaperLimit(ConferenceSystem sys, Conference theConference, UserProfile author) {
     	List<String> authors = new LinkedList<String>();
     	authors.add("Ian Jury"); 
@@ -168,7 +199,9 @@ public class Initialize {
     	//		Paper.createPaper(new File(""), authors, "Mitigation Strategies for Beyond Design Basis Events", author));
     }
 
-	
+	/**
+	 * Add users to the conference system.
+	 */
     private static void addUsers(ConferenceSystem sys) {
         sys.addUserProfile(new UserProfile("zachac",    "Zachary Chandler"));
         sys.addUserProfile(new UserProfile("kvn96",     "Kevin Nguyen"));
