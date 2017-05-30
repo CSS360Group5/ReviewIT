@@ -27,7 +27,7 @@ import model.UserProfile;
 /**
  * GUI class that creates the Panel where the user can assign a Reviewer to a Paper
  *
- * @version 05/25/2017
+ * @version 05/30/2017
  * @author Dmitriy Bliznyuk
  *
  */
@@ -56,8 +56,14 @@ public class AssignReviewer extends PanelCard {
      */
     public static final int MAX_REVIEWS = 8;
 
+    /**
+     * Button to assign a Reviewer to a Paper/
+     */
     private static JButton assignButton;
     
+    /**
+     * Label to indicate that a Reviewer was successfully assigned.
+     */
     private static JLabel successLabel;
 
     /** SVUID */
@@ -111,66 +117,6 @@ public class AssignReviewer extends PanelCard {
     	successLabel.setVisible(false);
     	successLabel.setHorizontalAlignment(JLabel.CENTER);
     	return successPanel;
-    }
-
-    /**
-     * Method to receive a panel which contains all available Reviewers in the Conference.
-     *
-     * @return JPanel which contains all available Reviewers.
-     */
-    private JPanel getAvailableReviewersPanel() {
-    	JPanel bottomPanel = new JPanel(new BorderLayout());
-    	bottomPanel.setBorder(new CompoundBorder(new EmptyBorder(0, SIDE_PADDING, 0, SIDE_PADDING), BorderFactory.createTitledBorder(" Assign Another Reviewer")));
-    	JPanel bottomLabelPanel = new JPanel(new BorderLayout());
-    	bottomPanel.add(bottomLabelPanel, BorderLayout.NORTH);
-    	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
-
-    	reviewerList = refineByAuthors(reviewerList);
-    	reviewerList = refineByCurrentReviewers(reviewerList);
-    	reviewerList = refineByMaxReviews(reviewerList);
-    	reviewerList = refineBySubchair(reviewerList);
-    	final List<UserProfile> finalReviewerList = reviewerList;
-    	String[] nameArray = new String[reviewerList.size()];
-    	for(int i = 0; i < reviewerList.size(); i++) {	// what will be actually displayed to the user
-    		nameArray[i] = reviewerList.get(i).getName();
-    	}
-    	JList<String> reviewerJList = new JList<String>(nameArray);
-    	Dimension panelSize = Main.BODY_SIZE;
-    	reviewerJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    	reviewerJList.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
-    	reviewerJList.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
-    	reviewerJList.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), INSIDE_PADDING / 2),
-                              new CompoundBorder(new LineBorder(Color.BLACK),
-                                                 new EmptyBorder(INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING))));
-    	reviewerJList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent arg0) {
-                String name = reviewerJList.getSelectedValue();
-                if (name != null && !name.equals("")) {
-                	assignButton.setEnabled(true);
-                } else {
-                	assignButton.setEnabled(false);
-                }
-            }
-        });
-    	JPanel buttonPanel = new JPanel();
-    	bottomPanel.add(reviewerJList, BorderLayout.CENTER); 	
-        assignButton = new JButton("Assign Reviewer");
-        assignButton.setEnabled(false);
-        assignButton.addActionListener(new ActionListener() {
-        	@Override
-            public void actionPerformed(ActionEvent arg) {
-        		context.getCurrentConference().getSubprogramRole().assignReviewer(finalReviewerList.get((reviewerJList.getSelectedIndex())), context.getPaper());
-        		panelChanger.changeTo(PANEL_LOOKUP_NAME);
-        		successLabel.setText("Successfully assigned \"" + finalReviewerList.get((reviewerJList.getSelectedIndex())).getName() 
-        				+ "\" to review Paper \"" + context.getPaper().getTitle() +"\"");
-        		successLabel.setVisible(true);
-        	}
-        });
-        buttonPanel.add(assignButton);
-        bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
-        
-    	return bottomPanel;
     }
 
     /**
@@ -336,6 +282,66 @@ public class AssignReviewer extends PanelCard {
     	return currentReviewers;
     }
 
+    /**
+     * Method to receive a panel which contains all available Reviewers in the Conference.
+     *
+     * @return JPanel which contains all available Reviewers.
+     */
+    private JPanel getAvailableReviewersPanel() {
+    	JPanel bottomPanel = new JPanel(new BorderLayout());
+    	bottomPanel.setBorder(new CompoundBorder(new EmptyBorder(0, SIDE_PADDING, 0, SIDE_PADDING), BorderFactory.createTitledBorder(" Assign Another Reviewer")));
+    	JPanel bottomLabelPanel = new JPanel(new BorderLayout());
+    	bottomPanel.add(bottomLabelPanel, BorderLayout.NORTH);
+    	List<UserProfile> reviewerList = context.getCurrentConference().getInfo().getReviewers();
+
+    	reviewerList = refineByAuthors(reviewerList);
+    	reviewerList = refineByCurrentReviewers(reviewerList);
+    	reviewerList = refineByMaxReviews(reviewerList);
+    	reviewerList = refineBySubchair(reviewerList);
+    	final List<UserProfile> finalReviewerList = reviewerList;
+    	String[] nameArray = new String[reviewerList.size()];
+    	for(int i = 0; i < reviewerList.size(); i++) {	// what will be actually displayed to the user
+    		nameArray[i] = reviewerList.get(i).getName();
+    	}
+    	JList<String> reviewerJList = new JList<String>(nameArray);
+    	Dimension panelSize = Main.BODY_SIZE;
+    	reviewerJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    	reviewerJList.setPreferredSize(new Dimension(panelSize.width / 2, panelSize.height/3));
+    	reviewerJList.setMaximumSize(new Dimension(panelSize.width / 2, panelSize.height/2));
+    	reviewerJList.setBorder(new CompoundBorder(new LineBorder(this.getBackground(), INSIDE_PADDING / 2),
+                              new CompoundBorder(new LineBorder(Color.BLACK),
+                                                 new EmptyBorder(INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING, INSIDE_PADDING))));
+    	reviewerJList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent arg0) {
+                String name = reviewerJList.getSelectedValue();
+                if (name != null && !name.equals("")) {
+                	assignButton.setEnabled(true);
+                } else {
+                	assignButton.setEnabled(false);
+                }
+            }
+        });
+    	JPanel buttonPanel = new JPanel();
+    	bottomPanel.add(reviewerJList, BorderLayout.CENTER); 	
+        assignButton = new JButton("Assign Reviewer");
+        assignButton.setEnabled(false);
+        assignButton.addActionListener(new ActionListener() {
+        	@Override
+            public void actionPerformed(ActionEvent arg) {
+        		context.getCurrentConference().getSubprogramRole().assignReviewer(finalReviewerList.get((reviewerJList.getSelectedIndex())), context.getPaper());
+        		panelChanger.changeTo(PANEL_LOOKUP_NAME);
+        		successLabel.setText("Successfully assigned \"" + finalReviewerList.get((reviewerJList.getSelectedIndex())).getName() 
+        				+ "\" to review Paper \"" + context.getPaper().getTitle() +"\"");
+        		successLabel.setVisible(true);
+        	}
+        });
+        buttonPanel.add(assignButton);
+        bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
+        
+    	return bottomPanel;
+    }
+    
     @Override
     public String getNameOfPanel() {
         return PANEL_LOOKUP_NAME;
