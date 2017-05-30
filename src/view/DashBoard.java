@@ -112,7 +112,7 @@ public class DashBoard extends PanelCard {
         
         
         for (int i = 0; i < actualPapers.size(); i++) {
-            Paper p = actualPapers.get(0);
+            Paper p = actualPapers.get(i);
             Review[] reviews = p.getReviews().toArray(new Review[0]);
             
             papers[i][0] = p;

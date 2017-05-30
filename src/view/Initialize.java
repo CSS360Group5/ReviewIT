@@ -1,12 +1,14 @@
 package view;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import model.Conference;
 import model.ConferenceSystem;
+import model.DirectorUtilities;
 import model.Paper;
 import model.Review;
 import model.UserProfile;
@@ -22,9 +24,8 @@ public class Initialize {
         UserProfile briang5 = sys.getUserProfile("briang5");
         UserProfile kvn96 = sys.getUserProfile("kvn96");
         UserProfile ianjury = sys.getUserProfile("ianjury");
-//        UserProfile dimabliz = sys.getUserProfile("ianjury");
+        UserProfile dimabliz = sys.getUserProfile("ianjury");
         
-
         Date now = new Date();
         
         Conference openDeadline = getConferenceWithOpenDeadline(now);
@@ -32,18 +33,34 @@ public class Initialize {
         Conference withPapers = getAnotherConference(now);
         Conference withOnly2Reviews = getAnotherConferenceWithLessReviews(now);
         
-        addSimplePaper(sys, true, withPapers, zachac, kvn96, briang5);
-        addSimplePaper(sys, false, withOnly2Reviews, zachac, kvn96, briang5);
+        addRecommendablePaper(sys, withPapers, zachac, kvn96, briang5, dimabliz, ianjury);
+        addNonRecommendablePaper(sys, withPapers, ianjury, kvn96, briang5, dimabliz, zachac);
+        addPaperWithOneReviewer(sys, withPapers, dimabliz, kvn96, zachac);
         
         addPaperLimit(sys, openDeadline, ianjury);
 
-        sys.addConference(openDeadline);
-        sys.addConference(closedDeadline);
-        sys.addConference(withPapers);
-        sys.addConference(withOnly2Reviews);
+        
+        Collection<Conference> conferences = new LinkedList<>();
+        conferences.add(openDeadline);
+        conferences.add(closedDeadline);
+        conferences.add(withPapers);
+        conferences.add(withOnly2Reviews);
+        
+        
+        for (Conference c : conferences) {
+            DirectorUtilities dir = c.getDirectorRole();
+            dir.addUserRole(zachac, Conference.REVIEW_ROLE);
+            dir.addUserRole(briang5, Conference.REVIEW_ROLE);
+            dir.addUserRole(kvn96, Conference.REVIEW_ROLE);
+            dir.addUserRole(ianjury, Conference.REVIEW_ROLE);
+            dir.addUserRole(dimabliz, Conference.REVIEW_ROLE);
+            
+            sys.addConference(c);
+        }
         
         sys.serializeModel();
     }
+
 
 
     private static Conference getAnotherConference(Date now) {
@@ -66,31 +83,69 @@ public class Initialize {
     }
 
 
-    private static void addSimplePaper(ConferenceSystem sys, boolean amountOfReviews, Conference withPapers, UserProfile author, 
-                                                                                    UserProfile subchair,
-                                                                                    UserProfile reviewer) {
+    private static void addRecommendablePaper(ConferenceSystem sys, Conference withPapers, UserProfile author,
+            UserProfile subchair, UserProfile reviewer1,  UserProfile reviewer2,  UserProfile reviewer3) {
+        
         Date now = new Date();
 
         List<String> authors = new LinkedList<String>();
-        authors.add("Zachary Chandler");
-        authors.add("Ian Jury");        
-        String paperName;
-        if(amountOfReviews) {
-        	paperName = "Fuild Motion Powered Generators";
-        } else {
-        	paperName = "Simplified Data Processing on Large Clusters";
-        }
+        authors.add(author.getName());    
+        String paperName = "Fuild Motion Powered Generators";
+        
         Paper simplePaper = Paper.createPaper(new File(""), authors, paperName, author);
         
         withPapers.getUserRole().addPaper(author, simplePaper);
         withPapers.getDirectorRole().assignPaperToSubProgramChair(subchair, simplePaper);
         withPapers.getInfo().getSubmissionDate().setTime(now.getTime() - 1);
-        withPapers.getSubprogramRole().assignReviewer(reviewer, simplePaper);
+        withPapers.getSubprogramRole().assignReviewer(reviewer1, simplePaper);
+        withPapers.getSubprogramRole().assignReviewer(reviewer2, simplePaper);
+        withPapers.getSubprogramRole().assignReviewer(reviewer3, simplePaper);
+        
         simplePaper.addReview(new Review(new File(""), 5));
         simplePaper.addReview(new Review(new File(""), 2));
-        if(amountOfReviews) {
-        	simplePaper.addReview(new Review(new File(""), 3));
-        }
+        simplePaper.addReview(new Review(new File(""), 3));
+        
+    }
+    
+    private static void addNonRecommendablePaper(ConferenceSystem sys, Conference conference, UserProfile author,
+            UserProfile subchair, UserProfile reviewer1,  UserProfile reviewer2,  UserProfile reviewer3) {
+        
+        Date now = new Date();
+
+        List<String> authors = new LinkedList<String>();
+        authors.add(author.getName());
+        
+        String paperName = "Simplified Data Processing on Large Clusters";
+        
+        Paper simplePaper = Paper.createPaper(new File(""), authors, paperName, author);
+        simplePaper.getSubmitDate().setTime(new Date().getTime() - 100);
+        
+        conference.getUserRole().addPaper(author, simplePaper);
+        conference.getDirectorRole().assignPaperToSubProgramChair(subchair, simplePaper);
+        conference.getInfo().getSubmissionDate().setTime(now.getTime() - 1);
+        conference.getSubprogramRole().assignReviewer(reviewer1, simplePaper);
+//        conference.getSubprogramRole().assignReviewer(reviewer2, simplePaper);
+        conference.getSubprogramRole().assignReviewer(reviewer3, simplePaper);
+        
+        simplePaper.addReview(new Review(new File(""), 6));
+        simplePaper.addReview(new Review(new File(""), 6));
+    }
+
+    private static void addPaperWithOneReviewer(ConferenceSystem sys, Conference conference, UserProfile author,
+            UserProfile subchair, UserProfile reviewer1) {
+        Date now = new Date();
+
+        List<String> authors = new LinkedList<String>();
+        authors.add(author.getName());
+        
+        String paperName = "Super Fluids in Motion";
+        
+        Paper simplePaper = Paper.createPaper(new File(""), authors, paperName, author);
+        simplePaper.getSubmitDate().setTime(new Date().getTime() - 100);
+        conference.getUserRole().addPaper(author, simplePaper);
+        conference.getDirectorRole().assignPaperToSubProgramChair(subchair, simplePaper);
+        conference.getInfo().getSubmissionDate().setTime(now.getTime() - 1);
+        conference.getSubprogramRole().assignReviewer(reviewer1, simplePaper);
     }
     
     private static void addPaperLimit(ConferenceSystem sys, Conference theConference, UserProfile author) {
