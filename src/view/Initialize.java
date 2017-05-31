@@ -230,41 +230,43 @@ public class Initialize {
         
         List<String> authors2 = new LinkedList<>();
         authors2.add(author2.getName());
+        
+        System.out.println("International Conference on Control, Automation, Robotics and Vision Engineering");
 
         // Author 1 papers
-        p = Paper.createPaper(new File(""), authors1, "TitleA", author1);
+        p = Paper.createPaper(new File(""), authors1, "Controlling Automated Robot Swarms", author1);
         conference.getUserRole().addPaper(author1, p);
         papers.add(p);
         
-        p = Paper.createPaper(new File(""), authors1, "TitleB", author1);
+        p = Paper.createPaper(new File(""), authors1, "Automation Through Optical Engineering", author1);
         conference.getUserRole().addPaper(author1, p);
         papers.add(p);
         
-        p = Paper.createPaper(new File(""), authors1, "TitleC", author1);
+        p = Paper.createPaper(new File(""), authors1, "Robotics and Optical Analysis, Not Related Whatsoever", author1);
         conference.getUserRole().addPaper(author1, p);
         papers.add(p);
         
-        p = Paper.createPaper(new File(""), authors1, "TitleD", author1);
+        p = Paper.createPaper(new File(""), authors1, "Controlling Optical Engineering", author1);
         conference.getUserRole().addPaper(author1, p);
         papers.add(p);
         
-        p = Paper.createPaper(new File(""), authors1, "TitleE", author1);
+        p = Paper.createPaper(new File(""), authors1, "Vision Engineering, a usless Buzword of the Future", author1);
         conference.getUserRole().addPaper(author1, p);
         papers.add(p);
         
         // Author 2 papers
-        p = Paper.createPaper(new File(""), authors2, "TitleF", author2);
+        p = Paper.createPaper(new File(""), authors2, "Final Automation State and the Ultimate Human Purpose", author2);
         conference.getUserRole().addPaper(author2, p);
         papers.add(p);
 
-        p = Paper.createPaper(new File(""), authors2, "TitleG", author2);
+        p = Paper.createPaper(new File(""), authors2, "Artificial Visual Optical Eyes", author2);
         conference.getUserRole().addPaper(author2, p);
         papers.add(p);
         
-        p = Paper.createPaper(new File(""), authors2, "TitleH", author2);
+        p = Paper.createPaper(new File(""), authors2, "Automation Through Visual Learning", author2);
         conference.getUserRole().addPaper(author2, p);
         
-        Paper p2 = Paper.createPaper(new File(""), authors2, "TitleI", author2);
+        Paper p2 = Paper.createPaper(new File(""), authors2, "Engineering and Vision, the Beauty of a Camera", author2);
         conference.getUserRole().addPaper(author2, p);
         
         conference.getInfo().getSubmissionDate().setTime(new Date().getTime() - 1);
