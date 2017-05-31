@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -32,14 +33,17 @@ public class ConferenceDataTest {
 	// names, userid's, and titles for testing purposes
 	private static final String TEST_AUTHOR = "John Doe";
 	private static final String TEST_REVIEWER = "Rob Reviewer";
+	private static final String TEST_SUBPROGRAMCHAIR = "Sally Subprogramchair";
 	private static final String TEST_USER_ID1 = "UID1";
 	private static final String TEST_USER_ID2 = "UID2";
+	private static final String TEST_USER_ID3 = "UID3";
 	private static final String TEST_CO_AUTHOR = "Sally Doe";
 	private static final String TEST_CON_NAME = "A test con";
 	private static final String TEST_TITLE = "Some Paper Title";
 	private  final UserProfile TEST_USER_PROFILE_AUTHOR = new UserProfile(TEST_USER_ID1,
 			TEST_AUTHOR);
 	private  final UserProfile TEST_USER_PROFILE_REVIEWER = new UserProfile(TEST_USER_ID2, TEST_REVIEWER);
+	private final UserProfile TEST_USER_PROFILE_SUBPROGRAMCHAIR = new UserProfile(TEST_USER_ID3, TEST_SUBPROGRAMCHAIR);
 	private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 	private static final String TEST_DATE = "4017/07/30 23:59:59";
 	private static final String TEST_DATE_2 = "2016/06/30 23:59:59";
@@ -94,7 +98,8 @@ public class ConferenceDataTest {
 				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
 		testPaper9 = Paper.createPaper(new File(""), 
 				new ArrayList<>(Arrays.asList(new String[]{TEST_REVIEWER, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
-		
+	
+		authorPaperList = new LinkedList();
 		authorPaperList.add(testPaper1);
 		authorPaperList.add(testPaper2);
 		authorPaperList.add(testPaper3);
@@ -127,11 +132,13 @@ public class ConferenceDataTest {
 		assertTrue(conferenceData.isSubmissionOpen(submissionDate));
 	}
 	
+	/*
+	 * Indirectly tests isPaperInSubmissionDeadline()
+	 */
 	@Test
 	public void isSubmissionOpen_paperDeadline_False() {
 		assertFalse(conferenceData.isSubmissionOpen(paperDeadline));
 	}
-	//isPaperInSubmissionDeadline functions more or less the same
 	
 	@Test
 	public void isReviewerInAssignmentLimit_OnePaper_True() {
@@ -148,7 +155,6 @@ public class ConferenceDataTest {
 		for(int i = 0; i < PAPER_ASSIGNMENT_LIMIT; i++) 
 			conference.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, authorPaperList.get(i));
 		assertTrue(conference.getInfo().getPapersAssignedToReviewer(TEST_USER_PROFILE_REVIEWER).size() == 8);
-		conferenceData = conference.getInfo();
 		assertFalse(conferenceData.isReviewerInAssignmentLimit(TEST_USER_PROFILE_REVIEWER));
 			
 	}
@@ -164,7 +170,24 @@ public class ConferenceDataTest {
 	}
 
 	@Test
+	public void isUserAuthor_TEST_USER_PROFILE_False() {
+		assertFalse(conferenceData.isUserAuthor(TEST_USER_PROFILE_AUTHOR));
+	}
+	
+	/* 
+	 * Indirectly tests the protected addUserToRole method as well as the other isUser___
+	 * methods that function the same way.
+	 */
+	@Test
 	public void isUserAuthor_TEST_USER_PROFILE_True() {
+		conference.getDirectorRole().addUserRole(TEST_USER_PROFILE_AUTHOR, "Author");
+		conferenceData = conference.getInfo();
 		assertTrue(conferenceData.isUserAuthor(TEST_USER_PROFILE_AUTHOR));
+	}
+	
+	@Test
+	public void assignSubprogramChairToPaper_testPaper1() {
+		conferenceData.assignSubprogramchairToPaper(TEST_USER_PROFILE_SUBPROGRAMCHAIR, testPaper1);
+		assertTrue(conferenceData.getPapersAssignedToSubProgramChair(TEST_USER_PROFILE_SUBPROGRAMCHAIR).size() == 1);
 	}
 }
