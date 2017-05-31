@@ -19,6 +19,12 @@ import model.Paper;
 import model.UserProfile;
 import model.UserUtilities;
 
+/**
+ * Testing the methods inside the ConferenceData class
+ * @author Brian
+ *
+ */
+
 public class ConferenceDataTest {
 	
 	// int constants for author paper submission limit and reviewer assignment
@@ -35,13 +41,18 @@ public class ConferenceDataTest {
 	private static final String TEST_TITLE = "Some Paper Title";
 	private  final UserProfile TEST_USER_PROFILE_AUTHOR = new UserProfile(TEST_USER_ID1,
 			TEST_AUTHOR);
+	private  final UserProfile TEST_USER_PROFILE_REVIEWER = new UserProfile(TEST_USER_ID2, TEST_REVIEWER);
 	private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 	private static final String TEST_DATE = "4017/07/30 23:59:59";
+	private static final String TEST_DATE_2 = "2016/06/30 23:59:59";
 	private static final SimpleDateFormat FORMAT = new SimpleDateFormat(DATE_FORMAT);
 	
+	private Date submissionDate;
 	private Date paperDeadline;
+	private Conference conference;
 	private ConferenceData conferenceData;
-	private List<Paper> authorPaperList;
+	private UserUtilities userUtilities;
+	private List<Paper> authorPaperList = new ArrayList();
 	private Map<String, List<Paper>> paperAuthorshipMap;
 	private Map<String, List<Paper>> reviewerAssignmentMap;
 	
@@ -55,13 +66,17 @@ public class ConferenceDataTest {
 	private Paper testPaper6;
 	private Paper testPaper7;
 	private Paper testPaper8;
+	private Paper testPaper9;
 	
 
 	@Before
 	public void setUp() throws Exception {
 		paperDeadline = FORMAT.parse(TEST_DATE);
+		submissionDate = FORMAT.parse(TEST_DATE_2);
 		
-		conferenceData = new ConferenceData(TEST_CON_NAME, paperDeadline, PAPER_SUBMISSION_LIMIT, PAPER_ASSIGNMENT_LIMIT);
+		conference = Conference.createConference(TEST_CON_NAME, paperDeadline, PAPER_SUBMISSION_LIMIT, PAPER_ASSIGNMENT_LIMIT);
+		
+		conferenceData = conference.getInfo();
 		
 		testPaper1 = Paper.createPaper(new File(""), 
 				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
@@ -73,17 +88,69 @@ public class ConferenceDataTest {
 				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
 		testPaper5 = Paper.createPaper(new File(""), 
 				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
+		testPaper6 = Paper.createPaper(new File(""), 
+				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
+		testPaper7 = Paper.createPaper(new File(""), 
+				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
+		testPaper8 = Paper.createPaper(new File(""), 
+				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
+		testPaper9 = Paper.createPaper(new File(""), 
+				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
 		
 		authorPaperList.add(testPaper1);
 		authorPaperList.add(testPaper2);
 		authorPaperList.add(testPaper3);
 		authorPaperList.add(testPaper4);
+		authorPaperList.add(testPaper5);
+		authorPaperList.add(testPaper6);
+		authorPaperList.add(testPaper7);
+		authorPaperList.add(testPaper8);
+		authorPaperList.add(testPaper9);
 		
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void isPaperInSubmissionLimit_OnePaper_True() {
+		conference.getUserRole().addPaper(TEST_USER_PROFILE_AUTHOR, authorPaperList.get(0));
+		conferenceData = conference.getInfo();
+		assertTrue(conferenceData.isPaperInAuthorSubmissionLimit(testPaper2));
+		
+	}
+	
+	@Test
+	public void isPaperInSubmissionLimit_PAPER_SUBMISSION_LIMIT_False() {
+		for(int i = 0; i < PAPER_SUBMISSION_LIMIT; i++)
+			conference.getUserRole().addPaper(TEST_USER_PROFILE_AUTHOR, authorPaperList.get(i));
+		assertFalse(conferenceData.isPaperInAuthorSubmissionLimit(testPaper1));
+	}
+	
+	@Test
+	public void isSubmissionOpen_submissionDate_True() {
+		assertTrue(conferenceData.isSubmissionOpen(submissionDate));
+	}
+	
+	@Test
+	public void isSubmissionOpen_paperDeadline_False() {
+		assertFalse(conferenceData.isSubmissionOpen(paperDeadline));
+	}
+	//isPaperInSubmissionDeadline functions more or less the same
+	
+	@Test
+	public void isReviewerInAssignmentLimit_OnePaper_True() {
+		conference = Conference.createConference(TEST_CON_NAME, submissionDate, PAPER_SUBMISSION_LIMIT, PAPER_ASSIGNMENT_LIMIT);
+		conference.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, testPaper1);
+		assertTrue(conference.getInfo().getPapersAssignedToReviewer(TEST_USER_PROFILE_REVIEWER).size() == 1);
+		assertTrue(conferenceData.isReviewerInAssignmentLimit(TEST_USER_PROFILE_REVIEWER));
+	}
+	
+	@Test
+	public void isReviewerInAssignmentLimit_PAPER_ASSIGNMENT_LIMIT_False() {
+		conference = Conference.createConference(TEST_CON_NAME, submissionDate, PAPER_SUBMISSION_LIMIT, PAPER_ASSIGNMENT_LIMIT);
+		for(int i = 0; i < PAPER_ASSIGNMENT_LIMIT; i++) 
+			conference.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, authorPaperList.get(i));
+		assertTrue(conference.getInfo().getPapersAssignedToReviewer(TEST_USER_PROFILE_REVIEWER).size() == 8);
+		assertFalse(conferenceData.isReviewerInAssignmentLimit(TEST_USER_PROFILE_REVIEWER));
+			
 	}
 
 }

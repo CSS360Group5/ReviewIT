@@ -49,7 +49,7 @@ public class ConferenceData implements ConferenceInfo, Serializable{
      */
     private final Map<UserProfile, List<String>> myUserRoleMap;
     
-    public ConferenceData(final String theConferenceName,
+    protected ConferenceData(final String theConferenceName,
             final Date thePaperDeadline,
             final int thePaperSubmissionLimit,
             final int thePaperAssignmentLimit) {
