@@ -99,7 +99,7 @@ public class ConferenceDataTest {
 		testPaper9 = Paper.createPaper(new File(""), 
 				new ArrayList<>(Arrays.asList(new String[]{TEST_REVIEWER, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
 	
-		authorPaperList = new LinkedList();
+		authorPaperList = new LinkedList<>();
 		authorPaperList.add(testPaper1);
 		authorPaperList.add(testPaper2);
 		authorPaperList.add(testPaper3);
