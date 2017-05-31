@@ -4,6 +4,12 @@ import model.Conference;
 import model.Paper;
 import model.UserProfile;
 
+/**
+ * An object to keep track of the context in which a panel is shown. Things such as the current conference, current
+ * paper and current user.
+ *
+ * @author Zachary Chandler
+ */
 public class UserContext {
 
     private Conference currentConference;
@@ -51,7 +57,4 @@ public class UserContext {
     public void setPaper(Paper paper) {
         this.paper = paper;
     }
-
-    
-    
 }

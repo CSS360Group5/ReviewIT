@@ -7,15 +7,22 @@ import javax.swing.JFrame;
 
 import model.ConferenceSystem;
 
+/**
+ * A GUI to run the conference model.
+ *
+ * @author Zachary Chandler
+ */
 public class Main {
 
+    /** The dimensions of the actual panel with the content in it. */
     public static final Dimension BODY_SIZE = new Dimension(800, 600);
     
-    public static final ImageIcon ICON = new ImageIcon("Icon.png", "a pretty but meaningless splat");
+    /** The Icon of the application. */
+    public static final ImageIcon ICON = new ImageIcon("Icon.png");
     
     public static void main(String[] args) {
         intializeSystem();
-        initializeWindow();
+        createWindow();
         
         Runtime.getRuntime().addShutdownHook(new Thread(Main::saveSystem));
     }
@@ -28,7 +35,10 @@ public class Main {
         ConferenceSystem.getInstance().serializeModel();
     }
     
-    private static void initializeWindow() {
+    /**
+     * Initializes and creates the window of the GUI.
+     */
+    private static void createWindow() {
         JFrame frame = new JFrame("MSEE Conferences");
         frame.setSize(new Dimension(BODY_SIZE.width, BODY_SIZE.height + 38));
         frame.setResizable(false);

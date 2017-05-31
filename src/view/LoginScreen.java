@@ -39,7 +39,6 @@ public class LoginScreen extends PanelCard {
     protected void updatePanel() {
         this.removeAll();
         
-        
         JLabel prompt = new JLabel(PROMPT_TEXT);
         prompt.setAlignmentX(CENTER_ALIGNMENT);
         
