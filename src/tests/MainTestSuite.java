@@ -14,15 +14,22 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-	SubmissionDeadlineTests.class,
-	PaperSubmissionLimitTests.class,
-	ReviewerIsAuthorTests.class,
-	ReviewerMaxPaperLimitTests.class,
-	ConferenceModelTests.class,
-	GetAuthorsTest.class,
-	AuthorRemovePaperTests.class,
-	ReccomendationTests.class,
-	ReviewerDeadlineAssignTests.class})
+        AuthorRemovePaperTests.class,
+        ConferenceDataTest.class,
+        ConferenceModelTests.class,
+        ConferenceTest.class,
+        GetAuthorsTest.class,
+        PaperSubmissionLimitTests.class,
+        ReccomendationTests.class,
+        ReviewerDeadlineAssignTests.class,
+        ReviewerIsAuthorTests.class,
+        ReviewerMaxPaperLimitTests.class,
+        ReviewerUtilitiesTest.class,
+        SubmissionDeadlineTests.class,
+        SubprogramUtilitiesTest.class,
+        UserProfileTest.class,
+        UserUtilitiesTest.class 
+    })
 
 public class MainTestSuite {
 }

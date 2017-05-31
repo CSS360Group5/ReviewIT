@@ -38,7 +38,7 @@ public class SubprogramUtilitiesTest {
 	@Before
 	public void setUp() throws Exception {
 		testAuthorList.add(testAuthorProfile.getName());
-		testConference = Conference.createConference("Test Conference", new Date(), 5, 8);
+		testConference = Conference.createConference("Test Conference", new Date(new Date().getTime() - 1), 5, 8);
 		testPaper = Paper.createPaper(new File("./path"), testAuthorList, "TestPaperTitle", testAuthorProfile);
 	}
 
