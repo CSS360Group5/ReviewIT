@@ -95,7 +95,7 @@ public class ConferenceDataTest {
 		testPaper8 = Paper.createPaper(new File(""), 
 				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
 		testPaper9 = Paper.createPaper(new File(""), 
-				new ArrayList<>(Arrays.asList(new String[]{TEST_AUTHOR, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
+				new ArrayList<>(Arrays.asList(new String[]{TEST_REVIEWER, TEST_CO_AUTHOR})), TEST_TITLE, TEST_USER_PROFILE_AUTHOR);
 		
 		authorPaperList.add(testPaper1);
 		authorPaperList.add(testPaper2);
@@ -149,8 +149,23 @@ public class ConferenceDataTest {
 		for(int i = 0; i < PAPER_ASSIGNMENT_LIMIT; i++) 
 			conference.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, authorPaperList.get(i));
 		assertTrue(conference.getInfo().getPapersAssignedToReviewer(TEST_USER_PROFILE_REVIEWER).size() == 8);
+		conferenceData = conference.getInfo();
 		assertFalse(conferenceData.isReviewerInAssignmentLimit(TEST_USER_PROFILE_REVIEWER));
 			
 	}
+	
+	@Test
+	public void isPaperAuthoredByReviewer_testPaper1_False() {
+		assertFalse(conferenceData.isPaperAuthoredByReviewer(TEST_REVIEWER, testPaper1));
+	}
+	
+	@Test
+	public void isPaperAuthoredByReviewer_testPaper9_True() {
+		assertTrue(conferenceData.isPaperAuthoredByReviewer(TEST_REVIEWER, testPaper9));
+	}
 
+	@Test
+	public void isUserAuthor_TEST_USER_PROFILE_True() {
+		assertTrue(conferenceData.isUserAuthor(TEST_USER_PROFILE_AUTHOR));
+	}
 }
