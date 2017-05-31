@@ -229,7 +229,7 @@ public class DashBoard extends PanelCard {
             } else if (i == collumnNames.length - 1) {
                 column.setMinWidth(120);
             } else {
-                column.setMinWidth(30);
+                column.setMinWidth(90);
             }
         }
         

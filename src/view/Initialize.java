@@ -40,11 +40,13 @@ public class Initialize {
         Conference withPapers = getAnotherConference(now);
         Conference withOnly2Reviews = getAnotherConferenceWithLessReviews(now);
         
+        addRemovablePaper(sys, withPapers, zachac);
         addRecommendablePaper(sys, withPapers, zachac, kvn96, briang5, dimabliz, ianjury);
         addNonRecommendablePaper(sys, withPapers, ianjury, kvn96, briang5, dimabliz, zachac);
         addPaperWithOneReviewer(sys, withPapers, dimabliz, kvn96, zachac);
+        addPaperLimit(sys, openDeadline, ianjury, kvn96);
+        addPapersToReviewer(sys, withOnly2Reviews, ianjury, zachac, kvn96, dimabliz);
         
-        addPaperLimit(sys, openDeadline, ianjury);
 
         
         Collection<Conference> conferences = new LinkedList<>();
@@ -68,12 +70,12 @@ public class Initialize {
         sys.serializeModel();
     }
 
-	/**
+    /**
 	 * @return the ASME/BATH FPMC Symposium on Fluid Power and Motion Conference
 	 */
     private static Conference getAnotherConference(Date now) {
         return Conference.createConference("ASME/BATH FPMC Symposium on Fluid Power and Motion", 
-                new Date(now.getTime() + 9000L), 5, 8);
+                new Date(now.getTime() + 100L), 5, 8);
     }
 
     /**
@@ -81,7 +83,7 @@ public class Initialize {
      */
     private static Conference getAnotherConferenceWithLessReviews(Date now) {
         return Conference.createConference("International Conference on Control, Automation, Robotics and Vision Engineering", 
-                new Date(now.getTime() + 9000L), 5, 8);
+                new Date(now.getTime() + 1000L), 5, 8);
     }
 
     /**
@@ -174,12 +176,27 @@ public class Initialize {
         conference.getInfo().getSubmissionDate().setTime(now.getTime() - 1);
         conference.getSubprogramRole().assignReviewer(reviewer1, simplePaper);
     }
-    
+
+    /** 
+     * Add a paper for the given author that they can remove.
+     */
+    private static void addRemovablePaper(ConferenceSystem sys, Conference conference, UserProfile author) {
+
+        List<String> authors = new LinkedList<String>();
+        authors.add(author.getName());
+        
+        Paper p = Paper.createPaper(new File(""), authors, "Flucating Fluids in a Fountain", author);
+        p.getSubmitDate().setTime(conference.getInfo().getSubmissionDate().getTime() - 1);
+        
+        conference.getUserRole().addPaper(author, p);
+        
+    }
 
     /**
      * Add a max - 1 papers to the given author to the given conference and conference system.
+     * @param kvn96 
      */
-    private static void addPaperLimit(ConferenceSystem sys, Conference theConference, UserProfile author) {
+    private static void addPaperLimit(ConferenceSystem sys, Conference theConference, UserProfile author, UserProfile kvn96) {
     	List<String> authors = new LinkedList<String>();
     	authors.add("Ian Jury"); 
     	
@@ -192,11 +209,73 @@ public class Initialize {
     	theConference.getUserRole().addPaper(author, 
     			Paper.createPaper(new File(""), authors, "Nuclear Safety, Security and Cyber Security", author));
     	
-    	theConference.getUserRole().addPaper(author, 
-    			Paper.createPaper(new File(""), authors, "Thermal-Hydraulics", author));
-    	
+    	Paper p = Paper.createPaper(new File(""), authors, "Thermal-Hydraulics", author);
+    	theConference.getUserRole().addPaper(author, p);
+    	theConference.getDirectorRole().assignPaperToSubProgramChair(kvn96, p);
     	//theConference.getUserRole().addPaper(author, 
     	//		Paper.createPaper(new File(""), authors, "Mitigation Strategies for Beyond Design Basis Events", author));
+    }
+
+    /**
+     * Add almost max papers to reviewer using the given authors and subchair.
+     */
+    private static void addPapersToReviewer(ConferenceSystem sys, Conference conference, UserProfile author1,
+            UserProfile author2, UserProfile subchair, UserProfile reviewer) {
+        
+        Collection<Paper> papers = new LinkedList<Paper>();
+        Paper p;
+
+        List<String> authors1 = new LinkedList<>();
+        authors1.add(author1.getName());
+        
+        List<String> authors2 = new LinkedList<>();
+        authors2.add(author2.getName());
+
+        // Author 1 papers
+        p = Paper.createPaper(new File(""), authors1, "TitleA", author1);
+        conference.getUserRole().addPaper(author1, p);
+        papers.add(p);
+        
+        p = Paper.createPaper(new File(""), authors1, "TitleB", author1);
+        conference.getUserRole().addPaper(author1, p);
+        papers.add(p);
+        
+        p = Paper.createPaper(new File(""), authors1, "TitleC", author1);
+        conference.getUserRole().addPaper(author1, p);
+        papers.add(p);
+        
+        p = Paper.createPaper(new File(""), authors1, "TitleD", author1);
+        conference.getUserRole().addPaper(author1, p);
+        papers.add(p);
+        
+        p = Paper.createPaper(new File(""), authors1, "TitleE", author1);
+        conference.getUserRole().addPaper(author1, p);
+        papers.add(p);
+        
+        // Author 2 papers
+        p = Paper.createPaper(new File(""), authors2, "TitleF", author2);
+        conference.getUserRole().addPaper(author2, p);
+        papers.add(p);
+
+        p = Paper.createPaper(new File(""), authors2, "TitleG", author2);
+        conference.getUserRole().addPaper(author2, p);
+        papers.add(p);
+        
+        p = Paper.createPaper(new File(""), authors2, "TitleH", author2);
+        conference.getUserRole().addPaper(author2, p);
+        
+        Paper p2 = Paper.createPaper(new File(""), authors2, "TitleI", author2);
+        conference.getUserRole().addPaper(author2, p);
+        
+        conference.getInfo().getSubmissionDate().setTime(new Date().getTime() - 1);
+
+        conference.getDirectorRole().assignPaperToSubProgramChair(subchair, p);
+        conference.getDirectorRole().assignPaperToSubProgramChair(subchair, p2);
+        
+        for (Paper pap : papers) {
+            conference.getDirectorRole().assignPaperToSubProgramChair(subchair, pap);
+            conference.getSubprogramRole().assignReviewer(reviewer, pap);
+        }
     }
 
 	/**
