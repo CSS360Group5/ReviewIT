@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import model.ConferenceData;
 import model.Conference;
 import model.Paper;
 import model.UserProfile;
-import model.UserUtilities;
 
 /**
  * Testing the methods inside the ConferenceData class
@@ -51,10 +49,10 @@ public class ConferenceDataTest {
 	private Date paperDeadline;
 	private Conference conference;
 	private ConferenceData conferenceData;
-	private UserUtilities userUtilities;
-	private List<Paper> authorPaperList = new ArrayList();
-	private Map<String, List<Paper>> paperAuthorshipMap;
-	private Map<String, List<Paper>> reviewerAssignmentMap;
+//	private UserUtilities userUtilities;
+	private List<Paper> authorPaperList;
+//	private Map<String, List<Paper>> paperAuthorshipMap;
+//	private Map<String, List<Paper>> reviewerAssignmentMap;
 	
 	
 	// test papers for max reviewer assignment/author submission
@@ -146,6 +144,7 @@ public class ConferenceDataTest {
 	@Test
 	public void isReviewerInAssignmentLimit_PAPER_ASSIGNMENT_LIMIT_False() {
 		conference = Conference.createConference(TEST_CON_NAME, submissionDate, PAPER_SUBMISSION_LIMIT, PAPER_ASSIGNMENT_LIMIT);
+		conferenceData = conference.getInfo();
 		for(int i = 0; i < PAPER_ASSIGNMENT_LIMIT; i++) 
 			conference.getSubprogramRole().assignReviewer(TEST_USER_PROFILE_REVIEWER, authorPaperList.get(i));
 		assertTrue(conference.getInfo().getPapersAssignedToReviewer(TEST_USER_PROFILE_REVIEWER).size() == 8);
